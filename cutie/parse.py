@@ -84,18 +84,14 @@ def samp_bact_parse(samp_bact_file):
     bact_names = []
     samp_bact = {}
     
-    # line 0 is 'constructed from biom file' 
-    next(samp_bact_file) # iterates to second line
-    line_number = 1
+    samp_bact_file.readline() # line 0 is 'constructed from biom file' 
+    samp_ids = samp_bact_file.readline().rstrip().split('\t')
+    samp_ids.pop(0) # the 0th entry is a header
+    for samp_id in samp_ids:
+        samp_bact[samp_id] = []
+
     for line in samp_bact_file:
-        if line_number is 1:
-            samp_ids = line.rstrip().split('\t')
-            samp_ids.pop(0) # the 0th entry is a header
-            for samp_id in samp_ids:
-                samp_bact[samp_id] = []
-            line_number += 1
-        # stop when you've reached the last line
-        elif line is not '': 
+        if line is not '': 
             split_line = line.rstrip().split('\t')
             # the 0th entry is the name of an OTU
             bact_names.append(split_line[0])
@@ -139,28 +135,3 @@ def dict_to_matrix(samp_dict, samp_ids):
         for c in xrange(0,cols):
             samp_matrix[r][c] = samp_dict[samp_ids[r]][c]
     return samp_matrix
-
-
-
-
-def example(in_f, sep='\t', body_sep=',', comment_sep='#'):
-    """ Example parsing function.
-    Returns a dictionary with key=first element of each line; values=list 
-    with rest of elements
-    """
-    ret_values = {}
-
-    for line in in_f:
-        line = line.strip()
-        # Skip comment lines
-        if line and not line.startswith(comment_sep):
-            head, body = line.split(sep)
-            body_parts = body.split(body_sep)
-            # Ensure unique keys
-            if head not in ret_values:
-                ret_values[head] = body_parts
-            else:
-                print 'ERR: Duplicated entry: [', head, ']'
-                sys.exit(-1)
-
-    return ret_values

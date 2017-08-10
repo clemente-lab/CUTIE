@@ -9,8 +9,14 @@ def initial_stats_SLR(
         samp_ids, 
         samp_bact_matrix, 
         samp_meta_matrix, 
-        output_file,
-        label):
+        functions = ['stats.linregress', 'stats.spearmanr'],
+        mapf = {'stats.linregress': stats.linregress, 
+                'stats.spearmanr': stats.spearmanr},
+        f_stats = {'stats.linregress': 
+                   ['b1', 'b0', 'pcorr','pvalue','r2'],
+               'stats.spearmanr':
+                   ['scorr','pvalue']}
+        ):
     """ 
     INPUTS
     samp_ids:         list of strings of sample IDs
@@ -18,9 +24,9 @@ def initial_stats_SLR(
                       bact j in sample i
     samp_meta_matrix: np array where row i col j corresponds to level of
                       meta j in sample i                  
-    output_file:      string of directory to be saved
-    label:            string of label (e.g. 'L6')
-    
+    functions:        list of strings of function names 
+    mapf:             dict that maps function name to function object
+    f_stats:          dict that maps function name to list of output strings
     
     OUTPUTS
     statistics: list of dict where each dict corresponds to each element 
@@ -39,51 +45,31 @@ def initial_stats_SLR(
     the element is an initial matrix with dimensions 3 x num_bact x num_meta,
     corresponding to the pearson corr, p-value, and R2 value from simple linear 
     regression (SLR) between each metabolite and bacteria. 
-    TO DO: include a parsing function for pre-written files
     
     
     EXAMPLE
-    functions = stats.linregress, stats.spearmanr
-    statistics = initial_stats_SLR(
-                    samp_ids, samp_bact_matrix, 
-                    samp_meta_matrix,
-                    output_file,
-                    label = 'L6')
-    """
-    # functions: list of function objects to be called
-    # function_stats: dict where key is function and elements are strings
-    #     of relevant statistics corresponding to output of function
-    
     functions = ['stats.linregress', 'stats.spearmanr']
+    mapf = {'stats.linregress': stats.linregress,
+            'stats.spearmanr': stats.spearmanr}
     f_stats = {'stats.linregress': 
                    ['b1', 'b0', 'pcorr','pvalue','r2'],
                'stats.spearmanr':
                    ['scorr','pvalue']}
+    stat_dict = initial_stats_SLR(
+                    samp_ids, 
+                    samp_bact_matrix, 
+                    samp_meta_matrix)
+    """
+
+    stat_dict = {}
     
-    statistics = {}
-    stat_files = {}
-    
-    num_samp = np.size(samp_bact_matrix, 0)
     num_bact = np.size(samp_bact_matrix, 1)
     num_meta = np.size(samp_meta_matrix, 1)
     
-    # retrieve relevant stats
-    for function in functions:
-        rel_stats = f_stats[function]
-        # initialize dict of file objects for each relevant statistic
-        # for each function
-        # key = function, entry = file object
-        stat_files[function] = {}
-        for r in xrange(len(rel_stats)):
-            fname = output_file + 'data_processing/initial_SLR_' 
-            fname = fname + rel_stats[r] + '_' + label + '.txt'
-            if os.path.isfile(fname) is True:
-                os.remove(fname)
-            stat_files[function][rel_stats[r]] = open(fname,'w')
-        # fill each entry with a 3D array, where
-        # depth = # rel stats, rows = # bact, col = # meta
-        statistics[function] = np.zeros(
-                                (len(rel_stats), 
+    # retrieve relevant stats and create dictionary entry, 3D array
+    for f in functions:
+        rel_stats = f_stats[f]
+        stat_dict[f] = np.zeros((len(rel_stats), 
                                  num_bact, 
                                  num_meta))
 
@@ -93,30 +79,90 @@ def initial_stats_SLR(
         for m in xrange(num_meta):
             meta = samp_meta_matrix[:,m] 
             for f in functions:
-                if f is 'stats.linregress':
-                    # values is a list of the relevant_stats in order
-                    # compute regression between unmasked entries
-                    values = stats.linregress(bact, meta)
-                elif f is 'stats.spearmanr':
-                    values = stats.spearmanr(bact, meta)
+                # values is a list of the relevant_stats in order
+                values = mapf[f](bact, meta)
                 for s in xrange(len(values)):
-                    statistics[f][s][b][m] = values[s] 
-                    # function keys into stat_files to find the file to write into
-                    # f_stats[function] retrieves the stats pertaining to 
-                    # a given function, while [s] indexes to the current value
-                    stat_files[f][f_stats[f][s]].write(str(values[s]) + '\t')
+                    stat_dict[f][s][b][m] = values[s] 
+    
+    return stat_dict 
+
+def print_stats_SLR(
+        stat_dict,
+        working_dir,
+        label,
+        functions = ['stats.linregress', 'stats.spearmanr'],
+        mapf = {'stats.linregress': stats.linregress,
+            'stats.spearmanr': stats.spearmanr},
+        f_stats = {'stats.linregress': 
+                   ['b1', 'b0', 'pcorr','pvalue','r2'],
+               'stats.spearmanr':
+                   ['scorr','pvalue']}
+        ):
+    """ 
+    INPUTS   
+    stat_dict:   dict that maps string of function to output matrix           
+    output_file: string of directory to be saved
+    label:       string of label (e.g. 'L6')
+    functions:   list of strings of function names 
+    mapf:        dict that maps function name to function object
+    f_stats:     dict that maps function name to list of output strings
+     
+    FUNCTION
+    Function that prints files for each pertinent statistic (in f_stats)
+    for each function in functions corresponding to each bact, meta pair.     
+    
+    EXAMPLE
+    functions = ['stats.linregress', 'stats.spearmanr']
+    mapf = {'stats.linregress': stats.linregress,
+            'stats.spearmanr': stats.spearmanr}
+    f_stats = {'stats.linregress': 
+                   ['b1', 'b0', 'pcorr','pvalue','r2'],
+               'stats.spearmanr':
+                   ['scorr','pvalue']}
+    print_stats_SLR(stat_dict,
+                    working_dir,
+                    label = 'L6')
+    """
+    # functions: list of function objects to be called
+    # function_stats: dict where key is function and elements are strings
+    #     of relevant statistics corresponding to output of function
+    
+    stat_files = {}
+    
+    num_bact = np.size(stat_dict[stat_dict.keys()[0]], 1)
+    num_meta = np.size(stat_dict[stat_dict.keys()[0]], 2)
+    
+    # retrieve relevant stats
+    for f in functions: # e.g. f = 'stats.linregress'
+        rel_stats = f_stats[f] # e.g. ['b1', 'b0', 'pcorr','pvalue','r2']
+        num_rel = len(rel_stats) # e.g. num_rel = 5
+        # initialize dict of file objects for each relevant statistic
+        stat_files[f] = {}
+        # retrieve 3D matrix from stat_dict
+        matrix = stat_dict[f]
+        # create a new file per statistic per function
+        for r in xrange(num_rel):
+            fname = working_dir + 'data_processing/initial_SLR_' 
+            fname = fname + rel_stats[r] + '_' + label + '.txt'
+            if os.path.isfile(fname) is True:
+                os.remove(fname)
+            stat_files[f][rel_stats[r]] = open(fname,'w')
         
-        # write new line for each file
-        for f in functions:
-            for s in xrange(len(f_stats[f])):
-                stat_files[f][f_stats[f][s]].write('\n')
-    
-    # close each file
-    for f in functions:
-        for s in xrange(len(f_stats[f])):
-            stat_files[f][f_stats[f][s]].close()
-    
-    return statistics 
+        # for each bact, meta pair
+        for b in xrange(num_bact):
+            for m in xrange(num_meta):
+                # retrieve the value pertaining to the statistic of interest
+                for r in xrange(num_rel):
+                    value = matrix[r][b][m]
+                    stat_files[f][rel_stats[r]].write(str(value) + '\t')
+            # print a new line after every bacteria
+            for r in xrange(num_rel):
+                stat_files[f][rel_stats[r]].write('\n')
+        # close the files after all bacteria are done
+        for r in xrange(num_rel):
+            stat_files[f][rel_stats[r]].close()
+    return
+
 
 def resample_SLR(bact_index, meta_index, 
                  samp_ids, samp_bact_matrix, 
@@ -176,7 +222,8 @@ def update_stats_SLR(
         samp_ids, 
         samp_bact_matrix,
         samp_meta_matrix, 
-        pvalue_matrix, 
+        pvalue_matrix,
+        alpha = 0.05
         ):
     """ 
     INPUTS
@@ -187,6 +234,7 @@ def update_stats_SLR(
                       for sample i
     pvalue_matrix:    np array of pvalues where entry i,j corresponds to the 
                       initial pvalue of the correlation between bact i and meta j
+    alpha:            float, significance level used for testing (default 0.05)
     
     OUTPUTS
     initial_sig: list of i,j points where corr of bact i and meta j is initially sig
@@ -210,7 +258,7 @@ def update_stats_SLR(
     n_subj = len(samp_ids)
 
     # multiple comparisons threshold
-    threshold = 0.05 / (n_meta * n_bact)
+    threshold = alpha / (n_meta * n_bact)
     
     # create lists of points
     initial_sig = []

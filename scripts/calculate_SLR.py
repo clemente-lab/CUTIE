@@ -5,6 +5,7 @@ import click
 from cutie import parse
 from cutie import statistics
 from cutie import __version__
+from scipy import stats
 import os
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
@@ -79,12 +80,26 @@ def calculate_SLR(samp_meta_fp,
     # Simple Linear Regression and Pairwise correlations
     ### 
     
+    functions = ['stats.linregress', 'stats.spearmanr']
+    mapf = {'stats.linregress': stats.linregress,
+            'stats.spearmanr': stats.spearmanr}
+    f_stats = {'stats.linregress': 
+                   ['b1', 'b0', 'pcorr','pvalue','r2'],
+               'stats.spearmanr':
+                   ['scorr','pvalue']}
+
     stat_dict = statistics.initial_stats_SLR(samp_ids, 
                                              samp_bact_matrix, 
                                              samp_meta_matrix, 
-                                             working_dir,
-                                             label)
-
+                                             functions,
+                                             mapf,
+                                             f_stats)
+    statistics.print_stats_SLR(stat_dict,
+                               working_dir,
+                               label,
+                               functions,
+                               mapf,
+                               f_stats)
     '''
     For key = 'stats.linregress', the statistics are:
                    ['b1', 'b0', 'pcorr','pvalue','r2']
