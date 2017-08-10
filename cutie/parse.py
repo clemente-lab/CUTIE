@@ -39,20 +39,15 @@ def samp_meta_parse (samp_meta_file,
     """
     samp_ids = []
     samp_meta = {}
-    
-    line_number = 0
+    # generate metabolite list from the 0th line (header)
+    # default assumes metabolites are in col 17 to 99
+    meta_names = samp_meta_file.readline().split('\t')[startcol:endcol]
+    # for the remainder of the lines (i.e. the non-header lines)
     for line in samp_meta_file:
-        # generate metabolite list from the 0th line (header)
-        # default assumes metabolites are in col 17 to 99
-        if line_number is 0:
-            meta_names = line.split('\t')[startcol:endcol]
-            line_number += 1
-        else: 
-            # for the remainder of the lines (i.e. the non-header lines)
-            line = line.split('\t')
-            samp_ids.append(line[0]) # line[0] is the sample id
-            metabolite_levels = line[startcol:endcol]
-            samp_meta[line[0]] = metabolite_levels
+        line = line.split('\t')
+        samp_ids.append(line[0]) # line[0] is the sample id
+        metabolite_levels = line[startcol:endcol]
+        samp_meta[line[0]] = metabolite_levels
    
     return samp_ids, meta_names, samp_meta
 
