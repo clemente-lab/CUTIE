@@ -61,18 +61,16 @@ def samp_bact_parse(samp_bact_file):
                 (in the OTU table)
     samp_bact:  dict where key = sample id (string) and entry is a string
                 containing relative abundance of bacteria
-    
+    samp_ids:   list of strings of sample IDs
+
     FUNCTION
     Reads in a sample-bacteria file (OTU table) and returns a list of bacteria 
     names (bact_names) and a dict (samp_bact) mapping sample ids to relative
     abundances.
     
     EXAMPLE
-    with open(
-            'data/otu_table_MultiO__Status_merged___L6.txt',
-            'r') 
-        as f,
-        bact_list_L6 = subj_bact_merge_parse(f)
+    with open('data/otu_table_MultiO__Status_merged___L6.txt', 'r') as f:
+        bact_list_L6 = samp_bact_parse(f)
     """
     
     # create lists (corresponding to smoking and non-smoking files) 
@@ -94,7 +92,40 @@ def samp_bact_parse(samp_bact_file):
             for b in xrange(len(split_line)):
                 samp_bact[samp_ids[b]].append(split_line[b])
         
-    return bact_names, samp_bact
+    return bact_names, samp_bact, samp_ids
+
+def bact_phage_parse(bact_phage_file, skip, separator):
+    '''
+    '''
+    for i in xrange(skip):
+        bact_phage_file.readline()
+
+    samp_ids = bact_phage_file.readline().strip().split('\t')[1:] # entry 0 is 'Taxa ID'
+    bact_names = []
+    phage_names = []
+    samp_bact = {}
+    samp_phage = {}
+    line_number = 10 # 0 indexed
+    for s in xrange(len(samp_ids)):
+        samp_bact[samp_ids[s]] = []
+        samp_phage[samp_ids[s]] = []
+
+    for line in bact_phage_file:
+        line_number += 1
+        line = line.strip().split('\t')
+        entries = line[1:]
+
+        if line_number < separator:
+            bact_names.append(line[0])
+            for s in xrange(len(samp_ids)):
+                samp_bact[samp_ids[s]].append(line[1:][s])
+        elif line[0] is not '':
+            phage_names.append(line[0])
+            for s in xrange(len(samp_ids)):
+                samp_phage[samp_ids[s]].append(line[1:][s])
+        
+    return samp_ids, bact_names, phage_names, samp_bact, samp_phage
+
 
 def dict_to_matrix(samp_dict, samp_ids):
     """ 
