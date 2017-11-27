@@ -6,6 +6,6 @@ __credits__ = ["Jose C. Clemente", "Kevin Bu"]
 __license__ = "GPL"
 __version__ = "0.1.0-dev"
 __maintainer__ = "Kevin Bu"
-__email__ = "kbpi314@gmail.com"
+__email__ = "kbu314@gmail.com"
 
 __all__ = ['parse','statistics']
