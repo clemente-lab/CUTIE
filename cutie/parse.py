@@ -115,8 +115,6 @@ def otu_parse(samp_bact_file, delimiter = '\t', skip = 1):
     return samp_ids, bact_names, samp_bact, n_bact, n_samp
 
 
-
-
 def parse_input(ftype, fp, startcol, endcol, delimiter, skip):
     """
     """
@@ -133,29 +131,6 @@ def parse_input(ftype, fp, startcol, endcol, delimiter, skip):
 
     return samp_ids, var_names, samp_to_var, n_var, n_samp 
 
-def parse_sparcc(sparcc_cov_fp, sparcc_pvalue_fp, delimiter, var_names, n_var):
-    """
-    """
-    sparcc_cov = np.zeros(shape=[n_var,n_var])
-    sparcc_pvalues = np.ones(shape=[n_var,n_var])
-
-    # initialize headers and dict
-    headers = f1.readline().rstrip().split(delimiter)
-    # placeholder index for the header for otus
-    indices = [np.nan]
-    indices.extend([var_names.index(x) for x in headers[1:]])    
-
-    for line1, line2 in izip(f1, f2):
-        split_line1 = line1.rstrip().split(delimiter)
-        split_line2 = line2.rstrip().split(delimiter)
-        for i in xrange(len(split_line1)):  
-            var1_index = indices[row]   
-            var2_index = indices[i]           
-            sparcc_cov[var1_index][var2_index] = split_line1[i]
-            sparcc_pvalues[var1_index][var2_index] = split_line2[i]
-        row += 1
-
-    return sparcc_cov, sparcc_pvalues
 
 def dict_to_matrix(samp_dict, samp_ids):
     """ 
