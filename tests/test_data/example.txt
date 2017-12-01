@@ -1,5 +1,0 @@
-some	blah,blah
-lines	bluh,bleh
-#comment line
-are	ppp,kkk
-else	xxx,yyy,zzz

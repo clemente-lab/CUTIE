@@ -1,6 +1,0 @@
-some	blah,blah
-lines	bluh,bleh
-#comment line
-are	ppp,kkk
-some	xxx,yyy,zzz
-are	sss,ttt
