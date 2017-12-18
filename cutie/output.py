@@ -34,7 +34,6 @@ def print_matrix(matrix, output_fp, delimiter = '\t', header = []):
                 f.write(str(matrix[r][c]) + delimiter)
             f.write('\n')
 
-    return
 
 def print_Rmatrix(avg_var1, norm_avg_var1, avg_var2, norm_avg_var2, var_var1,
     norm_var_var1, var_var2, norm_var_var2, skew_var1, skew_var2, n_var1, n_var2,
@@ -57,10 +56,8 @@ def print_Rmatrix(avg_var1, norm_avg_var1, avg_var2, norm_avg_var2, var_var1,
     R_matrix = np.zeros([n_corr, len(headers)])
     row = 0
     for var1 in xrange(n_var1):
-        # if paired == True and statistic != 'prop':
-        #    n_var2 = var1
         for var2 in xrange(n_var2):
-            if not (paired & (var1 == var2)):
+            if not (paired and (var1 == var2)):
                 entries = [var1, var2, avg_var1[0][var1], norm_avg_var1[0][var1], 
                             avg_var2[0][var2], norm_avg_var2[0][var2],
                             var_var1[0][var1], norm_var_var1[0][var1],
@@ -73,7 +70,36 @@ def print_Rmatrix(avg_var1, norm_avg_var1, avg_var2, norm_avg_var2, var_var1,
 
     print_matrix(R_matrix, working_dir + 'data_processing/R_matrix_' + label + \
                         '_resample_' + str(resample_k) + '.txt', '\t', headers)
-    return
+
+
+def create_json_matrix(n_var1, n_var2, n_corr, headers, paired, infln_metrics, 
+    infln_dict, initial_sig, TP):
+    """
+    Creates json_matrix for drawing UpSetR plots
+    TP is an indicator that indicates whether you are doing TP (1) or FP (0)
+    """
+    json_matrix = np.zeros([n_corr, len(headers)])
+
+    row = 0
+    for var1 in xrange(n_var1):
+        # the condition ensures that if calculating auto-correlations (paired == True)
+        # then the matrix will not contain entries where var1 == var2
+        for var2 in xrange(n_var2):
+            if not (paired and (var1 == var2)):
+                point = (var1, var2)
+                line = [row]
+                for metric in infln_metrics:
+                    if point in initial_sig:
+                        if sum(infln_dict[metric], 0)[var1][var2] == 0:
+                            line.append(TP)
+                        else:
+                            line.append(1 - TP)
+                    else:
+                        line.append(0)
+                TP_json_matrix[row] = np.array([line])
+                row += 1
+
+    return json_matrix
 
 
 def print_json_matrix(n_var1, n_var2, n_corr, infln_metrics, infln_mapping,
@@ -87,54 +113,17 @@ def print_json_matrix(n_var1, n_var2, n_corr, infln_metrics, infln_mapping,
         headers.append(metric)
 
     # create TP matrix
-    TP_json_matrix = np.zeros([n_corr, len(headers)])
-    row = 0
-    for var1 in xrange(n_var1):
-        # the condition ensures that if calculating auto-correlations (paired == True)
-        # then the matrix will not contain entries where var1 == var2
-        for var2 in xrange(n_var2):
-            if not (paired & (var1 == var2)):
-                point = (var1, var2)
-                line = [row]
-                for metric in infln_metrics:
-                    if point in initial_sig:
-                        if sum(infln_dict[metric],0)[var1][var2] == 0:
-                            line.append(1)
-                        else:
-                            line.append(0)
-                    else:
-                        line.append(0)
-
-                TP_json_matrix[row] = np.array([line])
-                row += 1
-
+    TP_json_matrix = create_json_matrix(n_var1, n_var2, n_corr, headers, paired, 
+        infln_metrics, infln_dict, initial_sig, 1)
     print_matrix(TP_json_matrix, 
-                working_dir + 'data_processing/TP_json_matrix.txt', ';', headers)
+        working_dir + 'data_processing/TP_json_matrix.txt', ';', headers)
     
     # create FP matrix 
-    FP_json_matrix = np.zeros([n_corr, len(headers)])
-    row = 0
-    for var1 in xrange(n_var1):
-        for var2 in xrange(n_var2):
-            if not (paired & (var1 == var2)):
-                point = (var1, var2)
-                line = [row]
-                for metric in infln_metrics:
-                    if point in initial_sig:
-                        if sum(infln_dict[metric],0)[var1][var2] == 0:
-                            line.append(0)
-                        else:
-                            line.append(1)
-                    else:
-                        line.append(0)
+    FP_json_matrix = create_json_matrix(n_var1, n_var2, n_corr, headers, paired, 
+        infln_metrics, infln_dict, initial_sig, 0)
+    print_matrix(FP_json_matrix, 
+        working_dir + 'data_processing/FP_json_matrix.txt', ';', headers)
     
-                FP_json_matrix[row] = np.array([line])
-                row += 1
-
-        print_matrix(FP_json_matrix, 
-                    working_dir + 'data_processing/FP_json_matrix.txt', ';', headers)
-    
-    return
 
 def print_prop(n_bact, working_dir, prop, samp_bact_mr, samp_bact_clr, 
     samp_bact_varlog, samp_bact_lclr):
@@ -147,5 +136,3 @@ def print_prop(n_bact, working_dir, prop, samp_bact_mr, samp_bact_clr,
     print_matrix(samp_bact_clr, working_dir + 'data_processing/samp_bact_clr.txt', header)
     print_matrix(np.array([samp_bact_varlog]), working_dir + 'data_processing/samp_bact_varlog.txt', header)
     print_matrix(samp_bact_lclr, working_dir + 'data_processing/samp_bact_lclr.txt', header)
-
-    return
