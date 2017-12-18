@@ -9,18 +9,16 @@ import numpy as np
 from itertools import izip
 from scipy import stats
 
-def mapping_parse (samp_meta_file, 
-                     startcol=17, 
-                     endcol=100,
-                     delimiter='\t'):
+def mapping_parse (samp_meta_file, startcol=17, endcol=100, delimiter='\t'):
     """
     INPUTS
     samp_meta_file: file object pointing to a table relating samples 
                     to metabolite levels
     startcol:       integer corresponding to the first column containing 
-                    metabolite data in samp_meta_file
+                    metabolite data in mapping file
     endcol:         integer corresponding to the column AFTER the last 
-                    column containing metabolite data in samp_meta_file
+                    column containing metabolite data in mapping file
+    delimiter:      string character that delimites file
     
     OUTPUTS
     samp_ids:   list of strings of sample IDs
@@ -55,10 +53,14 @@ def mapping_parse (samp_meta_file,
     print 'The number of samples is ' + str(n_samp)
     return samp_ids, meta_names, samp_meta, n_meta, n_samp
 
+
 def otu_parse(samp_bact_file, delimiter = '\t', skip = 1):
     """ 
     INPUTS
     samp_bact_file: file object pointing to an OTU table of bacteria levels
+    delimiter:      string character that delimites file
+    skip:           number of lines to skip in parsing the otu file (e.g. to 
+                    bypass metadata/info in headers) 
     
     OUTPUTS
     bact_names: list of strings corresponding to bacteria names 
@@ -104,6 +106,18 @@ def otu_parse(samp_bact_file, delimiter = '\t', skip = 1):
 
 def parse_input(ftype, fp, startcol, endcol, delimiter, skip):
     """
+    INPUTS
+    ftype: specific string (map or otu) that determines which parsing 
+           functionality to perform on the given file
+    fp:    string file path
+    startcol:       integer corresponding to the first column containing 
+                    metabolite data in mapping file
+    endcol:         integer corresponding to the column AFTER the last 
+                    column containing metabolite data in mapping file
+    delimiter:      string character that delimites file
+    skip:           number of lines to skip in parsing the otu file (e.g. to 
+                    bypass metadata/info in headers) 
+
     """
     # some files like the mapping file won't split on \n but will on \rU
     if ftype == 'map':
@@ -148,13 +162,16 @@ def dict_to_matrix(samp_dict, samp_ids):
         for c in xrange(cols):
             samp_matrix[r][c] = samp_dict[samp_ids[r]][c]
 
-    # retrieve mean, variance and skew and normalize mean and variance
+    # retrieve mean values and normalize
     avg_matrix = np.array([np.nanmean(samp_matrix,0)])
-    norm_avg_matrix = avg_matrix - min(avg_matrix)
-    norm_avg_matrix = norm_avg_matrix/max(norm_avg_matrix)
-    var_matrix = np.array([np.nanvar(samp_matrix,0)])
-    norm_var_matrix = var_matrix - min(var_matrix)
-    norm_var_matrix = norm_var_matrix/max(norm_var_matrix)
-    skew_matrix = np.array([[stats.skew(samp_matrix[:,x],nan_policy='omit') for x in xrange(cols)]])
-    return samp_matrix, avg_matrix, norm_avg_matrix,var_matrix,norm_var_matrix, skew_matrix
+    norm_avg_matrix = avg_matrix - avg_matrix.min()
+    norm_avg_matrix = norm_avg_matrix/norm_avg_matrix.max()
 
+    # retrieve variances and normalize
+    var_matrix = np.array([np.nanvar(samp_matrix,0)])
+    norm_var_matrix = var_matrix - var_matrix.min()
+    norm_var_matrix = norm_var_matrix/var_matrix.max()
+
+    skew_matrix = np.array([[stats.skew(samp_matrix[:,x],nan_policy='omit') \
+        for x in xrange(cols)]])
+    return samp_matrix, avg_matrix, norm_avg_matrix,var_matrix,norm_var_matrix, skew_matrix
