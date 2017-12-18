@@ -96,7 +96,7 @@ def create_json_matrix(n_var1, n_var2, n_corr, headers, paired, infln_metrics,
                             line.append(1 - TP)
                     else:
                         line.append(0)
-                TP_json_matrix[row] = np.array([line])
+                json_matrix[row] = np.array([line])
                 row += 1
 
     return json_matrix
