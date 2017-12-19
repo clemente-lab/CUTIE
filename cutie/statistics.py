@@ -108,15 +108,12 @@ def assign_statistics(n_var1, n_var2, samp_var1, samp_var2, statistic,
     elif statistic == 'ksc':
         functions = ['stats.spearmanr']
         mapf = {'stats.spearmanr': stats.spearmanr}
-        f_stats = {'stats.linregress': 
-               ['b1', 'b0', 'pcorr','ppvalue','stderr'],
-           'stats.spearmanr':
-               ['scorr','spvalue']}
+        f_stats = {
+        'stats.linregress': ['b1', 'b0', 'pcorr','ppvalue','stderr'],
+        'stats.spearmanr': ['scorr','spvalue']}
 
         stat_dict = initial_stats_SLR(n_var1, n_var2, samp_var1, samp_var2, 
-                                     functions,
-                                     mapf,
-                                     f_stats)
+                                     functions, mapf, f_stats)
         
         pvalues = stat_dict['stats.spearmanr'][1]
         logpvals = np.log(pvalues)
@@ -153,7 +150,7 @@ def set_threshold(pvalues, alpha, mc, paired = False):
         # fill the upper diagonal with nan as to not double count pvalues in FDR
         pvalues_copy[np.triu_indices(pvalues_copy.shape[1],0)] = np.nan
         # currently computing all pairs double counting
-        n_corr = int(np.size(pvalues_copy,1) * (np.size(pvalues_copy,1) - 1))#/2)
+        n_corr = np.size(pvalues_copy,1) * (np.size(pvalues_copy,1) - 1)#/2)
     else:
         n_corr = np.size(pvalues_copy,0) * np.size(pvalues_copy,1)
 
@@ -169,8 +166,8 @@ def set_threshold(pvalues, alpha, mc, paired = False):
     elif mc == 'fdr':
         # compute FDR cutoff
         cn = 1.0
-        thresholds = np.array([(float(k+1))/(len(pvalues_copy)) \
-            * alpha/cn for k in xrange(len(pvalues_copy))])
+        thresholds = np.array([(float(k+1))/(len(pvalues_copy))
+            * alpha / cn for k in xrange(len(pvalues_copy))])
         compare = np.where(pvalues_copy <= thresholds)[0]
         if len(compare) is 0:
             threshold = alpha
@@ -178,7 +175,6 @@ def set_threshold(pvalues, alpha, mc, paired = False):
                 + str(min(pvalues_copy))
         else:
             threshold = thresholds[max(compare)]
-
     print 'The threshold value was ' + str(threshold)
     return threshold, n_corr
 
@@ -211,16 +207,13 @@ def indicator(n_var1, n_var2, initial_sig, true_sig):
         indicators[i][j] = 1
     return indicators
 
-def resample1_cutie_pc(var1_index, var2_index, n_samp, n_var1, n_var2, 
+def resample1_cutie_pc(var1_index, var2_index,
                         samp_var1, samp_var2, influence1, influence2, threshold, 
                         sign, fold):
     """     
     INPUTS
     var1_index: integer of bacteria (in bact_names) to be evaluated
     var2_index: integer of metabolite (in meta_names) to be evaluated
-    n_samp:     sample size
-    n_var1:     number of var1
-    n_var2:     number of var2
     samp_var1:  np array where row i col j indicates level of bact j 
                 for sample i
     samp_var2:  np array where row i col j indicates level of meta j 
@@ -250,6 +243,8 @@ def resample1_cutie_pc(var1_index, var2_index, n_samp, n_var1, n_var2,
     Returns an indicator array where exceeds[i] is 1 if removing that sample causes
     the correlation to become insignificant in at least 1 different pairwise correlations
     """
+    n_var1, n_var2, n_samp = get_param(samp_var1, samp_var2)
+
     exceeds = np.zeros(n_samp)
     reverse = np.zeros(n_samp)
     corrs = np.zeros(n_samp)
@@ -271,8 +266,9 @@ def resample1_cutie_pc(var1_index, var2_index, n_samp, n_var1, n_var2,
         
         # temporary boolean option to require a certain fold change in p value
         if fold:
-            if (p_value > threshold and p_value > pvalue_matrix[var1_index][var2_index] \
-                * 100.0) or np.isnan(p_value): 
+            if (p_value > threshold and 
+                p_value > pvalue_matrix[var1_index][var2_index] * 100.0) or \
+                np.isnan(p_value): 
                 exceeds[sample_index] = 1
         elif p_value > threshold or np.isnan(p_value): 
             exceeds[sample_index] = 1
@@ -284,16 +280,13 @@ def resample1_cutie_pc(var1_index, var2_index, n_samp, n_var1, n_var2,
 
     return reverse, exceeds, corrs, p_values
 
-def resample1_cutie_sc(var1_index, var2_index, n_samp, n_var1, n_var2, 
+def resample1_cutie_sc(var1_index, var2_index, 
                         samp_var1, samp_var2, influence1, influence2, threshold, 
                         sign, fold):
     """     
     INPUTS
     var1_index: integer of bacteria (in bact_names) to be evaluated
     var2_index: integer of metabolite (in meta_names) to be evaluated
-    n_samp:     sample size
-    n_var1:     number of var1
-    n_var2:     number of var2
     samp_var1:  np array where row i col j indicates level of bact j 
                 for sample i
     samp_var2:  np array where row i col j indicates level of meta j 
@@ -323,6 +316,8 @@ def resample1_cutie_sc(var1_index, var2_index, n_samp, n_var1, n_var2,
     Returns an indicator array where exceeds[i] is 1 if removing that sample causes
     the correlation to become insignificant in at least 1 different pairwise correlations
     """
+    n_var1, n_var2, n_samp = get_param(samp_var1, samp_var2)
+
     exceeds = np.zeros(n_samp)
     reverse = np.zeros(n_samp)
     corrs = np.zeros(n_samp)
@@ -332,16 +327,17 @@ def resample1_cutie_sc(var1_index, var2_index, n_samp, n_var1, n_var2,
     
     # iteratively delete one sample and recompute statistics
     for sample_index in xrange(n_samp):
-        new_var1_values = var1_values[~np.in1d(range(n_var1),sample_index)]
-        new_var2_values = var2_values[~np.in1d(range(n_var2),sample_index)]
+        new_var1_values = var1_values[~np.in1d(range(n_var1), sample_index)]
+        new_var2_values = var2_values[~np.in1d(range(n_var2), sample_index)]
         if new_var1_values.size <= 3 or new_var2_values.size <= 3:
             p_value = 1
             corr = 0
         else:
             corr, p_value = stats.spearmanr(new_bact, new_meta)
         if fold:
-            if (p_value > threshold and p_value > pvalue_matrix[bact_index][meta_index] \
-                * 100.0) or np.isnan(p_value):
+            if (p_value > threshold and 
+                p_value > pvalue_matrix[bact_index][meta_index] * 100.0) or \
+                np.isnan(p_value):
                 exceeds[sample_index] = 1
         elif p_value > threshold or np.isnan(p_value): 
             exceeds[sample_index] = 1
@@ -406,16 +402,13 @@ def report_results(n_var1, n_var2, working_dir, label, SLR_initial_sig,
                                 + '_resample' + str(i+1) + '.txt', '\t',
                                 ['bact_index', 'meta_index'])
 
-    return 
 
-
-def cookd(var1_index, var2_index, n_samp, n_var1, n_var2, samp_var1, samp_var2, 
-    influence1, influence2, threshold, sign, fold ):
+def cookd(var1_index, var2_index, samp_var1, samp_var2, 
+          influence1, influence2, threshold, sign, fold ):
     """
     INPUTS
     bact_index:       integer of bacteria (in bact_names) to be evaluated
     meta_index:       integer of metabolite (in meta_names) to be evaluated
-    samp_ids:         list of strings of sample ids
     samp_bact_matrix: np array where row i col j indicates level of bact j 
                       for sample i
     samp_meta_matrix: np array where row i col j indicates level of meta j 
@@ -430,6 +423,7 @@ def cookd(var1_index, var2_index, n_samp, n_var1, n_var2, samp_var1, samp_var2,
     FUNCTION
     Compute Cook's Distance for a bact, meta pair
     """
+    n_samp = np.size(samp_var1, 0)
     # reverse is 0 because sign never changes
     reverse = np.zeros(n_samp)
     exceeds = np.zeros(n_samp)
@@ -442,15 +436,12 @@ def cookd(var1_index, var2_index, n_samp, n_var1, n_var2, samp_var1, samp_var2,
     return reverse, exceeds, c, p
 
 
-def dffits(var1_index, var2_index, n_samp, n_var1, n_var2, samp_var1, samp_var2, 
+def dffits(var1_index, var2_index, samp_var1, samp_var2, 
     influence1, influence2, threshold, sign, fold):
     """
     INPUTS
     var1_index: integer of bacteria (in bact_names) to be evaluated
     var2_index: integer of metabolite (in meta_names) to be evaluated
-    n_samp:     sample size
-    n_var1:     number of var1
-    n_var2:     number of var2
     samp_var1:  np array where row i col j indicates level of bact j 
                 for sample i
     samp_var2:  np array where row i col j indicates level of meta j 
@@ -474,6 +465,7 @@ def dffits(var1_index, var2_index, n_samp, n_var1, n_var2, samp_var1, samp_var2,
     FUNCTION
     Compute DFFITS for a bact, meta pair
     """
+    n_samp = np.size(samp_var1, 0)
     reverse = np.zeros(n_samp)
     exceeds = np.zeros(n_samp)
     dffits_, dffits_threshold = influence1.dffits
@@ -485,15 +477,12 @@ def dffits(var1_index, var2_index, n_samp, n_var1, n_var2, samp_var1, samp_var2,
     return reverse, exceeds, dffits_, [dffits_threshold] * n_samp
 
 
-def dsr(var1_index, var2_index, n_samp, n_var1, n_var2, samp_var1, samp_var2, 
+def dsr(var1_index, var2_index, samp_var1, samp_var2, 
     influence1, influence2, threshold, sign, fold):
     """
     INPUTS
     var1_index: integer of bacteria (in bact_names) to be evaluated
     var2_index: integer of metabolite (in meta_names) to be evaluated
-    n_samp:     sample size
-    n_var1:     number of var1
-    n_var2:     number of var2
     samp_var1:  np array where row i col j indicates level of bact j 
                 for sample i
     samp_var2:  np array where row i col j indicates level of meta j 
@@ -519,10 +508,10 @@ def dsr(var1_index, var2_index, n_samp, n_var1, n_var2, samp_var1, samp_var2,
     FUNCTION
     Compute Deleted Studentized Residual for a var1, var2 pair
     """
+    n_samp = np.size(samp_var1, 0)
     reverse = np.zeros(n_samp)
     exceeds = np.zeros(n_samp)
     dsr_ = influence1.resid_studentized_external 
-    # self.results.resid / sigma / np.sqrt(1 - hii) = influence.resid_studentized_external
     for i in xrange(n_samp):
         if dsr_[i] < -2 or dsr_[i] > 2 or np.isnan(dsr_[i]) or dsr_[i] == 0.0:
             exceeds[i] = 1
@@ -530,15 +519,12 @@ def dsr(var1_index, var2_index, n_samp, n_var1, n_var2, samp_var1, samp_var2,
     return reverse, exceeds, dsr_, dsr_
 
 
-def double_lev(var1_index, var2_index, n_samp, n_var1, n_var2, samp_var1, 
+def double_lev(var1_index, var2_index, samp_var1, 
     samp_var2, influence1, influence2, threshold, sign, fold):
     """
     INPUTS
     var1_index: integer of bacteria (in bact_names) to be evaluated
     var2_index: integer of metabolite (in meta_names) to be evaluated
-    n_samp:     sample size
-    n_var1:     number of var1
-    n_var2:     number of var2
     samp_var1:  np array where row i col j indicates level of bact j 
                 for sample i
     samp_var2:  np array where row i col j indicates level of meta j 
@@ -565,6 +551,7 @@ def double_lev(var1_index, var2_index, n_samp, n_var1, n_var2, samp_var1,
     FUNCTION
     Compute Deleted Studentized Residual for a var1, var2 pair
     """
+    n_samp = np.size(samp_var1, 0)
     # reverse is 0 because sign never changes
     reverse = np.zeros(n_samp)
     exceeds = np.zeros(n_samp)
@@ -579,9 +566,58 @@ def double_lev(var1_index, var2_index, n_samp, n_var1, n_var2, samp_var1,
 
     return reverse, exceeds, hat_matrix_x, hat_matrix_y
 
-def update_cutie(n_samp, n_var1, n_var2, samp_var1, samp_var2, pvalues, corrs,
-    infln_metrics, infln_mapping, threshold = 0.05, paired = False, fold = False):
-    """ 
+
+def return_influence(var1, var2, samp_var1, samp_var2):
+    """
+    Compute and return influence objects holding regression diagnostics
+    """
+    x_old = samp_var1[:,var1]
+    y_old = samp_var2[:,var2]
+    # add constant for constant term in regression
+    x = sm.add_constant(x_old)
+    y = sm.add_constant(y_old)
+    # compute models with x and y as independent vars, respectively
+    model1 = sm.OLS(y_old,x)
+    fitted1 = model1.fit()
+    influence1 = fitted1.get_influence()
+    model2 = sm.OLS(x_old,y)
+    fitted2 = model2.fit()
+    influence2 = fitted2.get_influence()    
+    return influence1, influence2
+
+
+def calculate_FP_sets(initial_sig, corrs, samp_var1, samp_var2, infln_metrics, 
+                      infln_mapping, threshold, fold):
+    """
+    Determine if each correlation belongs in which infln_metric_FP sets 
+    """
+    FP_infln_sets = {}
+    
+    # initialize dict
+    for metric in infln_metrics:
+        FP_infln_sets[metric] = set()
+
+    # determine if each initial_sig correlation belongs in each metric FP set
+    for pair in initial_sig:
+        var1, var2 = pair        
+        influence1, influence2 = return_influence(var1, var2, samp_var1, samp_var2)
+        for metric in infln_metrics:
+            sign = np.sign(corrs[var1][var2])
+            reverse, exceeds, corr_values, thresholds = infln_mapping[metric](
+                            var1, var2, samp_var1, samp_var2, influence1, influence2, 
+                            threshold, sign, fold)
+
+            # if exceeds == 0 then it is a TP
+            if exceeds.sum() != 0:
+                FP_infln_sets[metric].add(pair)              
+
+    return FP_infln_sets
+
+
+def pointwise_comparison(n_samp, n_var1, n_var2, samp_var1, samp_var2, pvalues, corrs, 
+                        working_dir, n_corr, initial_sig, threshold, point_compare, corr_compare, 
+                        statistic, paired = False, fold = False):
+    """
     INPUTS
     n_samp:        intger number of samples
     n_var1:        number of var1
@@ -594,143 +630,19 @@ def update_cutie(n_samp, n_var1, n_var2, samp_var1, samp_var2, pvalues, corrs,
                    initial pvalue of the correlation between var1 i and var2 j
     corrs:         np array of corrs where entry i,j corresponds to the 
                    initial pvalue of the correlation between var1 i and var2 j
-    infln_metrics: list of strings of influential point metrics to use
-    infln_mapping: dict mapping string name of metric to the function
+    working_dir:   string directory to save results
+    n_corr:        number of correlations
     threshold:     float, significance level used for testing (default 0.05)
-    
-    OUTPUTS
-    initial_sig: list of points i,j where the corr(i,j) is significant at 
-                 threshold level
-    true_sig:    dict where key is a statistic in infln_metrics and the element is
-                 a list of i,j points where given metric between var1 i and 
-                 var2 j is still sig
-    infln_dict:  dictionary of 3D matrices; each with dimension n_samp x n_var1 
-                 x n_var2 where entry (k, i, j) refers to the value of a sample 
-                 k in correlation var1, var2 = i, j and the key is the metric
+    point_compare: boolean if comparing overlap in tagging points
+    corr_compare:  boolean if comparing overlap in tagging correlations
+    statistic:     'kpc' or 'ksc' depending on initial screening method used
+    paired:        boolean whether variables are auto-correlated or not
+    fold:          boolean toggle for whether you require new pvalue to be 100x
+                   greater than original
     
     FUNCTION
-    For all var1, var2 pairs, recomputes pvalues by dropping 1 different 
-    observation at a time. Returns a list of var1, var2 points that were 
-    initially significant (initial_sig), as well as the subset that remains 
-    significant (true_sig).
-    """
-    # create lists of points
-    initial_sig = []
-    true_sig = {}
-    infln_dict = {}
-    corrs_dict = {}
-    thresholds_dict = {}
-
-    # 6 for the len of point originally, + 3* number of metrics
-    # FYI point = var1, var2, s, samp_var1[s][var1], samp_var2[s][var2], pvalues[var1][var2]
-    # 3 -> indicator, cutoff, strength
-    n_points = n_samp * n_var1 * n_var2 * len(infln_metrics)
-    headers = []
-    # due to memory error in python
-    all_points = []
-    #all_points = np.zeros([n_points, 6 + len(infln_metrics) * 3])
-    headers = ['var1_index','var2_index','sample_number','var1_value','var2_value','initial_sig']
-    for metric in infln_metrics:
-        headers.append(metric + '_indicator')
-        headers.append(metric + '_cutoff')
-        headers.append(metric + '_strength')
-
-    for metric in infln_metrics:
-    # default populate a matrix of 0s, 0 is not significant for the metric, 1 is
-        infln_dict[metric] = np.zeros([n_samp, n_var1, n_var2])
-        corrs_dict[metric] = np.zeros([n_samp, n_var1, n_var2])
-        thresholds_dict[metric] = np.zeros([n_samp, n_var1, n_var2])
-        true_sig[metric] = []
-
-    row = 0
-    # for each bact, meta pair
-    for var1 in xrange(n_var1): 
-        for var2 in xrange(n_var2): 
-            pair = (var1,var2)
-            FP_indicator = 0
-            # if variables are paired i.e. the same, then don't compute corr(i,i)
-            if pvalues[var1][var2] < threshold and not (paired & (var1 == var2)):
-                initial_sig.append(pair)
-                FP_indicator = -1
-            # set data matrices of x, y
-            x_old = samp_var1[:,var1]
-            y_old = samp_var2[:,var2]
-            # add constant for constant term in regression
-            x = sm.add_constant(x_old)
-            y = sm.add_constant(y_old)
-            # compute models with x and y as independent vars, respectively
-            model1 = sm.OLS(y_old,x)
-            fitted1 = model1.fit()
-            influence1 = fitted1.get_influence()
-            model2 = sm.OLS(x_old,y)
-            fitted2 = model2.fit()
-            influence2 = fitted2.get_influence()   
-
-            # retrieve sign of correlation        
-            sign = np.sign(corrs[var1][var2])
-            metric_corrs = {}
-            metric_thresholds = {}
-            metric_exceeds = {}
-
-            # perform cutie resampling for each statistic
-            for m in xrange(len(infln_metrics)):
-                metric = infln_metrics[m]
-                metric_index = headers.index(metric + '_indicator')
-                reverse, exceeds, corr_values, thresholds = infln_mapping[metric](
-                                var1, var2, n_samp, n_var1, n_var2, 
-                                samp_var1, samp_var2, influence1, influence2, 
-                                threshold, sign, fold)
-                metric_corrs[metric] = corr_values
-                metric_thresholds[metric] = thresholds
-                metric_exceeds[metric] = exceeds
-
-                # populate dictionary of correlations, thresholds, and indicators
-                for i in xrange(n_samp):
-                    infln_dict[metric][i][var1][var2] = metric_exceeds[metric][i] 
-                    corrs_dict[metric][i][var1][var2] = metric_corrs[metric][i]
-                    # thresholds is p-value for cutie pc or sc
-                    thresholds_dict[metric][i][var1][var2]  = metric_thresholds[metric][i]
-
-                # add correlation to TP if passed all thresholds
-                if pvalues[var1][var2] < threshold and not (paired & (var1 == var2)):
-                    if exceeds.sum() == 0:
-                        true_sig[metric].append(pair)
-                        FP_indicator = 1
-            
-            # subesquent chunk only works for small enough datasets, not on minerva
-            '''
-            for i in xrange(len(samp_ids)):
-                all_points[row][0] = bact
-                all_points[row][1] = meta
-                all_points[row][2] = i
-                all_points[row][3] = samp_bact_matrix[i][bact]
-                all_points[row][4] = samp_meta_matrix[i][meta]
-                all_points[row][5] = FP_indicator
-                    
-                for metric in infln_metrics:
-                    metric_index = headers.index(metric + '_indicator')
-                    # cutoff
-                    all_points[row][metric_index + 1] = metric_thresholds[metric][i]
-                    # strength
-                    all_points[row][metric_index + 2] = metric_corrs[metric][i]
-                    # indicators
-                    if pvalues[bact][meta] < threshold:
-                        if metric_exceeds[metric][i] == 0:
-                            all_points[row][metric_index] = 1
-                        else:
-                            all_points[row][metric_index] = -1
-                    else:
-                        all_points[row][metric_index] = 0
-
-                row += 1
-            '''
-                
-    return initial_sig, true_sig, infln_dict, corrs_dict, thresholds_dict, all_points, headers
-
-def pointwise_comparison(n_samp, n_var1, n_var2, samp_var1, samp_var2, pvalues, corrs, 
-                        working_dir, n_corr, threshold, point_compare, corr_compare, 
-                        statistic, paired = False, fold = False):
-    """
+    Prints R dataframes comparing overlap between tagged points as well as a JSON
+    table. 
     """
     if statistic == 'kpc':
         infln_metrics = ['cookd', 'dffits','dsr']#['cutie_1pc', 'cookd', 'dffits', 'double_lev']#'dsr']#,'double_lev']
@@ -751,122 +663,340 @@ def pointwise_comparison(n_samp, n_var1, n_var2, samp_var1, samp_var2, pvalues, 
                         #'double_lev': double_lev
                         }
 
-    initial_sig, true_sig, infln_dict, corrs_dict, thresholds_dict, all_points, \
-        headers = update_cutie(n_samp, n_var1, n_var2, samp_var1, samp_var2, 
-            pvalues, corrs, infln_metrics, infln_mapping, threshold, paired, fold)
+    if corr_compare or point_compare:
+        # key is metric, entry is set of points FP to that metric
+        FP_infln_sets = calculate_FP_sets(initial_sig, corrs, samp_var1, samp_var2, 
+                                            infln_metrics, infln_mapping, threshold, fold)
 
-    #output.print_matrix(all_points, working_dir + 'data_processing/' + 'all_points_R_matrix_.txt', '\t',headers)
+        # create list of sets 
+        FP_infln_sets_list = []
+        for metric in infln_metrics:
+            FP_infln_sets_list.append(FP_infln_sets[metric])
+
+        regions, regions_set = calculate_intersection(infln_metrics, FP_infln_sets_list)
+
+        generate_pair_matrix(infln_metrics, FP_infln_sets, n_var1, n_var2, samp_var1, samp_var2, 
+            infln_metrics, working_dir)
+
+        # generate json matrix
+        output.print_json_matrix(n_var1, n_var2, n_corr, infln_metrics, 
+                    infln_mapping, FP_infln_sets, initial_sig, working_dir, paired)
+
+
+        if point_compare:
+            # initialize headers and dicts
+            headers = initialize_headers(infln_metrics)
+            true_sig, infln_dict, corrs_dict, thresholds_dict = \
+                initialize_dicts(n_samp, n_var1, n_var2, infln_metrics)
+
+            # update dict and generate all_points matrix
+            all_points, infln_dict, corrs_dict, thresholds_dict = \
+                generate_all_points_matrix(samp_var1, samp_var2, initial_sig, 
+                    true_sig, headers, infln_dict, corrs_dict, thresholds_dict, 
+                    infln_mapping, infln_metrics, corrs, threshold, fold)
+            output.print_matrix(all_points, working_dir + 'data_processing/' + 'all_points_R_matrix_.txt', '\t',headers)
+                        
+            # report number of points in each overlapping set
+            points_sets_counter(n_samp, initial_sig, infln_metrics, infln_dict)
     
+    # report results
+    for metric in infln_metrics:
+        metric_FP = FP_infln_sets[metric]
+        print 'The number of false correlations according to ' + metric + \
+            ' is ' + str(len(metric_FP)) 
+        print 'The number of true correlations according to ' + metric + \
+            ' is ' + str(len(initial_sig) - len(metric_FP))
+
+    return 
+
+
+def generate_all_points_matrix(samp_var1, samp_var2, initial_sig, true_sig, 
+                                headers, infln_dict, corrs_dict, thresholds_dict, 
+                                infln_mapping, infln_metrics, corrs, threshold, fold):
+    """
+    Calculates stats on all points and returns all_points matrix.
+    Depending on the function, corr_values is the value of the influence metric
+    Thresholds is the cut off of the influence metric; except for pearson/spearman, 
+    where it is the p-value
+    """ 
+    n_var1, n_var2, n_samp = get_param(samp_var1, samp_var2)
+    all_points = np.zeros([n_var1 * n_var2 * n_samp, 6 + len(infln_metrics) * 3])
+
+    row = 0
+    # for each variable pair
+    for var1 in xrange(n_var1): 
+        for var2 in xrange(n_var2): 
+            pair = (var1,var2)
+            influence1, influence2 = return_influence(var1, var2, samp_var1, samp_var2)   
+            sign = np.sign(corrs[var1][var2])
+
+            metric_corrs = {}
+            metric_thresholds = {}
+            metric_exceeds = {}
+
+            # perform analysis for each statistic
+            for metric in infln_metrics:
+                metric_index = headers.index(metric + '_indicator')
+
+                reverse, exceeds, corr_values, thresholds = infln_mapping[metric](
+                                var1, var2, samp_var1, samp_var2, influence1, 
+                                influence2, threshold, sign, fold)
+                
+                # update inner dicts
+                metric_corrs[metric] = corr_values
+                metric_thresholds[metric] = thresholds
+                metric_exceeds[metric] = exceeds
+
+                # update major dicts (used for determining )
+                infln_dict, corrs_dict, thresholds_dict = update_dicts(
+                    var1, var2, n_samp, metric, corr_values, thresholds, 
+                    exceeds, infln_dict, corrs_dict, thresholds_dict)
+
+                # determine indicator CUtIe status and update true_sig list
+                FP_indicator = determine_indicator(pair, exceeds, initial_sig)
+    
+            # subesquent chunk only works for small enough datasets, not on minerva
+            for i in xrange(n_samp):
+                all_points = populate_row(i, row, all_points, var1, var2 ,samp_var1, 
+                    samp_var2, FP_indicator, headers, infln_metrics, 
+                    metric_thresholds, metric_corrs, metric_exceeds, initial_sig)
+                
+                # increment row in the all_points matrix
+                row += 1
+
+    return all_points, infln_dict, corrs_dict, thresholds_dict
+
+
+def update_dicts(var1, var2, n_samp, metric, corr_values, thresholds, exceeds, infln_dict, corrs_dict, thresholds_dict):
+    """
+    Update major dicts (infln_dict, corrs_dict, thresholds_dict)
+    """
+    # populate dictionary of correlations, thresholds, and indicators
+    for i in xrange(n_samp):
+        infln_dict[metric][i][var1][var2] = exceeds[i] 
+        corrs_dict[metric][i][var1][var2] = corr_values[i]
+        # thresholds is p-value for cutie pc or sc
+        thresholds_dict[metric][i][var1][var2]  = thresholds[i]
+
+    return infln_dict, corrs_dict, thresholds_dict
+
+
+def determine_indicator(pair, exceeds, initial_sig):
+    """
+    Return indicator given an i,j pair and a list of initial_sig points
+    """
+    if pair in initial_sig:
+        if exceeds.sum() == 0:
+            FP_indicator = 1
+        else:
+            FP_indicator = -1 
+    else:
+        FP_indicator = 0
+
+    return FP_indicator 
+
+
+def populate_row(samp, row, all_points, var1, var2 ,samp_var1, samp_var2, 
+                FP_indicator, headers, infln_metrics, metric_thresholds, metric_corrs,
+                metric_exceeds, initial_sig):
+    """
+    Fills in a single row of the all_points matrix (i.e. corresponding to a single point)
+    """
+    all_points[row][0] = var1
+    all_points[row][1] = var2
+    all_points[row][2] = samp
+    all_points[row][3] = samp_var1[samp][var1]
+    all_points[row][4] = samp_var2[samp][var2]
+    all_points[row][5] = FP_indicator
+        
+    for metric in infln_metrics:
+        metric_index = headers.index(metric + '_indicator')
+        # cutoff
+        all_points[row][metric_index + 1] = metric_thresholds[metric][samp]
+        # strength
+        all_points[row][metric_index + 2] = metric_corrs[metric][samp]
+        # indicators
+        pair = (var1, var2)
+        if pair in initial_sig:
+            if metric_exceeds[metric][samp] == 0:
+                all_points[row][metric_index] = 1
+            else:
+                all_points[row][metric_index] = -1
+        else:
+            all_points[row][metric_index] = 0
+
+    return all_points 
+
+
+def points_sets_counter(n_samp, initial_sig, infln_metrics, infln_dict):
+    """
+    Determines number of points in each overlapping set of influence metrics
+    """
     # create list of all possible combinations of influence metrics
-    # ex. combs = [['cutie'],['cookd'],['cutie','cookd']]
+    # ex, if infln_metrics = ['cutie','cookd'] then
+    # combs = [['cutie'],['cookd'],['cutie','cookd']]
     combs = []
     for i in xrange(1, len(infln_metrics)+1):
         els = [list(x) for x in itertools.combinations(infln_metrics, i)]
         combs.extend(els)
 
-    # if evaluating each point
-    if point_compare:
-        point_dict = defaultdict(list)
-        for pair in initial_sig:
-            var1, var2 = pair
-            for s in xrange(len(samp_ids)):
-                for comb in combs: # [1], [2, 3], etc.
-                    infln = True
-                    for c in comb: # each individual key     
-                        # 0 means the correlation was never flagged by that influence metric
-                        if infln_dict[c][s][var1][var2] == 0:
-                            infln = False
+    pair_dict = defaultdict(list)
+    for pair in initial_sig:
+        var1, var2 = pair
+        for s in xrange(n_samp):
+            for comb in combs: # e.g. ['cutie']
+                # assume particular method tags a point as influential
+                infln = True
+                for c in comb: # each individual key     
+                    # 0 means the correlation was never flagged by that influence metric
+                    if infln_dict[c][s][var1][var2] == 0:
+                        infln = False
+                if infln is True:
+                    # store the point with the relevant set on the venn diagram
+                    pair_dict[str(comb)].append(pair)
 
-                    if infln is True:
-                        point = [var1, var2, s, samp_var1[s][var1], \
-                            samp_var2[s][var2], pvalues[var1][var2]]
-                        for metric in infln_metrics:
-                            if infln_dict[metric][s][var1][var2] != 0:
-                                exceeded = 1
-                            else:
-                                exceeded = 0
-                            cutoff = thresholds_dict[metric][s][var1][var2]
-                            corr_str = corrs_dict[metric][s][var1][var2]
-                            point.append(exceeded)
-                            point.append(cutoff)
-                            point.append(corr_str)
-                        point_dict[str(comb)].append(point)
+    for comb in combs:
+        print 'The amount of influential points in set ' + str(comb) + ' is ' + str(len(pair_dict[str(comb)]))
 
-        for comb in combs:
-            print 'The amount of influential points in set ' + str(comb) + ' is ' + str(len(point_dict[str(comb)]))
-            points = point_dict[str(comb)]
-            n_points = len(points)
-            # 6 for the len of point originally, + 3* number of metrics
-            # FYI point = var1, var2, s, samp_var1[s][var1], samp_var2[s][var2], pvalues[var1][var2]
-            point_matrix = np.zeros([n_points, 6+ len(comb) * 3])
-            #for p in xrange(n_points):
-            #    point_matrix[p] = points[p]
-            #headers = ['var1_index','var2_index','sample_number','var1_value','var2_value','pvalue']
-            #for c in comb:
-            #    headers.append(str(c) + '_indicator')
-            #    headers.append(str(c) + '_cutoff')
-            #    headers.append(str(c) + '_strength')
-            #output.print_matrix(point_matrix, working_dir + 'data_processing/' + 'points_R_matrix' + label + '_' + str(comb) + '.txt', headers)
-    
-    if corr_compare:
-        corr_dict = {}
-        for comb in combs:
-            corr_dict[str(comb)] = []
 
-        for point in initial_sig:
-            var1, var2 = point
-            for comb in combs: # [1], [2, 3], etc.
-                FP = True
-                for c in comb: # each individual key    
-                    if sum(infln_dict[c],0)[var1][var2] == 0:
-                        FP = False
-                        break
-                if FP is True:
-                    corr_dict[str(comb)].append(point)
-                    
-        for comb in combs:
-            print 'The amount of FP in set ' + str(comb) + ' is ' + str(len(corr_dict[str(comb)]))
-            
-        n_var1 = np.size(samp_var1,1)
-        n_var2 = np.size(samp_var2,1)
-        headers = ['var1','var2']
-        for metric in infln_metrics:
-            headers.append(metric)
-        pair_matrix = np.zeros([n_var1 * n_var2 ,len(headers)])
-        row = 0
-        for var1 in xrange(n_var1):
-            for var2 in xrange(n_var2): 
-                line = [var1, var2]
-                for metric in infln_metrics:
-                    point = (var1, var2)
-                    if point in initial_sig:
-                        if sum(infln_dict[metric],0)[var1][var2] == 0:
-                            line.append(1)
-                        else:
-                            line.append(-1)
-                    else:
-                        line.append(0)
-                pair_matrix[row] = line
-                row += 1
-        output.print_matrix(pair_matrix, working_dir + 'data_processing/all_pairs.txt', '\t', headers)
+def initialize_headers(infln_metrics):
+    """
+    Initialize headers for R matrix
+    """
+    headers = ['var1_index','var2_index','sample_number','var1_value', \
+                'var2_value','initial_sig']
 
-        print 'Printing JSON matrix...'
-        output.print_json_matrix(n_var1, n_var2, n_corr, infln_metrics, infln_mapping,
-                                infln_dict, initial_sig, working_dir,  
-                                paired = False)
-
-    # report results
     for metric in infln_metrics:
-        metric_true_sig = true_sig[metric]
-        print 'The number of false correlations according to ' + metric + \
-            ' is ' + str(len(initial_sig)-len(metric_true_sig)) 
-        print 'The number of true correlations according to ' + metric + \
-            ' is ' + str(len(metric_true_sig))
+        # populate headers
+        headers.append(metric + '_indicator')
+        headers.append(metric + '_cutoff')
+        headers.append(metric + '_strength')
+
+    return headers
+
+
+def initialize_dicts(n_samp, n_var1, n_var2, infln_metrics):
+    """
+    Initializes dict for storing data on metrics for all points
+    """
+                
+    # create dicts of lists of points
+    true_sig = {}
+    infln_dict = {}
+    corrs_dict = {}
+    thresholds_dict = {}    
+    
+    # default populate a matrix of 0s, 0 is not significant for the metric, 1 is
+    # key is metric, entry is 3D array for each point (ith-sample, x_var, y_var)
+    for metric in infln_metrics:
+        infln_dict[metric] = np.zeros([n_samp, n_var1, n_var2])
+        corrs_dict[metric] = np.zeros([n_samp, n_var1, n_var2])
+        thresholds_dict[metric] = np.zeros([n_samp, n_var1, n_var2])
+        true_sig[metric] = []
+
+    return true_sig, infln_dict, corrs_dict, thresholds_dict
+
+
+def calculate_intersection(names, sets):
+    '''
+    Calculates intersection of items in sets for all regions
+    names = ['a','b','c']
+    sets = [list_a, list_b, list_c]
+    '''
+    # temporary mapping of name  to set
+    name_to_set = {}
+    for i in xrange(len(names)):
+        name_to_set[names[i]] = sets[i]
+
+    # get regions and initialize default dict of list
+    regions = []
+    for i in xrange(1, len(names)+1):
+        els = [list(x) for x in itertools.combinations(names, i)]
+        regions.extend(els)
+    regions_set = defaultdict(list)
+
+    # create union of sets
+    union_set = set()
+    for indiv_set in sets:
+        union_set = union_set.union(indiv_set)
+
+    # for each region, determine in_set and out_set
+    for region in regions:
+        in_set = set(region)
+        out_set = set(names).difference(in_set)
+
+        # for each in_set,     
+        final_set = union_set
+        for in_s in in_set:
+            final_set = final_set.intersection(name_to_set[in_s])
+
+        for out_s in out_set:
+            final_set = final_set.difference(name_to_set[out_s])
+
+        regions_set[str(region)] = final_set
+
+        print 'The amount of unique elements in set ' + str(region) + ' is ' + str(len(final_set))
+    return regions, regions_set
+
+
+def generate_pair_matrix(base_regions, regions_set, n_var1, n_var2, samp_var1, samp_var2, infln_metrics, working_dir):
+    ''' Generate matrix in R where each row is a correlation and each column
+    is an indicator value (-1, 1, 0) for FP, TP, not-screened respectively by 
+    the given indicators
+    '''
+    headers = ['var1','var2']
+    for metric in infln_metrics:
+        headers.append(metric)
+    pair_matrix = np.zeros([n_var1 * n_var2 ,len(headers)])
+
+    # initialize the indices of the correlations of the row matrix, 
+    # each row is a correlation
+    for var1 in xrange(n_var1):
+        for var2 in xrange(n_var2):
+            row_number = n_var1 * var1 + var2
+            pair_matrix[row_number][0] = var1
+            pair_matrix[row_number][1] = var2
+
+    for region in base_regions:
+        # region_set is a list of tuples
+        region_set = regions_set[region]
+        region_index = base_regions.index(region)
+        for pair in region_set:
+            var1, var2 = pair 
+            row_number = n_var1 * var1 + var2
+            pair_matrix[row_number][region_index + 2] = -1   
+
+    output.print_matrix(pair_matrix, working_dir + \
+        'data_processing/all_pairs.txt', '\t', headers)
 
     return
 
 
+def get_param(samp_var1, samp_var2):
+    """
+    Extracts number of variables and samples
+    """
+    n_var1 = np.size(samp_var1, 1)
+    n_var2 = np.size(samp_var2, 1)
+    n_samp = np.size(samp_var1, 0)
+
+    return n_var1, n_var2, n_samp
 
 
+def initial_sig_SLR(n_var1, n_var2, pvalues, threshold, paired):
+    """
+    Determine list of initially significant candidate correlations
+    """
+    initial_sig = []
+    for var1 in xrange(n_var1): 
+        for var2 in xrange(n_var2): 
+            pair = (var1,var2)
+            FP_indicator = 0
+            # if variables are paired i.e. the same, then don't compute corr(i,i)
+            if pvalues[var1][var2] < threshold and not (paired and (var1 == var2)):
+                initial_sig.append(pair)
+    
+    print 'The length of initial_sig is ' + str(len(initial_sig))
 
+    return initial_sig
 
