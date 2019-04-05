@@ -1,0 +1,19 @@
+#!/bin/bash
+#BSUB -q premium
+#BSUB -W 48:00
+#BSUB -J cutie.0
+#BSUB -P acc_clemej05a
+#BSUB -B
+#BSUB -n 2
+#BSUB -R "span[hosts=1]"
+#BSUB -m mothra
+#BSUB -o %J.stdout
+#BSUB -eo %J.stderr
+#BSUB -L /bin/bash
+
+module load qiime/1.9.1/1.9.1
+
+export QIIME_BSUB_OPTIONS='-q alloc -P acc_clemej05a -W 48:00 -n 1 '
+export QIIME_CONFIG_FP=$HOME/.qiime_config.1.9.1
+
+export PYTHONPATH=$PYTHONPATH:/hpc/users/buk02/tools/sandbox/lib/python2.7/site-packages/ && python -W ignore /sc/orga/work/buk02/cutie/scripts/calculate_cutie.py -df /sc/orga/work/buk02/cutie/scripts/config_defaults.ini -cf /sc/orga/work/buk02/data_analysis/sim_copula_n50_norm_0_1_jkk1fdr0.05/config.ini

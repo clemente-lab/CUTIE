@@ -1,0 +1,1 @@
+statistic	lungc	hdac	whopearson	lungc_rpc	hdac_rpc	WHO_rpcspearman	lungc_rsc	hdac_rsc	WHO_rsckendall	lungc_rkc	hdac_rkc	WHO_rkcmine	lungc_rmine	hdac_rmine	WHO_rmine

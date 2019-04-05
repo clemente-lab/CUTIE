@@ -1,0 +1,1 @@
+statistic	cutie	jackknifing	bootstrapping	cooks_dpearson	kpc	jkp	bsp	pointwise_kpcspearman	ksc	jks	bss	pointwise_ksckendall	kkc	jkk	bsk	pointwise_kkcmine	mine	jkm	bsm	pointwise_mine
