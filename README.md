@@ -1,29 +1,43 @@
 ###
+# Overview
+###
+
+CUTIE is a python module for evaluating pairwise correlations in a dataset for
+influential points using various methods, including CUTIE, jackknifing, and
+bootstrapping.
+
+Detailed information about the package can be found in the accompanying publication.
+
+Questions and concerns should be sent to kbu314@gmail.com.
+
+###
 # Installation, setup, and preprocessing
 ###
 
-python setup.py install <install-directory>
+We suggest using CUTIE in a conda environment, as such.
 
-# minerva files
-/sc/orga/work/buk02/clemente_lab/lungpt_data/otu_table_MultiO_merged___L6.txt
-/sc/orga/work/buk02/clemente_lab/lungpt_data/Mapping.Pneumotype.Multiomics.RL.NYU.w_metabolites.w_inflamm.txt
-/sc/orga/work/buk02/clemente_lab/cutie/data/pre_sparcc_MSQ/otu_table.MSQ34_L6.txt
+source activate cutie
 
-# minepy installation
+Perform installation by navigating to the main directory. Make sure you have
+your PYTHONPATH variable set to the desired destination.
+
+cd /path/to/CUTIE
+export PYTHONPATH=/path/to/pythonpath
+python3 setup.py install --prefix=/yourpath/
+
+Likely you will need to install minepy unless you have used it before; it is
+located at the following URL.
 http://minepy.sourceforge.net/docs/0.3.5/install.html
 
-# install
-cd /Users/KevinBu/Desktop/clemente_lab/CUTIE
-export PYTHONPATH=/Users/KevinBu/tools/sandbox/lib/python3.7/site-packages/
-Python3 setup.py install  --prefix=/Users/KevinBu/tools/sandbox/
+###
+# Usage example
+###
 
-# navigate to dir
-cd /Users/KevinBu/Desktop/clemente_lab/CUTIE/tests/
+The config file test_config.ini will need to be modified depending on where you
+are running CUTIE.
 
-# mk test directory
-mkdir /Users/KevinBu/Desktop/clemente_lab/CUTIE/tests/lungpt_1pc_point_unit_test0.05/
+mkdir lungpt_1pc_point_unit_test0.05/
 
-# run cutie
 python3 /Users/KevinBu/Desktop/clemente_lab/CUTIE/scripts/calculate_cutie.py -df /Users/KevinBu/Desktop/clemente_lab/CUTIE/tests/config_defaults.ini -cf /Users/KevinBu/Desktop/clemente_lab/CUTIE/tests/lungpt_1pc_point_unit_test_kkc1fdr0.05/test_config.ini
 
 
