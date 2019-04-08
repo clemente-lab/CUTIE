@@ -8,4 +8,4 @@ __version__ = "0.1.0-dev"
 __maintainer__ = "Kevin Bu"
 __email__ = "kbu314@gmail.com"
 
-__all__ = ['parse', 'statistics', 'output']
+__all__ = ['parse', 'output', 'utils', 'statistics']

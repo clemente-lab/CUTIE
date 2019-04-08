@@ -213,6 +213,53 @@ def report_results(n_var1, n_var2, working_dir, label, initial_corr, true_corr,
                  + '_resample' + str(i+1) + '.txt'
             dict_to_print_matrix(false_comb_to_rev, fp, i)
 
+def generate_pair_matrix(base_regions, regions_set, n_var1, n_var2, samp_var1,
+                         samp_var2, infln_metrics, working_dir):
+    """
+    Generate matrix for R where each row is a correlation and each column
+    is an indicator value (-1, 1, 0) for FP, TP, or not-screened respectively.
+    ----------------------------------------------------------------------------
+    INPUTS
+    base_regions  - List of strings. Each string describes one group among which
+                    the intersections are being computed.
+    regions_set   - Dictionary. Maps key (region on Venn Diagram) to elements in
+                    that set (e.g. variable pairs)
+    n_var1        - Integer. Number of variables in file 1.
+    n_var2        - Integer. Number of variables in file 2.
+    samp_var1     - 2D array. Each value in row i col j is the level of
+                     variable j corresponding to sample i in the order that the
+                     samples are presented in samp_ids
+    samp_var2     - 2D array. Same as samp_var1 but for file 2.
+    infln_metrics - List. Contains strings of infln_metrics (such as 'cookd').
+    working_dir   - String. Path of working directory as specified by user.
+                    Should end in '/'
+    """
+    headers = ['var1', 'var2']
+    for metric in infln_metrics:
+        headers.append(metric)
+    pair_matrix = np.zeros([n_var1 * n_var2, len(headers)])
+
+    # initialize the indices of the correlations of the row matrix,
+    # each row is a correlation
+    for var1 in range(n_var1):
+        for var2 in range(n_var2):
+            row_number = n_var2 * var1 + var2
+            pair_matrix[row_number][0] = var1
+            pair_matrix[row_number][1] = var2
+
+    for region in base_regions:
+        # region_set is a list of tuples
+        region_set = regions_set[region]
+        region_index = base_regions.index(region)
+        for pair in region_set:
+            var1, var2 = pair
+            row_number = n_var2 * var1 + var2
+            pair_matrix[row_number][region_index + 2] = -1
+
+    print_matrix(pair_matrix, working_dir + \
+        'data_processing/all_pairs.txt', headers, '\t')
+
+
 ###
 # Graphing
 ###
@@ -817,7 +864,7 @@ def plot_corr_sets(graph_bound, df, working_dir, f1type, f2type, var1_names,
 ###
 
 def diag_plots(samp_counter, var1_counter, var2_counter, resample_k,
-               working_dir, paired, samp_var1, samp_var2, n_samp, lof):
+               working_dir, paired, samp_var1, samp_var2, n_samp):
     """
     Create diagnostic plots i.e. creates histograms of number of times each
     sample or variable appears in CUtIe's
@@ -841,9 +888,6 @@ def diag_plots(samp_counter, var1_counter, var2_counter, resample_k,
                    samples are presented in samp_ids
     samp_var2    - 2D array. Same as samp_var1 but for file 2.
     n_samp       - Integer. Number of samples.
-    lof          - Array. Length n_samp, corresponds to output from
-                   statistics.lof_fit() where i-th entry is -1 if i-th sample is
-                   deemed outlier by LOF and 1 otherwise.
     """
     diag_stats = ['samp', 'var1', 'var2']
     stats_mapping = {'samp': samp_counter,
@@ -864,13 +908,13 @@ def diag_plots(samp_counter, var1_counter, var2_counter, resample_k,
                          + stats + '_resample' + str(i+1) + '.txt',
                          ['index', 'count'], '\t')
 
-            # create figure, stratifying on lof if quantity is sample
+            # create figure
             fig = plt.figure()
             if stats == 'samp':
                 counts_df = pd.DataFrame(
-                    {stats:counts[:, 0], 'n_cuties': counts[:, 1]}) #, 'lof': lof})
+                    {stats:counts[:, 0], 'n_cuties': counts[:, 1]})
                 sns_plot = sns.lmplot(stats, 'n_cuties', data=counts_df,
-                                      fit_reg=False) #, hue="lof")
+                                      fit_reg=False)
             else:
                 counts_df = pd.DataFrame(
                     {stats:counts[:, 0], 'n_cuties': counts[:, 1]})

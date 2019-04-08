@@ -10,11 +10,10 @@ import minepy
 import datetime
 import pandas as pd
 import statsmodels.api as sm
-from sklearn.neighbors import LocalOutlierFactor
 from scipy import stats
-from collections import defaultdict
 from cutie import parse
 from cutie import output
+from cutie import utils
 
 def assign_statistics(samp_var1, samp_var2, statistic, pearson_stats,
                       spearman_stats, kendall_stats, mine_stats, mine_bins,
@@ -53,7 +52,7 @@ def assign_statistics(samp_var1, samp_var2, statistic, pearson_stats,
                      e.g. pvalue, correlation for given statistic while entry is
                      a 2D array representing numerical value of that quantity.
     """
-    n_var1, n_var2, n_samp = get_param(samp_var1, samp_var2)
+    n_var1, n_var2, n_samp = utils.get_param(samp_var1, samp_var2)
 
     stat_to_matrix = {}
 
@@ -139,7 +138,7 @@ def initial_stats_SLR(samp_var1, samp_var2, functions, mapf, f_stats):
                  to the value of that quantity k for the correlation between
                  var i and var j.
     """
-    n_var1, n_var2, n_samp = get_param(samp_var1, samp_var2)
+    n_var1, n_var2, n_samp = utils.get_param(samp_var1, samp_var2)
 
     stat_dict = {}
 
@@ -279,38 +278,7 @@ def set_threshold(pvalues, alpha, mc, log_fp, paired=False):
     output.write_log('The threshold value was ' + str(threshold), log_fp)
     return threshold, n_corr
 
-def indicator(n_var1, n_var2, initial_corr, true_corr):
-    """
-    Takes in lists of initial pairs of variables and true correlations and
-    returns a matrix indicating TN, FP and TP/FN (indicator matrix). Entry i,j
-    is:
-        0  if var1 i, var2 j were never significantly correlated (TN)
-        -1 if var1 i, var2 j were falsely correlated (FP/TN)
-        1  if var1 i, var2 j is correlated following resampling (TP/FN)
-    ----------------------------------------------------------------------------
-    INPUTS
-    n_var1       - Integer. Number of variables in file 1.
-    n_var2       - Integer. Number of variables in file 2.
-    initial_corr - Set of tuples. Each tuple is a variable pair that is in the
-                   set of correlations deemed initially significant or
-                   insignificant (in CUtIe or reverse CUtIe, respectively)
-                   prior to resampling
-    true_corr     - Set of tuples for a given k referring to variable pairs
-                   deemed true correlations following resampling of k points
-                   according to CUtie.
 
-    OUTPUTS
-    indicators    - 2D array. Size (n_var1 x n_var2) where each i,j entry is
-                    described as above.
-    """
-    indicators = np.zeros((n_var1, n_var2))
-    for point in initial_corr:
-        i, j = point
-        indicators[i][j] = -1
-    for point in true_corr:
-        i, j = point
-        indicators[i][j] = 1
-    return indicators
 
 ###
 # Zero handling for log transform
@@ -372,7 +340,7 @@ def multi_replacement(correction, samp_var, samp_var_mr):
                   presented in samp_ids.
     samp_var_mr - 2D array. Copy of samp_var in which 0s will be replaced.
     """
-    n_var, n_var, n_samp = get_param(samp_var, samp_var)
+    n_var, n_var, n_samp = utils.get_param(samp_var, samp_var)
 
     samp_var_mr[samp_var_mr == 0] = correction
 
@@ -445,9 +413,9 @@ def resample1_cutie_pc(var1_index, var2_index, samp_var1, samp_var2, influence1,
                  removed.
     p_values   - 1D array. Contains values of pvalues with sample i removed.
     """
-    n_var1, n_var2, n_samp = get_param(samp_var1, samp_var2)
+    n_var1, n_var2, n_samp = utils.get_param(samp_var1, samp_var2)
 
-    exceeds, reverse, maxp, minr, var1, var2 = init_var_indicators(var1_index,
+    exceeds, reverse, maxp, minr, var1, var2 = utils.init_var_indicators(var1_index,
                                                                    var2_index,
                                                                    samp_var1,
                                                                    samp_var2,
@@ -463,7 +431,7 @@ def resample1_cutie_pc(var1_index, var2_index, samp_var1, samp_var2, influence1,
         new_var2 = var2[~np.in1d(range(n_samp), s)]
 
         # remove NaNs
-        new_var1, new_var2 = remove_nans(new_var1, new_var2)
+        new_var1, new_var2 = utils.remove_nans(new_var1, new_var2)
 
         # compute new p_value and r_value
         p_value, r_value = compute_pc(new_var1, new_var2)
@@ -523,7 +491,7 @@ def resample1_cutie_sc(var1_index, var2_index, samp_var1, samp_var2, influence1,
                  removed.
     p_values   - 1D array. Contains values of pvalues with sample i removed.
     """
-    n_var1, n_var2, n_samp = get_param(samp_var1, samp_var2)
+    n_var1, n_var2, n_samp = utils.get_param(samp_var1, samp_var2)
 
     exceeds = np.zeros(n_samp)
     reverse = np.zeros(n_samp)
@@ -820,7 +788,7 @@ def pointwise_comparison(samp_var1, samp_var2, pvalues, corrs, working_dir,
     fold         - Boolean. Determines whether you require the new P value to
                    be a certain fold greater to be classified as a CUtIe.
     """
-    n_var1, n_var2, n_samp = get_param(samp_var1, samp_var2)
+    n_var1, n_var2, n_samp = utils.get_param(samp_var1, samp_var2)
 
     infln_metrics = ['cookd', 'cutie_1pc'] #, 'dffits', 'dsr'] # 'dsr'
     infln_mapping = {
@@ -840,19 +808,13 @@ def pointwise_comparison(samp_var1, samp_var2, pvalues, corrs, working_dir,
     for metric in infln_metrics:
         FP_infln_sets_list.append(FP_infln_sets[metric])
 
-    region_combs, region_sets = calculate_intersection(infln_metrics,
+    region_combs, region_sets = utils.calculate_intersection(infln_metrics,
                                                        FP_infln_sets_list,
                                                        log_fp)
 
     # base regions == infln_metriics for this
-    generate_pair_matrix(infln_metrics, FP_infln_sets, n_var1, n_var2,
+    output.generate_pair_matrix(infln_metrics, FP_infln_sets, n_var1, n_var2,
                          samp_var1, samp_var2, infln_metrics, working_dir)
-
-    # generate json matrix
-    #output.print_json_matrix(n_var1, n_var2, n_corr, infln_metrics,
-    #            FP_infln_sets, initial_corr, working_dir, paired, point = False)
-    #output.print_json_matrix(n_var1, n_var2, n_corr, infln_metrics,
-    #            FP_infln_sets, initial_corr, working_dir, paired, point = True)
 
     # report results
     for metric in infln_metrics:
@@ -863,111 +825,6 @@ def pointwise_comparison(samp_var1, samp_var2, pvalues, corrs, working_dir,
             metric + ' is ' + str(len(initial_corr) - len(metric_FP)), log_fp)
 
     return infln_metrics, infln_mapping, FP_infln_sets, region_combs, region_sets
-
-def calculate_intersection(names, sets, log_fp):
-    """
-    Calculates all possible intersection (i.e. Venn Diagram) of sets.
-    ----------------------------------------------------------------------------
-    INPUTS
-    names        - List. Strings referring to names of sets.
-    sets         - List of sets. Order of sets must match order of sets in names.
-    log_fp       - String. File path of log file.
-
-    e.g.
-    names = ['a','b','c']
-    sets = [set_a, set_b, set_c] where set_a = set([(1,2),(1,3)]),
-        set_b = set([(1,2),(1,4)]) etc.
-
-    OUTPUTS
-    region_combs - List of strings. Each string describes a region (union) in the
-                   Venn Diagram.
-    region_sets  - Dictionary. Maps key (region on Venn Diagram) to elements in
-                   that set (e.g. variable pairs)
-
-    """
-    # temporary mapping of name  to set
-    name_to_set = {}
-    for i in range(len(names)):
-        name_to_set[names[i]] = sets[i]
-
-    # get regions and initialize default dict of list
-    region_combs = []
-    for i in range(1, len(names)+1):
-        els = [list(x) for x in itertools.combinations(names, i)]
-        region_combs.extend(els)
-    region_sets = defaultdict(list)
-
-    # create union of sets
-    union_set = set()
-    for indiv_set in sets:
-        union_set = union_set.union(indiv_set)
-
-    # for each region, determine in_set and out_set
-    for region in region_combs:
-        in_set = set(region)
-        out_set = set(names).difference(in_set)
-
-        # for each in_set,
-        final_set = union_set
-        for in_s in in_set:
-            final_set = final_set.intersection(name_to_set[in_s])
-
-        for out_s in out_set:
-            final_set = final_set.difference(name_to_set[out_s])
-
-        region_sets[str(region)] = final_set
-
-        output.write_log('The amount of unique elements in set ' + \
-            str(region) + ' is ' + str(len(final_set)), log_fp)
-
-    return region_combs, region_sets
-
-
-def generate_pair_matrix(base_regions, regions_set, n_var1, n_var2, samp_var1,
-                         samp_var2, infln_metrics, working_dir):
-    """
-    Generate matrix for R where each row is a correlation and each column
-    is an indicator value (-1, 1, 0) for FP, TP, or not-screened respectively.
-    ----------------------------------------------------------------------------
-    INPUTS
-    base_regions  - List of strings. Each string describes one group among which
-                    the intersections are being computed.
-    regions_set   - Dictionary. Maps key (region on Venn Diagram) to elements in
-                    that set (e.g. variable pairs)
-    n_var1        - Integer. Number of variables in file 1.
-    n_var2        - Integer. Number of variables in file 2.
-    samp_var1     - 2D array. Each value in row i col j is the level of
-                     variable j corresponding to sample i in the order that the
-                     samples are presented in samp_ids
-    samp_var2     - 2D array. Same as samp_var1 but for file 2.
-    infln_metrics - List. Contains strings of infln_metrics (such as 'cookd').
-    working_dir   - String. Path of working directory as specified by user.
-                    Should end in '/'
-    """
-    headers = ['var1', 'var2']
-    for metric in infln_metrics:
-        headers.append(metric)
-    pair_matrix = np.zeros([n_var1 * n_var2, len(headers)])
-
-    # initialize the indices of the correlations of the row matrix,
-    # each row is a correlation
-    for var1 in range(n_var1):
-        for var2 in range(n_var2):
-            row_number = n_var2 * var1 + var2
-            pair_matrix[row_number][0] = var1
-            pair_matrix[row_number][1] = var2
-
-    for region in base_regions:
-        # region_set is a list of tuples
-        region_set = regions_set[region]
-        region_index = base_regions.index(region)
-        for pair in region_set:
-            var1, var2 = pair
-            row_number = n_var2 * var1 + var2
-            pair_matrix[row_number][region_index + 2] = -1
-
-    output.print_matrix(pair_matrix, working_dir + \
-        'data_processing/all_pairs.txt', headers, '\t')
 
 
 def log_transform(samp_var, working_dir, var_number):
@@ -983,7 +840,7 @@ def log_transform(samp_var, working_dir, var_number):
     var_number   - Integer. Represents if file 1 or file 2 is being
                    log-transformed (or both).
     """
-    n_var, n_var, n_samp = get_param(samp_var, samp_var)
+    n_var, n_var, n_samp = utils.get_param(samp_var, samp_var)
 
     samp_var_mr, samp_var_clr, samp_var_lclr, samp_var_varlog = \
         multi_zeros(n_samp, n_var, samp_var)
@@ -994,27 +851,6 @@ def log_transform(samp_var, working_dir, var_number):
 
     return np.log(samp_var_mr)
 
-def get_param(samp_var1, samp_var2):
-    """
-    Commonly used helper function. Extracts, n_var1, n_var2 and n_samp from
-    samp_var1 and samp_var2 matrices.
-    ----------------------------------------------------------------------------
-    INPUTS
-    samp_var1 - 2D array. Each value in row i col j is the level of variable j
-                corresponding to sample i in the order that the samples are
-                presented in samp_ids.
-    samp_var2 - 2D array. Same as samp_var1 but for file 2.
-
-    OUTPUTS
-    n_var1    - Integer. Number of variables in file 1.
-    n_var2    - Integer. Number of variables in file 2.
-    n_samp    - Integer. Number of samples (should be same between file 1 and 2)
-    """
-    n_var1 = np.size(samp_var1, 1)
-    n_var2 = np.size(samp_var2, 1)
-    n_samp = np.size(samp_var1, 0)
-
-    return n_var1, n_var2, n_samp
 
 def get_initial_corr(n_var1, n_var2, pvalues, threshold, paired):
     """
@@ -1146,7 +982,7 @@ def updatek_cutie(initial_corr, pvalues, samp_var1, samp_var2, threshold,
                         resampling values (from 0 to k) in which that point
                         induces a sign change.
     """
-    n_var1, n_var2, n_samp = get_param(samp_var1, samp_var2)
+    n_var1, n_var2, n_samp = utils.get_param(samp_var1, samp_var2)
 
     # raise error if resampling too many points
     if resample_k > n_samp - 3:
@@ -1154,7 +990,7 @@ def updatek_cutie(initial_corr, pvalues, samp_var1, samp_var2, threshold,
                          % (str(len(samp_ids))))
 
     (true_corr, true_comb_to_rev, false_comb_to_rev,
-     extrema_p, extrema_r) = initialize_stat_dicts(resample_k, n_var1, n_var2,
+     extrema_p, extrema_r) = utils.initialize_stat_dicts(resample_k, n_var1, n_var2,
                                                    statistic, forward_stats,
                                                    reverse_stats)
 
@@ -1180,10 +1016,6 @@ def updatek_cutie(initial_corr, pvalues, samp_var1, samp_var2, threshold,
                                     false_comb_to_rev, extrema_p, extrema_r,
                                     fold, fold_value, n_replicates, CI_method,
                                     pvalue_bins, mine_bins)
-
-    # output histograms/plots showing sample and variable appearance among CUtIe's
-    # output.diag_hist(samp_counter, var1_counter, var2_counter, resample_k,
-    #                 working_dir)
 
     return (true_corr, true_comb_to_rev, false_comb_to_rev, corr_extrema_p,
             corr_extrema_r, samp_counter, var1_counter, var2_counter,
@@ -1278,7 +1110,7 @@ def cutiek_true_corr(initial_corr, samp_var1, samp_var2, pvalues, corrs,
                         resampling values (from 0 to k) in which that point
                         induces a sign change.
     """
-    n_var1, n_var2, n_samp = get_param(samp_var1, samp_var2)
+    n_var1, n_var2, n_samp = utils.get_param(samp_var1, samp_var2)
 
     # determine forward or reverse handling
     if statistic in forward_stats:
@@ -1661,108 +1493,6 @@ def update_rev_extrema_rp(sign, r_value, p_value, indices, reverse, extrema_p,
 
     return reverse, extrema_p, extrema_r
 
-def init_var_indicators(var1_index, var2_index, samp_var1, samp_var2, forward):
-    """
-    Initialize indicator matrices and variable matrices
-    ----------------------------------------------------------------------------
-    INPUTS
-    var1_index - Integer. Index of variable from file 1 for pairwise correlation.
-    var2_index - Integer. Index of variable from file 1 for pairwise correlation.
-    samp_var1  - 2D array. Each value in row i col j is the level of variable j
-                 corresponding to sample i in the order that the samples are
-                 presented in samp_ids.
-    samp_var2  - 2D array. Same as samp_var1 but for file 2.
-    forward    - Boolean. True if CUtIe is run in the forward direction, False if
-                 reverse.
-
-    OUTPUT (in addition to above)
-    reverse    - 1D array. Index i is 1 if the correlation changes sign upon
-                 removing sample i.
-    exceeds    - 1D array. Index i is 1 if removing that sample causes the
-                 correlation to become insignificant in at least 1 different
-                 pairwise correlations
-    extrema_p - 1D array. Length n_samp, contains lowest or highest p value
-                observed thusfar for a particular sample, depending if reverse
-                or forward CUtIe was run, respectively across all i in {1,...,k}
-                iterations of CUtIe_k.
-    extrema_r - 1D array. Same as extrema_p but for R / correlation strength
-                values.
-    var1      - 1D array. Values for specified variable (from var_index1) from
-                file 1.
-    var2      - 1D array. Values for specified variable (from var_index2) from
-                file 2.
-    """
-    n_var1, n_var2, n_samp = get_param(samp_var1, samp_var2)
-
-    exceeds = np.zeros(n_samp)
-    reverse = np.zeros(n_samp)
-    if forward is True:
-        extrema_p = np.zeros(n_samp)
-        extrema_r = np.ones(n_samp)
-    elif forward is False:
-        extrema_p = np.ones(n_samp)
-        extrema_r = np.zeros(n_samp)
-
-    # slice relevant variables
-    var1 = samp_var1[:, var1_index]
-    var2 = samp_var2[:, var2_index]
-    return exceeds, reverse, extrema_p, extrema_r, var1, var2
-
-def return_indicators(n_var1, n_var2, initial_corr, true_corr, resample_k):
-    """
-    Construct indicator matrices for keeping track of false_corrs.
-    ----------------------------------------------------------------------------
-    INPUTS
-    n_var1       - Integer. Number of variables in file 1.
-    n_var2       - Integer. Number of variables in file 2.
-    initial_corr - Set of tuples. Each tuple is a variable pair that is in the
-                   set of correlations deemed initially significant or
-                   insignificant (in CUtIe or reverse CUtIe, respectively)
-                   prior to resampling
-    true_corr    - Set of tuples for a given k referring to variable pairs
-                   deemed true correlations following resampling of k points
-                   according to CUtie.
-    resample_k   - Integer. Number of points being resampled by CUtIe.
-
-    OUTPUTS
-    indicators   - Dictionary. Key is the number of points removed and entry i j
-                   corresponds to indicator value for correlation between var1 i
-                   and var2 j.
-    """
-    indicators = {}
-    for i in range(resample_k):
-        indicators[str(i+1)] = indicator(n_var1, n_var2, initial_corr,
-                                         true_corr[str(i+1)])
-
-    return indicators
-
-def remove_nans(var1, var2):
-    """
-    Remove Nan Points (at least one Nan in an observation).
-    ----------------------------------------------------------------------------
-    INPUTS
-    var1      - 1D array. Values for specified variable (from var_index1) from
-                file 1.
-    var2      - 1D array. Values for specified variable (from var_index2) from
-                file 2.
-
-    Example:
-    # remove all points where one or both values are NAN
-    # new_var1 = np.array([1,2,np.nan])
-    # new_var2 = np.array([1,np.nan,3])
-    # stacked = array([[  1.,   2.,  nan],
-    #                  [  1.,  nan,   3.]])
-    # np.isnan(stacked) = array([[False, False,  True],
-    #                             [False,  True, False]], dtype=bool)
-    # np.all(~np.isnan(stacked), axis = 0) = array([ True, False, False])
-    # stacked[:,np.all(~np.isnan(stacked), axis = 0)] =  array([[ 1.],
-    #                                                           [ 1.]])
-    """
-    stacked = np.stack([var1, var2], 0)
-    stacked = stacked[:, np.all(~np.isnan(stacked), axis=0)]
-    new_var1 = stacked[0]
-    new_var2 = stacked[1]
-    return new_var1, new_var2
 
 def jackknifek_cutie(var1_index, var2_index, n_samp, samp_var1, samp_var2,
                      pvalues, threshold, resample_k, sign, forward, statistic,
@@ -1817,7 +1547,7 @@ def jackknifek_cutie(var1_index, var2_index, n_samp, samp_var1, samp_var2,
     """
 
     # initialize indicators and variables
-    exceeds, reverse, extrema_p, extrema_r, var1, var2 = init_var_indicators(
+    exceeds, reverse, extrema_p, extrema_r, var1, var2 = utils.init_var_indicators(
         var1_index, var2_index, samp_var1, samp_var2, forward)
 
     p_values = []
@@ -1828,7 +1558,7 @@ def jackknifek_cutie(var1_index, var2_index, n_samp, samp_var1, samp_var2,
         new_var2 = var2[~np.in1d(range(len(var2)), indices)]
 
         # remove NaNs
-        new_var1, new_var2 = remove_nans(new_var1, new_var2)
+        new_var1, new_var2 = utils.remove_nans(new_var1, new_var2)
 
         # compute new p_value and r_value depending on statistic
         if statistic == 'jkp' or statistic == 'rjkp':
@@ -1917,7 +1647,7 @@ def bootstrap_cutie(var1_index, var2_index, n_samp, samp_var1, samp_var2,
                         strength values.
     """
     # initialize indicators and variables
-    exceeds, reverse, extrema_p, extrema_r, var1, var2 = init_var_indicators(
+    exceeds, reverse, extrema_p, extrema_r, var1, var2 = utils.init_var_indicators(
         var1_index, var2_index, samp_var1, samp_var2, forward)
 
     p_values = []
@@ -1932,7 +1662,7 @@ def bootstrap_cutie(var1_index, var2_index, n_samp, samp_var1, samp_var2,
 
 
         # remove NaNs
-        new_var1, new_var2 = remove_nans(new_var1, new_var2)
+        new_var1, new_var2 = utils.remove_nans(new_var1, new_var2)
 
         # compute new p_value and r_value depending on statistic
         if statistic == 'bsp' or statistic == 'rbsp':
@@ -2016,7 +1746,7 @@ def resamplek_cutie(var1_index, var2_index, n_samp, samp_var1, samp_var2,
                         strength values.
     """
     # initialize indicators and variables
-    exceeds, reverse, extrema_p, extrema_r, var1, var2 = init_var_indicators(
+    exceeds, reverse, extrema_p, extrema_r, var1, var2 = utils.init_var_indicators(
         var1_index, var2_index, samp_var1, samp_var2, forward)
 
     # iteratively delete k samples and recompute statistics
@@ -2026,7 +1756,7 @@ def resamplek_cutie(var1_index, var2_index, n_samp, samp_var1, samp_var2,
         new_var2 = var2[~np.in1d(range(len(var2)), indices)]
 
         # remove NaNs
-        new_var1, new_var2 = remove_nans(new_var1, new_var2)
+        new_var1, new_var2 = utils.remove_nans(new_var1, new_var2)
 
         # compute new p_value and r_value depending on statistic
         if statistic == 'kpc' or statistic == 'rpc':
@@ -2161,109 +1891,3 @@ def test_CI(CI, threshold, exceeds, indices, upper=True, CI_method='log'):
             for i in indices:
                 exceeds[i] += 1
     return exceeds
-
-def initialize_stat_dicts(resample_k, n_var1, n_var2, statistic, forward_stats,
-                          reverse_stats):
-    """
-    Create empty dicts for keeping track of CUtIe analysis.
-    ----------------------------------------------------------------------------
-    INPUTS
-    resample_k        - Integer. Number of points being resampled by CUtIe.
-    n_var1            - Integer. Number of variables in file 1.
-    n_var2            - Integer. Number of variables in file 2.
-    statistic         - String. Describes analysis being performed.
-
-    forward_stats     - List of strings. Contains list of statistics e.g. 'kpc'
-                        'jkp' that pertain to forward (non-reverse) CUtIe
-                        analysis.
-    reverse_stats     - List of strings. Contains list of statistics e.g. 'rpc'
-                        'rjkp' that pertain to reverse CUtIe analysis.
-
-    OUTPUTS
-    true_corr         - Set of integer tuples. Contains variable pairs
-                        classified as true correlations (TP or FN, depending on
-                        forward or reverse CUtIe respectively).
-    true_comb_to_rev  - Dictionary. Key is string of number of points being
-                        resampled, and entry is a 2D array of indicators where
-                        the entry in the i-th row and j-th column is 1 if that
-                        particular correlation in the set of true_corr (either
-                        TP or FN) reverses sign upon removal of a point.
-    false_comb_to_rev - Dictionary. Same as true_comb_to_rev but for TN/FP.
-    extrema_p         - Dictionary. Key is number of points being resampled and
-                        entry is 2D array where row i col j refers to worst or
-                        best (if CUtIe or reverse CUtIe is run, respectively)
-                        for correlation between var i and var j.
-    extrema_r         - Dictionary. Same as extrema_p except values stored are
-                        correlation strengths.
-    """
-    # create dicts of points to track true_sig and reversed-sign correlations
-    true_corr = {}
-    true_comb_to_rev = {}
-    false_comb_to_rev = {}
-
-    # create matrices dict to hold the most extreme values of p and r (for R-sq)
-    extrema_p = {}
-    extrema_r = {}
-
-    # initialize dictionary entries as empty lists
-    for i in range(resample_k):
-        true_corr[str(i+1)] = []
-        true_comb_to_rev[str(i+1)] = []
-        false_comb_to_rev[str(i+1)] = []
-        if statistic in forward_stats:
-            extrema_p[str(i+1)] = np.ones([n_var1, n_var2])
-            extrema_r[str(i+1)] = np.zeros([n_var1, n_var2])
-        elif statistic in reverse_stats:
-            extrema_p[str(i+1)] = np.zeros([n_var1, n_var2])
-            extrema_r[str(i+1)] = np.ones([n_var1, n_var2])
-
-    return true_corr, true_comb_to_rev, false_comb_to_rev, extrema_p, extrema_r
-
-###
-# LOF outlier detection
-###
-
-def lof_fit(samp_var1, samp_var2, n_samp, working_dir, paired, log_fp):
-    """
-    LOF outlier detection
-    http://scikit-learn.org/stable/auto_examples/neighbors/plot_lof.html
-    ----------------------------------------------------------------------------
-    INPUTS
-    samp_var1         - 2D array. Each value in row i col j is the level of
-                        variable j corresponding to sample i in the order that
-                        the samples are presented in samp_ids when parsed.
-    samp_var2         - 2D array. Same as samp_var1 but for file 2.
-    n_samp            - Integer. Number of samples.
-    working_dir       - String. File path of working directory specified by user.
-                        Should end in '/'
-    paired            - Boolean. True if variables are paired (i.e. file 1 and
-                        file 2 are the same), False otherwise.
-    log_fp            - String. File path of log file output.
-
-    OUTPUTS
-    y_pred            - 1D array. Length n_samp where i-th entry is -1 if i-th
-                        sample is deemed outlier by LOF and 1 otherwise.
-    """
-    df = pd.DataFrame(samp_var1)
-    if not paired:
-        df2 = pd.DataFrame(samp_var2)
-        df = df.join(df2, lsuffix='_df1', rsuffix='_df2')
-    # drop NA
-    df = df.dropna(how='any', axis=0)
-
-    np.random.seed(42)
-    # fit the model
-    clf = LocalOutlierFactor(n_neighbors=20)
-
-    # ones represent non-outlier values
-    try:
-        y_pred = clf.fit_predict(df)
-    except:
-        y_pred = np.ones(n_samp)
-        output.write_log('could not fit LOF model', log_fp)
-
-    #.shape[0] gives number of rows
-    out_df = pd.DataFrame(data=y_pred, index=range(n_samp)).reset_index()
-    out_dir = working_dir + 'data_processing/LOF_outliers.txt'
-    out_df.to_csv(out_dir, sep='\t', header=['sample', 'outlier'])
-    return y_pred
