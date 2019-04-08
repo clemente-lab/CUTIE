@@ -2,8 +2,9 @@
 from __future__ import division
 
 from cutie import parse
-from cutie import statistics
 from cutie import output
+from cutie import utils
+from cutie import statistics
 from cutie import __version__
 
 import matplotlib
@@ -41,7 +42,7 @@ CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
 def calculate_cutie(defaults_fp, config_fp):
     """
-    Computes pairwise correlations between each bact, meta pair and
+    Computes pairwise correlations between each variable pair and
     for the significant correlations, recomputes correlation for each pair
     after iteratively excluding n observations, differentiating
     true and false correlations on the basis of whether the correlation remains
@@ -193,13 +194,13 @@ def calculate_cutie(defaults_fp, config_fp):
 
     # element i,j is -1 if flagged by CUtIe as FP, 1 if TP,
     # and 0 if insig originally
-    true_indicators = statistics.return_indicators(n_var1, n_var2, initial_corr,
+    true_indicators = utils.return_indicators(n_var1, n_var2, initial_corr,
                                         true_corr, resample_k)
 
-    true_rev_indicators = statistics.return_indicators(n_var1, n_var2,
+    true_rev_indicators = utils.return_indicators(n_var1, n_var2,
         initial_corr, true_comb_to_rev, resample_k)
 
-    false_rev_indicators = statistics.return_indicators(n_var1, n_var2,
+    false_rev_indicators = utils.return_indicators(n_var1, n_var2,
         initial_corr, false_comb_to_rev, resample_k)
 
     if corr_compare:
@@ -209,7 +210,7 @@ def calculate_cutie(defaults_fp, config_fp):
             temp_dict = {}
             region_truths = set(initial_corr).difference(region_sets[region])
             temp_dict['1'] = region_truths
-            metric_set_to_indicator[region] = statistics.return_indicators(
+            metric_set_to_indicator[region] = utils.return_indicators(
                 n_var1, n_var2, initial_corr, temp_dict, 1)['1']
 
 
@@ -296,15 +297,8 @@ def calculate_cutie(defaults_fp, config_fp):
         samp_var2, all_pairs, sim, region_sets, corr_compare, exceeds_points,
         rev_points, fix_axis)
 
-    # output histograms showing sample and variable appearance among CUtIes
-    # lof = statistics.lof_fit(samp_var1, samp_var2, n_samp, working_dir, paired,
-    #                         log_fp)
-
-    # currently causes LOF to have all 1's i.e. no outliers identified
-    lof = np.ones(n_samp)
-
     output.diag_plots(samp_counter, var1_counter, var2_counter, resample_k,
-        working_dir, paired, samp_var1, samp_var2, n_samp, lof)
+        working_dir, paired, samp_var1, samp_var2, n_samp)
 
     # write log file
     output.write_log('The runtime was ' + str(time.process_time() - start_time), log_fp)
