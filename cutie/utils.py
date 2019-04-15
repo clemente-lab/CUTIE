@@ -101,9 +101,9 @@ def return_indicators(n_var1, n_var2, initial_corr, true_corr, resample_k):
                    set of correlations deemed initially significant or
                    insignificant (in CUtIe or reverse CUtIe, respectively)
                    prior to resampling
-    true_corr    - Set of tuples for a given k referring to variable pairs
-                   deemed true correlations following resampling of k points
-                   according to CUtie.
+    true_corr    - Dictionary indexed by k value containing lists of tuples
+                   referring to variable pairs deemed true correlations following
+                   resampling of k points according to CUtie.
     resample_k   - Integer. Number of points being resampled by CUtIe.
 
     OUTPUTS
@@ -113,9 +113,7 @@ def return_indicators(n_var1, n_var2, initial_corr, true_corr, resample_k):
     """
     indicators = {}
     for i in range(resample_k):
-        indicators[str(i+1)] = indicator(n_var1, n_var2, initial_corr,
-                                         true_corr[str(i+1)])
-
+        indicators[str(i + 1)] = indicator(n_var1, n_var2, initial_corr, true_corr[str(i + 1)])
     return indicators
 
 
@@ -166,10 +164,7 @@ def get_param(samp_var1, samp_var2):
     """
     n_var1 = np.size(samp_var1, 1)
     n_var2 = np.size(samp_var2, 1)
-    if n_var1 == 0:
-        n_samp = 0
-    else:
-        n_samp = np.size(samp_var1, 0)
+    n_samp = np.size(samp_var1, 0)
 
     return n_var1, n_var2, n_samp
 

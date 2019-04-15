@@ -25,6 +25,7 @@ def test_calculate_intersection():
 
 
 def test_get_param():
+    # Test normal input
     n_samples = 4
     samp_var1 = [[j for j in range(15)] for i in range(n_samples)]
     samp_var2 = [[j for j in range(8)] for i in range(n_samples)]
@@ -34,12 +35,21 @@ def test_get_param():
     assert n_var2 == 8
     assert n_samp == n_samples
 
-    zeros = np.zeros((3, 5, 2), dtype=np.complex128)
+    # Test one file with no values
+    n_samples = 4
+    samp_var1 = [[j for j in range(0)] for i in range(n_samples)]
+    samp_var2 = [[j for j in range(8)] for i in range(n_samples)]
+    n_var1, n_var2, n_samp = utils.get_param(samp_var1, samp_var2)
 
+    assert n_var1 == 0
+    assert n_var2 == 8
+    assert n_samp == n_samples
+
+    # Test empty inputs
     n_var1, n_var2, n_samp = utils.get_param([[]], [[]])
     assert n_var1 == 0
     assert n_var2 == 0
-    assert n_samp == 0
+    assert n_samp == 1
 
 
 def test_remove_nans():
@@ -73,3 +83,28 @@ def test_remove_nans():
     nvar1, nvar2 = utils.remove_nans(var1, var2)
     assert (nvar1 == np.array(var1)).all()
     assert (nvar2 == np.array(var2)).all()
+
+
+def test_return_indicators():
+    # Not testing the correctness of the values in the
+    # list returned as they are the direct result of
+    # utils.indicator and so should be tested there
+    # Not tests zeros for the parameters that are only
+    # passed along to utils.indicator for the same reason
+
+    # Test a normal case
+    n_var1 = 34
+    n_var2 = 20
+    initial_corr = {(1, 2), (2, 3), (15, 19)}
+    true_corr = {
+        '1': {(1, 2), (2, 3), (15, 19)},
+        '2': {(2, 3)}
+    }
+    resample_k = 2
+    assert utils.return_indicators(n_var1, n_var2, initial_corr, true_corr, resample_k)
+
+    # Test an empty case
+    assert not utils.return_indicators(0, 0, {}, {}, 0)
+
+    # Test a partially empty cases
+    assert not utils.return_indicators(n_var1, n_var2, initial_corr, true_corr, 0)
