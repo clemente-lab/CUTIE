@@ -8,7 +8,7 @@ import ast
 import re
 
 __author__ = "The Clemente Lab"
-__copyright__ = "Copyright 2017, The Clemente Lab"
+__copyright__ = "Copyright 2019, The Clemente Lab"
 __credits__ = ["Jose C. Clemente, Kevin Bu"]
 __license__ = "GPL"
 __maintainer__ = "Kevin Bu"
@@ -25,10 +25,10 @@ setup(name='cutie',
       version=version,
       description='Correlations under the influence',
       classifiers=[
-          'Development Status :: 3 - Alpha',
-          'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
-          'Programming Language :: Python :: 2.7',
-          'Topic :: Scientific/Engineering :: Bio-Informatics',
+        'Development Status :: 3 - Alpha',
+        'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
+        'Programming Language :: Python :: 3.7',
+        'Topic :: Scientific/Engineering :: Bio-Informatics',
       ],
       url='http://github.com/clemente-lab/cutie',
       author=__author__,
@@ -38,12 +38,27 @@ setup(name='cutie',
       scripts=glob('scripts/*py'),
       install_requires=[
           'click',
+          'os',
+          'sys',
+          'csv',
+          're',
+          'hashlib',
+          'time',
+          'datetime',
+          'collections',
+          'configparser',
+          'itertools',
           'numpy',
-          'matplotlib',
           'pandas',
+          'random',
+          'statsmodels',
+          'scipy',
+          'math',
+          'decimal',
+          'matplotlib',
+          'minepy',
           'seaborn',
           'py',
-          'pytest',
-          'minepy'
+          'pytest'
       ],
       zip_safe=False)
