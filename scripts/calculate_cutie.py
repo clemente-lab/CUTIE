@@ -97,12 +97,12 @@ def calculate_cutie(defaults_fp, config_fp):
         parse.parse_input(f2type, samp_var2_fp, startcol2, endcol2, delimiter2,
                           skip2, log_fp)
     output.write_log('The md5 of samp_var2 was ' + \
-        str(parse.md5Checksum(samp_var2_fp)), log_fp)
+        str(parse.md5_checksum(samp_var2_fp)), log_fp)
     samp_ids1, var1_names, samp_var1_df, n_var1, n_samp = \
         parse.parse_input(f1type, samp_var1_fp, startcol1, endcol1, delimiter1,
                           skip1, log_fp)
     output.write_log('The md5 of samp_var1 was ' + \
-        str(parse.md5Checksum(samp_var1_fp)), log_fp)
+        str(parse.md5_checksum(samp_var1_fp)), log_fp)
 
     # if the samp_ids differ, only take common elements
     samp_ids = [value for value in samp_ids1 if value in samp_ids2]
