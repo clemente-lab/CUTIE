@@ -1289,12 +1289,10 @@ def compute_pc(new_var1, new_var2):
                variable from file 1.
     new_var2 - Array. Same as new_var1 but for file 2.
     """
-    slope, intercept, r_value, p_value, std_err = stats.linregress(new_var1,
-                                                                   new_var2)
+    r_value, p_value = stats.pearsonr(new_var1, new_var2)
 
     # if p_value is nan
-    if np.isnan(p_value):
-        p_value = 1
+    if np.isnan(r_value):
         r_value = 0
 
     return p_value, r_value

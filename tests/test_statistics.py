@@ -1,15 +1,13 @@
 #!/usr/bin/python
 
-from unittest import TestCase, main
+import unittest
 
 import numpy as np
 from numpy.testing import assert_almost_equal, assert_equal
 
-import stats.linregress
-
 from cutie import output, parse, utils, statistics
 
-class TestStatistics(TestCase):
+class TestStatistics(unittest.TestCase):
 
     def setUp(self):
         self.samp_var1 = np.transpose(np.array([
@@ -26,38 +24,14 @@ class TestStatistics(TestCase):
 
 
     def test_compute_pc(self):
-
         # undefined correlation
-        self.new_var1 = [2, 3, 4]
-        self.new_var2 = [1, 1, 1]
-        self.null_output = (1,0)
-
-        self.assertEqual(self.null_output,
-            statistics.compute_pc(self.new_var1, self.new_var2))
+        assert_almost_equal((1,0), statistics.compute_pc([2, 3, 4], [1, 1, 1]))
 
         # perfect correlation
-        self.new_var1 = [2, 3, 4]
-        self.new_var2 = [2, 3, 4]
-        self.perfect_output = (0,1)
+        assert_almost_equal((0,1), statistics.compute_pc([2, 3, 4], [2, 3, 4]))
 
-        self.assertEqual(self.perfect_output,
-            statistics.compute_pc(self.new_var1, self.new_var2))
-
-        #
-        assert_almost_equal(cast_str_to_num(self.str1), 100000)
-        assert_almost_equal(cast_str_to_num(self.str2), 0.001)
-
-
-        slope, intercept, r_value, p_value, std_err = stats.linregress(
-            new_var1, new_var2)
-
-    # if p_value is nan
-    if np.isnan(p_value):
-        p_value = 1
-        r_value = 0
-
-    return p_value, r_value
-
+        # empirical correlation
+        assert_almost_equal((0.057,0.995), statistics.compute_pc([2, 3, 6],[1, 2, 4]),decimal=3)
 
 if __name__ == '__main__':
     unittest.main()
