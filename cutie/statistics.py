@@ -54,44 +54,28 @@ def assign_statistics(samp_var1, samp_var2, statistic, pearson_stats,
     stat_to_matrix = {}
 
     if statistic in pearson_stats:
-        # define function and dictionary mapping string to function
-        # for statistic of interest
-        functions = ['stats.pearsonr']
-        mapf = {'stats.pearsonr': stats.pearsonr}
-        # f_stats must match the output of stats.linregress
-        f_stats = {'stats.pearsonr': ['pcorr', 'ppvalue']}
-        stat_dict = initial_stats_SLR(samp_var1, samp_var2, functions, mapf,
-                                      f_stats)
-
-        stat_to_matrix['pvalues'] = stat_dict['stats.pearsonr'][1]
-        stat_to_matrix['correlations'] = stat_dict['stats.pearsonr'][1]
-        stat_to_matrix['logpvals'] = np.log(stat_dict['stats.pearsonr'][0])
-        stat_to_matrix['r2vals'] = np.square(stat_dict['stats.pearsonr'][0])
+        stat_array = initial_stats_SLR(samp_var1, samp_var2, stats.pearsonr)
+        # Index 0 gets you the r values, 1 gets the p values
+        stat_to_matrix['pvalues'] = stat_array[1]
+        stat_to_matrix['logpvals'] = np.log(stat_array[1])
+        stat_to_matrix['correlations'] = stat_array[0]
+        stat_to_matrix['r2vals'] = np.square(stat_array[0])
 
     elif statistic in spearman_stats:
-        functions = ['stats.spearmanr']
-        mapf = {'stats.spearmanr': stats.spearmanr}
-        f_stats = {'stats.spearmanr': ['scorr', 'spvalue']}
-        stat_dict = initial_stats_SLR(samp_var1, samp_var2, functions, mapf,
-                                      f_stats)
+        stat_dict = initial_stats_SLR(samp_var1, samp_var2, stats.spearmanr)
 
-        stat_to_matrix['pvalues'] = stat_dict['stats.spearmanr'][1]
-        stat_to_matrix['logpvals'] = np.log(stat_to_matrix['pvalues'])
-        stat_to_matrix['correlations'] = stat_dict['stats.spearmanr'][0]
-        stat_to_matrix['r2vals'] = stat_dict['stats.spearmanr'][0]
+        stat_to_matrix['pvalues'] = stat_array[1]
+        stat_to_matrix['logpvals'] = np.log(stat_array[1])
+        stat_to_matrix['correlations'] = stat_array[0]
+        stat_to_matrix['r2vals'] = stat_array[0]
         # filler, same as correlations
 
     elif statistic in kendall_stats:
-        functions = ['stats.kendalltau']
-        mapf = {'stats.kendalltau': stats.kendalltau}
-        f_stats = {'stats.kendalltau': ['kcorr', 'kpvalue']}
-        stat_dict = initial_stats_SLR(samp_var1, samp_var2, functions, mapf,
-                                      f_stats)
-
-        stat_to_matrix['pvalues'] = stat_dict['stats.kendalltau'][1]
-        stat_to_matrix['logpvals'] = np.log(stat_to_matrix['pvalues'])
-        stat_to_matrix['correlations'] = stat_dict['stats.kendalltau'][0]
-        stat_to_matrix['r2vals'] = stat_dict['stats.kendalltau'][0]
+        stat_dict = initial_stats_SLR(samp_var1, samp_var2, stats.kendalltau)
+        stat_to_matrix['pvalues'] = stat_array[1]
+        stat_to_matrix['logpvals'] = np.log(stat_array[1])
+        stat_to_matrix['correlations'] = stat_array[0]
+        stat_to_matrix['r2vals'] = stat_array[0]
         # filler, same as correlations
 
     elif statistic in mine_stats:
@@ -109,61 +93,51 @@ def assign_statistics(samp_var1, samp_var2, statistic, pearson_stats,
     return stat_to_matrix
 
 
-def initial_stats_SLR(samp_var1, samp_var2, functions, mapf, f_stats):
+def initial_stats_SLR(samp_var1, samp_var2, corr_func):
     """
-    Helper function for assign_statistics. Forks between SLR (simple linear
-    regression/inclusive of Pearson and Spearman) and MINE. Computes an initial
+    Helper function for assign_statistics. Forks between desired correlation
+    coefficient (Pearson, Spearman, Kendall and MINE). Computes an initial
     set of statistics per the specified functions. Returns a dict where the key
     is a statistical function and the element is an initial matrix with
     dimensions n_rel_stats x n_var1 x n_var2, corresponding to the relevant
-    statistics from simple linear regression (SLR) between each var1 and var2.
+    statistic between each var1 and var2.
     ----------------------------------------------------------------------------
     INPUTS
     samp_var1  - 2D array. Each value in row i col j is the level of variable j
                  corresponding to sample i in the order that the samples are
                  presented in samp_ids.
     samp_var2  - 2D array. Same as samp_var1 but for file 2.
-    functions  - List of strings. Function names verbatim from libraries.
-    mapf       - Dictionary. Maps function names to the function object.
-    f_stats    - Dictionary. Maps function name to list of output strings
-                 corresponding to what each function returns.
+    corr_func  - Function. Desired function for computing correlation (e.g.
+                 stats.pearsonr, stats.spearmanr, stats.kendalltau).
 
     OUTPUTS
-    statistics - Dictionary. Each key is a particular statistics function and
-                 each entry is a 3D np array where depth k, row i, col j corresponds
-                 to the value of that quantity k for the correlation between
-                 var i and var j.
+    stat_array - 3D array. Depth k = 2, row i, col j corresponds to the value of
+                 that quantity k (correlation or pvalue) for the correlation
+                 between var i and var j.
     """
     n_var1, n_var2, n_samp = utils.get_param(samp_var1, samp_var2)
 
-    stat_dict = {}
-
     # retrieve relevant stats and create dictionary entry, 3D array
-    for f in functions:
-        rel_stats = f_stats[f]
-        stat_dict[f] = np.zeros((len(rel_stats), n_var1, n_var2))
+    rel_stats = ['correlation', 'pvalue']
+    stat_array = np.zeros((len(rel_stats), n_var1, n_var2))
 
     # subset the data matrices into the cols needed
     for var1 in range(n_var1):
         for var2 in range(n_var2):
             var1_values = samp_var1[:, var1]
             var2_values = samp_var2[:, var2]
-            stacked = np.stack([var1_values, var2_values], 0)
-            # remove NANs
-            stacked = stacked[:, np.all(~np.isnan(stacked), axis=0)]
-            var1_values = stacked[0]
-            var2_values = stacked[1]
-            for f in functions:
-                # values is a list of the relevant_stats in order
-                if len(var1_values) == 0 or len(var2_values) == 0:
-                    values = np.zeros([len(f_stats[f])])
-                    values[:] = np.nan
-                else:
-                    values = mapf[f](var1_values, var2_values)
-                for s in range(len(values)):
-                    stat_dict[f][s][var1][var2] = values[s]
+            var1_values, var2_values = remove_nans(var1_values, var2_values)
 
-    return stat_dict
+            # values is a list of the relevant_stats in order
+            if len(var1_values) == 0 or len(var2_values) == 0:
+                values = np.zeros([len(rel_stats)])
+                values[:] = np.nan
+            else:
+                values = corr_func(var1_values, var2_values)
+            for s in range(len(values)):
+                stat_array[s][var1][var2] = values[s]
+
+    return stat_array
 
 
 def initial_stats_MINE(n_var, samp_var, mine_bins, pvalue_bins):
