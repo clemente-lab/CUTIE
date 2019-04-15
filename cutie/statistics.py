@@ -56,18 +56,17 @@ def assign_statistics(samp_var1, samp_var2, statistic, pearson_stats,
     if statistic in pearson_stats:
         # define function and dictionary mapping string to function
         # for statistic of interest
-        functions = ['stats.linregress']
-        mapf = {'stats.linregress': stats.linregress}
+        functions = ['stats.pearsonr']
+        mapf = {'stats.pearsonr': stats.pearsonr}
         # f_stats must match the output of stats.linregress
-        f_stats = {'stats.linregress':
-                   ['b1', 'b0', 'pcorr', 'ppvalue', 'stderr']}
+        f_stats = {'stats.pearsonr': ['pcorr', 'ppvalue']}
         stat_dict = initial_stats_SLR(samp_var1, samp_var2, functions, mapf,
                                       f_stats)
 
-        stat_to_matrix['pvalues'] = stat_dict['stats.linregress'][3]
-        stat_to_matrix['correlations'] = stat_dict['stats.linregress'][2]
-        stat_to_matrix['logpvals'] = np.log(stat_dict['stats.linregress'][3])
-        stat_to_matrix['r2vals'] = np.square(stat_dict['stats.linregress'][2])
+        stat_to_matrix['pvalues'] = stat_dict['stats.pearsonr'][1]
+        stat_to_matrix['correlations'] = stat_dict['stats.pearsonr'][1]
+        stat_to_matrix['logpvals'] = np.log(stat_dict['stats.pearsonr'][0])
+        stat_to_matrix['r2vals'] = np.square(stat_dict['stats.pearsonr'][0])
 
     elif statistic in spearman_stats:
         functions = ['stats.spearmanr']
@@ -85,7 +84,7 @@ def assign_statistics(samp_var1, samp_var2, statistic, pearson_stats,
     elif statistic in kendall_stats:
         functions = ['stats.kendalltau']
         mapf = {'stats.kendalltau': stats.kendalltau}
-        f_stats = {'stats.kendalltau': ['scorr', 'spvalue']}
+        f_stats = {'stats.kendalltau': ['kcorr', 'kpvalue']}
         stat_dict = initial_stats_SLR(samp_var1, samp_var2, functions, mapf,
                                       f_stats)
 
