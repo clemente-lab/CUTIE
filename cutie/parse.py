@@ -90,7 +90,6 @@ def parse_input(ftype, fp, startcol, endcol, delimiter, skip, log_fp):
 
     return samp_ids, var_names, df, n_var, n_samp
 
-
 def process_df(samp_var_df, samp_ids):
     """
     Reads in dataframe. Returns matrix of values as well as
@@ -128,7 +127,6 @@ def process_df(samp_var_df, samp_ids):
     var_var = np.array([np.nanvar(samp_var, 0)])
 
     return samp_var, avg_var, var_var
-
 
 def read_taxa(taxa, delim=';'):
     """
