@@ -284,7 +284,7 @@ def set_threshold(pvalues, alpha, mc, log_fp, paired=False):
 # Zero handling for log transform
 ###
 
-def multi_zeros(n_samp, n_var, samp_var):
+def multi_zeros(samp_var):
     """
     INPUTS
     samp_var: 2D array where each entry in row i col j refers to relative
@@ -295,21 +295,19 @@ def multi_zeros(n_samp, n_var, samp_var):
     samp_var_clr:    2D centered log ratio matrix, each row of mr divided by its geometric mean
     samp_var_lclr:   2D log of CLR matrix, log of each row
     samp_var_varlog: 1D variance of lclr matrix, element j refers to variance of col j
-    correction:       threshold used for correction (currently min(samp_var_matrix / 2))
-    n_zero:           number of 0's detected in the original samp_var_matrix
 
     FUNCTION
     Eliminates 0's from a matrix and replaces it with a multiplicative threshold
     correction, using the smallest value divided by 2 as the replacement.
     """
-    # create working copy
-    samp_var_mr = np.copy(samp_var)
+    n_samp = len(samp_var)
+    n_var = len(samp_var[0])
 
     # obtain 0 correction value
     correction = zero_replacement(samp_var)
 
     # replace 0s with correction
-    samp_var_mr = multi_replacement(correction, samp_var, samp_var_mr)
+    samp_var_mr = np.where(0 != samp_var, samp_var, correction)
 
     # create array of geometric means for log clr correction
     samp_var_gm = np.zeros(n_samp)
@@ -326,33 +324,6 @@ def multi_zeros(n_samp, n_var, samp_var):
         samp_var_varlog[i] = np.var(samp_var_lclr[:, i])
 
     return samp_var_mr, samp_var_clr, samp_var_lclr, samp_var_varlog
-
-
-def multi_replacement(correction, samp_var, samp_var_mr):
-    """
-    Helper function for multi_zeros(). Replaces 0 values in a 2D array with a
-    value specified by correction in accordance with the multiplicative
-    replacement procedure for dealing with 0s.
-    ----------------------------------------------------------------------------
-    INPUTS
-    correction  - Float. Value with which to replace 0s.
-    samp_var    - 2D array. Each value in row i col j is the level of variable j
-                  corresponding to sample i in the order that the samples are
-                  presented in samp_ids.
-    samp_var_mr - 2D array. Copy of samp_var in which 0s will be replaced.
-    """
-    n_var, n_var, n_samp = utils.get_param(samp_var, samp_var)
-
-    samp_var_mr[samp_var_mr == 0] = correction
-
-    # correct non-zero values
-    for i in range(n_samp):
-        nrow_zero = len(np.where(samp_var[i] == 0)[0])
-        for j in range(n_var):
-            if samp_var[i][j] != 0:
-                samp_var_mr[i][j] = samp_var_mr[i][j] * (1 - nrow_zero * correction)
-
-    return samp_var_mr
 
 
 def zero_replacement(samp_var):
@@ -855,8 +826,7 @@ def log_transform(samp_var, working_dir, var_number):
     """
     n_var, n_var, n_samp = utils.get_param(samp_var, samp_var)
 
-    samp_var_mr, samp_var_clr, samp_var_lclr, samp_var_varlog = \
-        multi_zeros(n_samp, n_var, samp_var)
+    samp_var_mr, samp_var_clr, samp_var_lclr, samp_var_varlog = multi_zeros(samp_var)
 
     header = [str(x + 1) for x in range(n_var)]
     output.print_matrix(samp_var_mr, working_dir + 'data_processing/samp_var' +
