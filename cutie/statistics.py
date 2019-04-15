@@ -347,7 +347,7 @@ def zero_replacement(samp_var):
     # Otherwise find the minimum
     min_value = float(min(filtered))
 
-    # Ensure that the input is not all zero
+    # Find the correction value
     if min_value < 1:
         correction = min_value ** 2  # or use divided by 2)
     else:
