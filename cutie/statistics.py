@@ -366,8 +366,17 @@ def zero_replacement(samp_var):
                corresponding to sample i in the order that the samples are
                presented in samp_ids.
     """
-    # find min non-zero value
-    min_value = min(samp_var[np.nonzero(samp_var)])
+    # Flatten 2D array to one dimension and remove duplicates
+    flat_arr = set(np.array(samp_var).flatten())
+    # Remove all zero values
+    filtered = [x for x in flat_arr if not x == 0]
+    # If no values remain raise an error
+    if not filtered:
+        raise ValueError('Input array must contain non-zero values')
+    # Otherwise find the minimum
+    min_value = float(min(filtered))
+
+    # Ensure that the input is not all zero
     if min_value < 1:
         correction = min_value ** 2  # or use divided by 2)
     else:
@@ -849,7 +858,7 @@ def log_transform(samp_var, working_dir, var_number):
     samp_var_mr, samp_var_clr, samp_var_lclr, samp_var_varlog = \
         multi_zeros(n_samp, n_var, samp_var)
 
-    header = [str(x+1) for x in range(n_var)]
+    header = [str(x + 1) for x in range(n_var)]
     output.print_matrix(samp_var_mr, working_dir + 'data_processing/samp_var' +
                         str(var_number) + '_mr.txt', header, '\t')
 
