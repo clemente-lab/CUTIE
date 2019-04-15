@@ -10,14 +10,14 @@ import minepy
 import datetime
 import pandas as pd
 import statsmodels.api as sm
-from scipy import stats
+from scipy import statss
 from cutie import parse
 from cutie import output
 from cutie import utils
 
 def assign_statistics(samp_var1, samp_var2, statistic, pearson_stats,
                       spearman_stats, kendall_stats, mine_stats, mine_bins,
-                      pvalue_bins, f1type, log_fp):
+                      pvalue_bins):
     """
     Creates dictionary mapping statistics to 2D matrix containing relevant
     statistics (e.g. pvalue, correlation) for correlation between var i and j.
@@ -37,15 +37,12 @@ def assign_statistics(samp_var1, samp_var2, statistic, pearson_stats,
     kendall_stats  - List of strings. Describes possible Kendall-based
                      statistics.
     mine_stats     - List of strings. Describes possible MINE-based statistics.
-    mine_bins      - 2D Array. Obtained from parse_minep. Each row is in format
+    mine_bins      - 2D array. Obtained from parse_minep. Each row is in format
                      [MIC_str, pvalue, stderr of pvalue]. Pvalue corresponds to
                      probability of observing MIC_str as or more extreme as
                      observed MIC_str.
     pvalue_bins    - List. Sorted list of pvalues from greatest to least used
                      by MINE to bin the MIC_str.
-    f1type         - String. Must be 'map' or 'otu' which specifies parsing
-                     functionality to perform on file 1.
-    log_fp         - String. File path of log file output.
 
     OUTPUTS
     stat_to_matrix - Dictionary. Key is string representing particular quantity
@@ -108,7 +105,7 @@ def assign_statistics(samp_var1, samp_var2, statistic, pearson_stats,
         # filler, same as correlations
 
     else:
-        output.write_log('Invalid statistic chosen', log_fp)
+        raise ValueError('Invalid statistic chosen: ' + statistic)
 
     return stat_to_matrix
 
@@ -1292,14 +1289,8 @@ def compute_pc(new_var1, new_var2):
                variable from file 1.
     new_var2 - Array. Same as new_var1 but for file 2.
     """
-    # if resulting variables do not contain enough points
-    if new_var1.size < 2 or new_var2.size < 2:
-        p_value = 1
-        r_value = 0
-
-    else:
-        slope, intercept, r_value, p_value, std_err = stats.linregress(
-            new_var1, new_var2)
+    slope, intercept, r_value, p_value, std_err = stats.linregress(new_var1,
+                                                                   new_var2)
 
     # if p_value is nan
     if np.isnan(p_value):
