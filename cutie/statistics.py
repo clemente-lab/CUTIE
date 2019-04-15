@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 from __future__ import division
 import matplotlib
-matplotlib.use('Agg')
 import os
 import math
 import itertools
@@ -14,6 +13,11 @@ from scipy import stats
 from cutie import parse
 from cutie import output
 from cutie import utils
+from collections import defaultdict
+
+matplotlib.use('Agg')
+
+
 
 def assign_statistics(samp_var1, samp_var2, statistic, pearson_stats,
                       spearman_stats, kendall_stats, mine_stats, mine_bins,
@@ -225,6 +229,7 @@ def initial_stats_MINE(n_var, samp_var, mine_bins, pvalue_bins):
 
     return MIC_str, MIC_pvalues
 
+
 def set_threshold(pvalues, alpha, mc, log_fp, paired=False):
     """
     Computes p-value threshold for alpha according to FDR, Bonferroni, or FWER.
@@ -327,6 +332,7 @@ def multi_zeros(n_samp, n_var, samp_var):
 
     return samp_var_mr, samp_var_clr, samp_var_lclr, samp_var_varlog
 
+
 def multi_replacement(correction, samp_var, samp_var_mr):
     """
     Helper function for multi_zeros(). Replaces 0 values in a 2D array with a
@@ -352,6 +358,7 @@ def multi_replacement(correction, samp_var, samp_var_mr):
                 samp_var_mr[i][j] = samp_var_mr[i][j] * (1 - nrow_zero * correction)
 
     return samp_var_mr
+
 
 def zero_replacement(samp_var):
     """
@@ -436,15 +443,13 @@ def resample1_cutie_pc(var1_index, var2_index, samp_var1, samp_var2, influence1,
         # compute new p_value and r_value
         p_value, r_value = compute_pc(new_var1, new_var2)
 
-
         # update reverse, maxp, and minr
         reverse, maxp, minr = update_rev_extrema_rp(sign, r_value, p_value,
                                                     [s], reverse, maxp, minr,
                                                     True)
-
         if fold:
-            if (p_value > threshold and \
-                p_value > pvalues[var1_index][var2_index] * fold_value) or \
+            if (p_value > threshold and
+                p_value > p_values[var1_index][var2_index] * fold_value) or \
                 np.isnan(p_value):
                 exceeds[s] += 1
         elif p_value > threshold or np.isnan(p_value):
@@ -454,6 +459,7 @@ def resample1_cutie_pc(var1_index, var2_index, samp_var1, samp_var2, influence1,
         p_values[s] = p_value
 
     return reverse, exceeds, corrs, p_values
+
 
 def resample1_cutie_sc(var1_index, var2_index, samp_var1, samp_var2, influence1,
                        influence2, threshold, sign, fold, fold_value):
@@ -808,9 +814,9 @@ def pointwise_comparison(samp_var1, samp_var2, pvalues, corrs, working_dir,
     for metric in infln_metrics:
         FP_infln_sets_list.append(FP_infln_sets[metric])
 
-    region_combs, region_sets = utils.calculate_intersection(infln_metrics,
-                                                       FP_infln_sets_list,
-                                                       log_fp)
+    region_sets = utils.calculate_intersection(infln_metrics,
+                                               FP_infln_sets_list,
+                                               log_fp)
 
     # base regions == infln_metriics for this
     output.generate_pair_matrix(infln_metrics, FP_infln_sets, n_var1, n_var2,
@@ -989,10 +995,20 @@ def updatek_cutie(initial_corr, pvalues, samp_var1, samp_var2, threshold,
         raise ValueError('Too many points specified for resampling for size %s'
                          % (str(len(samp_ids))))
 
-    (true_corr, true_comb_to_rev, false_comb_to_rev,
-     extrema_p, extrema_r) = utils.initialize_stat_dicts(resample_k, n_var1, n_var2,
-                                                   statistic, forward_stats,
-                                                   reverse_stats)
+    # Create dicts of points to track true_sig and reversed-sign correlations
+    true_corr = defaultdict(list)
+    true_comb_to_rev = defaultdict(list)
+    false_comb_to_rev = defaultdict(list)
+
+    # create matrices dict to hold the most extreme values of p and r (for R-sq)
+    extrema_p = {}
+    extrema_r = {}
+    if statistic in forward_stats:
+        extrema_p = defaultdict(lambda: np.ones([n_var1, n_var2]))
+        extrema_r = defaultdict(lambda: np.zeros([n_var1, n_var2]))
+    elif statistic in reverse_stats:
+        extrema_p = defaultdict(lambda: np.zeros([n_var1, n_var2]))
+        extrema_r = defaultdict(lambda: np.ones([n_var1, n_var2]))
 
     # true sig and false insig are lists of tuples
     # where each tuple is a pair of variable indices
