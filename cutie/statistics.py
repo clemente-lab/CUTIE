@@ -10,7 +10,7 @@ import minepy
 import datetime
 import pandas as pd
 import statsmodels.api as sm
-from scipy import statss
+from scipy import stats
 from cutie import parse
 from cutie import output
 from cutie import utils
