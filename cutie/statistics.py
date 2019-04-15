@@ -1307,7 +1307,7 @@ def compute_pc(new_var1, new_var2):
     """
     r_value, p_value = stats.pearsonr(new_var1, new_var2)
 
-    # if p_value is nan
+    # if r_value is nan (p_value is still 1.0)
     if np.isnan(r_value):
         r_value = 0
 
@@ -1323,14 +1323,7 @@ def compute_sc(new_var1, new_var2):
                variable from file 1.
     new_var2 - Array. Same as new_var1 but for file 2.
     """
-
-    # if resulting variables do not contain enough points
-    if new_var1.size < 2 or new_var2.size < 2:
-        p_value = 1
-        r_value = 0
-
-    else:
-        r_value, p_value = stats.spearmanr(new_var1, new_var2)
+    r_value, p_value = stats.spearmanr(new_var1, new_var2)
 
     # if p_value is nan
     if np.isnan(p_value):
