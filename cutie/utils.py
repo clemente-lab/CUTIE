@@ -5,9 +5,7 @@ import numpy as np
 from collections import defaultdict
 import itertools
 
-from cutie import parse
 from cutie import output
-
 
 
 def indicator(n_var1, n_var2, initial_corr, true_corr):
@@ -91,6 +89,7 @@ def init_var_indicators(var1_index, var2_index, samp_var1, samp_var2, forward):
     var2 = samp_var2[:, var2_index]
     return exceeds, reverse, extrema_p, extrema_r, var1, var2
 
+
 def return_indicators(n_var1, n_var2, initial_corr, true_corr, resample_k):
     """
     Construct indicator matrices for keeping track of false_corrs.
@@ -102,9 +101,9 @@ def return_indicators(n_var1, n_var2, initial_corr, true_corr, resample_k):
                    set of correlations deemed initially significant or
                    insignificant (in CUtIe or reverse CUtIe, respectively)
                    prior to resampling
-    true_corr    - Set of tuples for a given k referring to variable pairs
-                   deemed true correlations following resampling of k points
-                   according to CUtie.
+    true_corr    - Dictionary indexed by k value containing lists of tuples
+                   referring to variable pairs deemed true correlations following
+                   resampling of k points according to CUtie.
     resample_k   - Integer. Number of points being resampled by CUtIe.
 
     OUTPUTS
@@ -114,10 +113,9 @@ def return_indicators(n_var1, n_var2, initial_corr, true_corr, resample_k):
     """
     indicators = {}
     for i in range(resample_k):
-        indicators[str(i+1)] = indicator(n_var1, n_var2, initial_corr,
-                                         true_corr[str(i+1)])
-
+        indicators[str(i + 1)] = indicator(n_var1, n_var2, initial_corr, true_corr[str(i + 1)])
     return indicators
+
 
 def remove_nans(var1, var2):
     """
@@ -170,6 +168,7 @@ def get_param(samp_var1, samp_var2):
 
     return n_var1, n_var2, n_samp
 
+
 def calculate_intersection(names, sets, log_fp):
     """
     Calculates all possible intersection (i.e. Venn Diagram) of sets.
@@ -191,16 +190,15 @@ def calculate_intersection(names, sets, log_fp):
                    that set (e.g. variable pairs)
 
     """
-    # temporary mapping of name  to set
-    name_to_set = {}
-    for i in range(len(names)):
-        name_to_set[names[i]] = sets[i]
+    # temporary mapping of name to set
+    name_to_set = {names[i]: sets[i] for i in range(len(names))}
 
     # get regions and initialize default dict of list
     region_combs = []
     for i in range(1, len(names)+1):
         els = [list(x) for x in itertools.combinations(names, i)]
         region_combs.extend(els)
+
     region_sets = defaultdict(list)
 
     # create union of sets
@@ -223,66 +221,7 @@ def calculate_intersection(names, sets, log_fp):
 
         region_sets[str(region)] = final_set
 
-        output.write_log('The amount of unique elements in set ' + \
-            str(region) + ' is ' + str(len(final_set)), log_fp)
+        output.write_log('The amount of unique elements in set ' +
+                         str(region) + ' is ' + str(len(final_set)), log_fp)
 
-    return region_combs, region_sets
-
-
-def initialize_stat_dicts(resample_k, n_var1, n_var2, statistic, forward_stats,
-                          reverse_stats):
-    """
-    Create empty dicts for keeping track of CUtIe analysis.
-    ----------------------------------------------------------------------------
-    INPUTS
-    resample_k        - Integer. Number of points being resampled by CUtIe.
-    n_var1            - Integer. Number of variables in file 1.
-    n_var2            - Integer. Number of variables in file 2.
-    statistic         - String. Describes analysis being performed.
-
-    forward_stats     - List of strings. Contains list of statistics e.g. 'kpc'
-                        'jkp' that pertain to forward (non-reverse) CUtIe
-                        analysis.
-    reverse_stats     - List of strings. Contains list of statistics e.g. 'rpc'
-                        'rjkp' that pertain to reverse CUtIe analysis.
-
-    OUTPUTS
-    true_corr         - Set of integer tuples. Contains variable pairs
-                        classified as true correlations (TP or FN, depending on
-                        forward or reverse CUtIe respectively).
-    true_comb_to_rev  - Dictionary. Key is string of number of points being
-                        resampled, and entry is a 2D array of indicators where
-                        the entry in the i-th row and j-th column is 1 if that
-                        particular correlation in the set of true_corr (either
-                        TP or FN) reverses sign upon removal of a point.
-    false_comb_to_rev - Dictionary. Same as true_comb_to_rev but for TN/FP.
-    extrema_p         - Dictionary. Key is number of points being resampled and
-                        entry is 2D array where row i col j refers to worst or
-                        best (if CUtIe or reverse CUtIe is run, respectively)
-                        for correlation between var i and var j.
-    extrema_r         - Dictionary. Same as extrema_p except values stored are
-                        correlation strengths.
-    """
-    # create dicts of points to track true_sig and reversed-sign correlations
-    true_corr = {}
-    true_comb_to_rev = {}
-    false_comb_to_rev = {}
-
-    # create matrices dict to hold the most extreme values of p and r (for R-sq)
-    extrema_p = {}
-    extrema_r = {}
-
-    # initialize dictionary entries as empty lists
-    for i in range(resample_k):
-        true_corr[str(i+1)] = []
-        true_comb_to_rev[str(i+1)] = []
-        false_comb_to_rev[str(i+1)] = []
-        if statistic in forward_stats:
-            extrema_p[str(i+1)] = np.ones([n_var1, n_var2])
-            extrema_r[str(i+1)] = np.zeros([n_var1, n_var2])
-        elif statistic in reverse_stats:
-            extrema_p[str(i+1)] = np.zeros([n_var1, n_var2])
-            extrema_r[str(i+1)] = np.ones([n_var1, n_var2])
-
-    return true_corr, true_comb_to_rev, false_comb_to_rev, extrema_p, extrema_r
-
+    return region_sets
