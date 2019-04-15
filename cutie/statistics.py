@@ -1,22 +1,18 @@
 #!/usr/bin/env python
 from __future__ import division
 import matplotlib
-import os
 import math
 import itertools
 import numpy as np
 import minepy
-import datetime
 import pandas as pd
 import statsmodels.api as sm
 from scipy import stats
-from cutie import parse
 from cutie import output
 from cutie import utils
 from collections import defaultdict
 
 matplotlib.use('Agg')
-
 
 
 def assign_statistics(samp_var1, samp_var2, statistic, pearson_stats,
@@ -246,7 +242,7 @@ def set_threshold(pvalues, alpha, mc, log_fp, paired=False):
     """
     output.write_log('The type of mc correction used was ' + mc, log_fp)
     pvalues_copy = np.copy(pvalues)
-    if paired == True:
+    if paired:
         # fill the upper diagonal with nan as to not double count pvalues in FDR
         pvalues_copy[np.triu_indices(pvalues_copy.shape[1], 0)] = np.nan
         # currently computing all pairs double counting
@@ -281,12 +277,11 @@ def set_threshold(pvalues, alpha, mc, log_fp, paired=False):
     return threshold, n_corr
 
 
-
 ###
 # Zero handling for log transform
 ###
 
-def multi_zeros(n_samp, n_var, samp_var):
+def multi_zeros(samp_var):
     """
     INPUTS
     samp_var: 2D array where each entry in row i col j refers to relative
@@ -297,21 +292,19 @@ def multi_zeros(n_samp, n_var, samp_var):
     samp_var_clr:    2D centered log ratio matrix, each row of mr divided by its geometric mean
     samp_var_lclr:   2D log of CLR matrix, log of each row
     samp_var_varlog: 1D variance of lclr matrix, element j refers to variance of col j
-    correction:       threshold used for correction (currently min(samp_var_matrix / 2))
-    n_zero:           number of 0's detected in the original samp_var_matrix
 
     FUNCTION
     Eliminates 0's from a matrix and replaces it with a multiplicative threshold
     correction, using the smallest value divided by 2 as the replacement.
     """
-    # create working copy
-    samp_var_mr = np.copy(samp_var)
+    n_samp = len(samp_var)
+    n_var = len(samp_var[0])
 
     # obtain 0 correction value
     correction = zero_replacement(samp_var)
 
     # replace 0s with correction
-    samp_var_mr = multi_replacement(correction, samp_var, samp_var_mr)
+    samp_var_mr = np.where(0 != samp_var, samp_var, correction)
 
     # create array of geometric means for log clr correction
     samp_var_gm = np.zeros(n_samp)
@@ -330,33 +323,6 @@ def multi_zeros(n_samp, n_var, samp_var):
     return samp_var_mr, samp_var_clr, samp_var_lclr, samp_var_varlog
 
 
-def multi_replacement(correction, samp_var, samp_var_mr):
-    """
-    Helper function for multi_zeros(). Replaces 0 values in a 2D array with a
-    value specified by correction in accordance with the multiplicative
-    replacement procedure for dealing with 0s.
-    ----------------------------------------------------------------------------
-    INPUTS
-    correction  - Float. Value with which to replace 0s.
-    samp_var    - 2D array. Each value in row i col j is the level of variable j
-                  corresponding to sample i in the order that the samples are
-                  presented in samp_ids.
-    samp_var_mr - 2D array. Copy of samp_var in which 0s will be replaced.
-    """
-    n_var, n_var, n_samp = utils.get_param(samp_var, samp_var)
-
-    samp_var_mr[samp_var_mr == 0] = correction
-
-    # correct non-zero values
-    for i in range(n_samp):
-        nrow_zero = len(np.where(samp_var[i] == 0)[0])
-        for j in range(n_var):
-            if samp_var[i][j] != 0:
-                samp_var_mr[i][j] = samp_var_mr[i][j] * (1 - nrow_zero * correction)
-
-    return samp_var_mr
-
-
 def zero_replacement(samp_var):
     """
     Helper function for multi_zeros(). Obtains value for zero replacement by
@@ -368,10 +334,19 @@ def zero_replacement(samp_var):
                corresponding to sample i in the order that the samples are
                presented in samp_ids.
     """
-    # find min non-zero value
-    min_value = min(samp_var[np.nonzero(samp_var)])
+    # Flatten 2D array to one dimension and remove duplicates
+    flat_arr = set(np.array(samp_var).flatten())
+    # Remove all zero values
+    filtered = [x for x in flat_arr if not x == 0]
+    # If no values remain raise an error
+    if not filtered:
+        raise ValueError('Input array must contain non-zero values')
+    # Otherwise find the minimum
+    min_value = float(min(filtered))
+
+    # Find the correction value
     if min_value < 1:
-        correction = min_value ** 2 # or use divided by 2)
+        correction = min_value ** 2  # or use divided by 2)
     else:
         correction = min_value / 2
 
@@ -380,6 +355,7 @@ def zero_replacement(samp_var):
 ###
 # Pointwise diagnostics
 ###
+
 
 def resample1_cutie_pc(var1_index, var2_index, samp_var1, samp_var2, influence1,
                        influence2, threshold, sign, fold, fold_value):
@@ -420,10 +396,10 @@ def resample1_cutie_pc(var1_index, var2_index, samp_var1, samp_var2, influence1,
     n_var1, n_var2, n_samp = utils.get_param(samp_var1, samp_var2)
 
     exceeds, reverse, maxp, minr, var1, var2 = utils.init_var_indicators(var1_index,
-                                                                   var2_index,
-                                                                   samp_var1,
-                                                                   samp_var2,
-                                                                   True)
+                                                                         var2_index,
+                                                                         samp_var1,
+                                                                         samp_var2,
+                                                                         True)
     corrs = np.zeros(n_samp)
     p_values = np.zeros(n_samp)
 
@@ -447,7 +423,7 @@ def resample1_cutie_pc(var1_index, var2_index, samp_var1, samp_var2, influence1,
         if fold:
             if (p_value > threshold and
                 p_value > p_values[var1_index][var2_index] * fold_value) or \
-                np.isnan(p_value):
+                    np.isnan(p_value):
                 exceeds[s] += 1
         elif p_value > threshold or np.isnan(p_value):
             exceeds[s] += 1
@@ -514,7 +490,7 @@ def resample1_cutie_sc(var1_index, var2_index, samp_var1, samp_var2, influence1,
             corr, p_value = stats.spearmanr(new_var1_values, new_var2_values)
         if fold:
             if (p_value > threshold and p_value > original_p * fold_value) or \
-                np.isnan(p_value):
+                    np.isnan(p_value):
                 exceeds[sample_index] = 1
         elif p_value > threshold or np.isnan(p_value):
             exceeds[sample_index] = 1
@@ -524,6 +500,7 @@ def resample1_cutie_sc(var1_index, var2_index, samp_var1, samp_var2, influence1,
         p_values[sample_index] = p_value
 
     return reverse, exceeds, corrs, p_values
+
 
 def cookd(var1_index, var2_index, samp_var1, samp_var2,
           influence1, influence2, threshold, sign, fold, fold_value):
@@ -565,7 +542,7 @@ def cookd(var1_index, var2_index, samp_var1, samp_var2,
     # reverse is 0 because sign never changes
     reverse = np.zeros(n_samp)
     exceeds = np.zeros(n_samp)
-    #c is the distance and p is p-value
+    # c is the distance and p is p-value
     (c, p) = influence1.cooks_distance
     for i in range(len(c)):
         if c[i] > 1 or np.isnan(c[i]) or c[i] == 0.0:
@@ -615,7 +592,7 @@ def dffits(var1_index, var2_index, samp_var1, samp_var2,
     dffits_, dffits_threshold = influence1.dffits
     for i in range(n_samp):
         if dffits_[i] > dffits_threshold or dffits_[i] < -dffits_threshold or \
-        np.isnan(dffits_[i]) or dffits_[i] == 0.0:
+                np.isnan(dffits_[i]) or dffits_[i] == 0.0:
             exceeds[i] = 1
 
     return reverse, exceeds, dffits_, [dffits_threshold] * n_samp
@@ -699,6 +676,7 @@ def return_influence(var1, var2, samp_var1, samp_var2):
     fitted2 = model2.fit()
     influence2 = fitted2.get_influence()
     return influence1, influence2
+
 
 def calculate_FP_sets(initial_corr, corrs, samp_var1, samp_var2, infln_metrics,
                       infln_mapping, threshold, fold, fold_value):
@@ -793,13 +771,13 @@ def pointwise_comparison(samp_var1, samp_var2, pvalues, corrs, working_dir,
     """
     n_var1, n_var2, n_samp = utils.get_param(samp_var1, samp_var2)
 
-    infln_metrics = ['cookd', 'cutie_1pc'] #, 'dffits', 'dsr'] # 'dsr'
+    infln_metrics = ['cookd', 'cutie_1pc']  # 'dffits', 'dsr'] # 'dsr'
     infln_mapping = {
         'cutie_1pc': resample1_cutie_pc,
         'cookd': cookd,
-        #'dffits': dffits,
-        #'dsr': dsr
-        }
+        # 'dffits': dffits,
+        # 'dsr': dsr
+    }
 
     # key is metric, entry is set of points FP to that metric
     FP_infln_sets = calculate_FP_sets(initial_corr, corrs, samp_var1, samp_var2,
@@ -817,15 +795,15 @@ def pointwise_comparison(samp_var1, samp_var2, pvalues, corrs, working_dir,
 
     # base regions == infln_metriics for this
     output.generate_pair_matrix(infln_metrics, FP_infln_sets, n_var1, n_var2,
-                         samp_var1, samp_var2, infln_metrics, working_dir)
+                                samp_var1, samp_var2, infln_metrics, working_dir)
 
     # report results
     for metric in infln_metrics:
         metric_FP = FP_infln_sets[metric]
-        output.write_log('The number of false correlations according to ' + \
-            metric + ' is ' + str(len(metric_FP)), log_fp)
-        output.write_log('The number of true correlations according to ' + \
-            metric + ' is ' + str(len(initial_corr) - len(metric_FP)), log_fp)
+        output.write_log('The number of false correlations according to ' +
+                         metric + ' is ' + str(len(metric_FP)), log_fp)
+        output.write_log('The number of true correlations according to ' +
+                         metric + ' is ' + str(len(initial_corr) - len(metric_FP)), log_fp)
 
     return infln_metrics, infln_mapping, FP_infln_sets, region_combs, region_sets
 
@@ -845,12 +823,11 @@ def log_transform(samp_var, working_dir, var_number):
     """
     n_var, n_var, n_samp = utils.get_param(samp_var, samp_var)
 
-    samp_var_mr, samp_var_clr, samp_var_lclr, samp_var_varlog = \
-        multi_zeros(n_samp, n_var, samp_var)
+    samp_var_mr, samp_var_clr, samp_var_lclr, samp_var_varlog = multi_zeros(samp_var)
 
-    header = [str(x+1) for x in range(n_var)]
-    output.print_matrix(samp_var_mr, working_dir + 'data_processing/samp_var' + \
-        str(var_number) + '_mr.txt', header, '\t')
+    header = [str(x + 1) for x in range(n_var)]
+    output.print_matrix(samp_var_mr, working_dir + 'data_processing/samp_var' +
+                        str(var_number) + '_mr.txt', header, '\t')
 
     return np.log(samp_var_mr)
 
@@ -884,8 +861,7 @@ def get_initial_corr(n_var1, n_var2, pvalues, threshold, paired):
                 all_pairs.append(pair)
             # if variables are paired i.e. both x1 and x2 are the same
             # then don't compute corr(i,i)
-            if pvalues[var1][var2] < threshold and \
-            not (paired and (var1 == var2)):
+            if pvalues[var1][var2] < threshold and not (paired and (var1 == var2)):
                 initial_corr.append(pair)
 
     return initial_corr, all_pairs
@@ -893,6 +869,7 @@ def get_initial_corr(n_var1, n_var2, pvalues, threshold, paired):
 ###
 # RESAMPLE K
 ###
+
 
 def updatek_cutie(initial_corr, pvalues, samp_var1, samp_var2, threshold,
                   resample_k, corrs, fold, fold_value, working_dir, CI_method,
@@ -1198,6 +1175,7 @@ def cutiek_true_corr(initial_corr, samp_var1, samp_var2, pvalues, corrs,
             corr_extrema_r, samp_counter, var1_counter, var2_counter,
             exceeds_points, rev_points)
 
+
 def evaluate_correlation_k(var1, var2, n_samp, samp_var1, samp_var2, pvalues,
                            threshold, statistic, index, sign, fold, fold_value,
                            n_replicates, CI_method, forward, forward_stats,
@@ -1295,6 +1273,7 @@ def evaluate_correlation_k(var1, var2, n_samp, samp_var1, samp_var2, pvalues,
         extrema_r = np.max(extrema_r)
 
     return new_rev_corr, new_truths, extrema_p, extrema_r
+
 
 def compute_pc(new_var1, new_var2):
     """
@@ -1394,6 +1373,7 @@ def compute_mine(new_var1, new_var2, pvalue_bins, mine_str, mine_bins):
 
     return p_value, r_value
 
+
 def str_to_pvalues(pvalue_bins, mine_str, mine_bins):
     """
     Convert MIC_str to pvalue using parsed table from MINE.
@@ -1417,6 +1397,7 @@ def str_to_pvalues(pvalue_bins, mine_str, mine_bins):
         mine_p = 1
 
     return mine_p
+
 
 def binarySearchBins(alist, item):
     """
@@ -1575,7 +1556,6 @@ def jackknifek_cutie(var1_index, var2_index, n_samp, samp_var1, samp_var2,
             forward)
         p_values.append(p_value)
 
-
     # generate log confidence interval on p-value
     CI, p_mu, p_sigma = get_pCI(np.array(p_values), n_samp, CI_method)
 
@@ -1658,7 +1638,6 @@ def bootstrap_cutie(var1_index, var2_index, n_samp, samp_var1, samp_var2,
             new_var1.append(var1[new_samp[j]])
             new_var2.append(var2[new_samp[j]])
 
-
         # remove NaNs
         new_var1, new_var2 = utils.remove_nans(new_var1, new_var2)
 
@@ -1690,6 +1669,7 @@ def bootstrap_cutie(var1_index, var2_index, n_samp, samp_var1, samp_var2,
             CI, threshold, exceeds, range(n_samp), False, CI_method)
 
     return reverse, exceeds, extrema_p, extrema_r
+
 
 def resamplek_cutie(var1_index, var2_index, n_samp, samp_var1, samp_var2,
                     pvalues, threshold, resample_k, sign, forward, statistic,
@@ -1780,9 +1760,9 @@ def resamplek_cutie(var1_index, var2_index, n_samp, samp_var1, samp_var2,
         if forward is True:
             # fold change p-value restraint
             if fold:
-                if (p_value > threshold and \
+                if (p_value > threshold and
                     p_value > pvalues[var1_index][var2_index] * fold_value) or \
-                    np.isnan(p_value):
+                        np.isnan(p_value):
                     for i in indices:
                         exceeds[i] += 1
             elif p_value > threshold or np.isnan(p_value):
@@ -1792,9 +1772,9 @@ def resamplek_cutie(var1_index, var2_index, n_samp, samp_var1, samp_var2,
         elif forward is False:
             # fold change p-value restraint
             if fold:
-                if (p_value < threshold and \
+                if (p_value < threshold and
                     p_value < pvalues[var1_index][var2_index] * fold_value) or \
-                    np.isnan(p_value):
+                        np.isnan(p_value):
                     for i in indices:
                         exceeds[i] += 1
             elif p_value < threshold or np.isnan(p_value):
@@ -1806,6 +1786,7 @@ def resamplek_cutie(var1_index, var2_index, n_samp, samp_var1, samp_var2,
 ###
 # Confidence interval handling
 ###
+
 
 def get_pCI(p_values, n_samp, CI_method='log', zero_replace=10e-100):
     """
@@ -1844,6 +1825,7 @@ def get_pCI(p_values, n_samp, CI_method='log', zero_replace=10e-100):
            p_mu + 1.96 * p_sigma / np.sqrt(n_samp))
 
     return pCI, p_mu, p_sigma
+
 
 def test_CI(CI, threshold, exceeds, indices, upper=True, CI_method='log'):
     """
