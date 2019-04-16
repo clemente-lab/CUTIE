@@ -106,8 +106,8 @@ def initial_stats_SLR(samp_var1, samp_var2, corr_func):
     # subset the data matrices into the cols needed
     for var1 in range(n_var1):
         for var2 in range(n_var2):
-            var1_values, var2_values = remove_nans(samp_var1[:, var1],
-                                                   samp_var2[:, var2])
+            var1_values, var2_values = utils.remove_nans(samp_var1[:, var1],
+                                                         samp_var2[:, var2])
             corrs[var1][var2], pvalues[var1][var2] = corr_func(var1_values,
                                                                var2_values)
 
