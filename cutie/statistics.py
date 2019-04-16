@@ -139,13 +139,11 @@ def initial_stats_MINE(n_var, samp_var, mine_bins, pvalue_bins):
     MIC_pvalues - 2D array. Entry in i-th row, j-th column corresponds to pvalue
                   of MIC str between var i and var j.
     """
-    df = pd.DataFrame(samp_var)
-
     # mine accepts files in OTU table format, so need to transpose
-    df = df.T
+    df = pd.DataFrame(samp_var).T
 
     # drop NA
-    # df = df.dropna(how = 'any', axis = 1)
+    df = df.dropna(how = 'any', axis = 1)
     MIC_flat = minepy.pstats(df, alpha=0.6, c=15, est="mic_approx")[0]
 
     # see MINE API docstrings for indexing

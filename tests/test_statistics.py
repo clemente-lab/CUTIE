@@ -2,6 +2,7 @@
 
 import unittest
 
+import os
 import numpy as np
 from scipy import stats
 from numpy.testing import assert_almost_equal, assert_equal
@@ -44,6 +45,8 @@ class TestStatistics(unittest.TestCase):
         self.mapf = {'stats.pearsonr': stats.pearsonr,
                      'stats.spearmanr': stats.spearmanr,
                      'stats.kendalltau': stats.kendalltau}
+        self.minep_fp = 'n=50,alpha=0.6.csv'
+
 
     def test_compute_pc(self):
         assert_almost_equal((1,0), statistics.compute_pc(self.undef_corr[0],
@@ -97,7 +100,26 @@ class TestStatistics(unittest.TestCase):
         for stat in self.functions:
             assert_almost_equal(true_arrays[stat],
                 statistics.initial_stats_SLR(self.samp_var1, self.samp_var1,
-                    self.mapf[stat]), decimal = 7)
+                    self.mapf[stat]), decimal=7)
+
+    def test_initial_stats_MINE(self):
+
+        # technically improper usage of the p value file but suffices
+        # for testing purposes (sample size does not match)
+        with open(os.path.dirname(os.path.realpath(__file__)) + '/' + \
+            self.minep_fp, 'r') as f:
+                mine_bins, pvalue_bins = parse.parse_minep(f, ',', 13)
+
+        assert_almost_equal((np.array([
+            [1.        , 0.41997309, 0.41997309],
+            [0.41997309, 1.        , 0.97095059],
+            [0.41997309, 0.97095059, 1.        ]]), np.array([
+            [2.5600000e-07, 2.9577243e-02, 2.9577243e-02],
+            [2.9577243e-02, 2.5600000e-07, 2.5600000e-07],
+            [2.9577243e-02, 2.5600000e-07, 2.5600000e-07]])),
+            statistics.initial_stats_MINE(np.shape(self.samp_var1)[1],
+                self.samp_var1, mine_bins, pvalue_bins), decimal=7)
+
 
     def test_zero_replacement(self):
         # Test no zeros
