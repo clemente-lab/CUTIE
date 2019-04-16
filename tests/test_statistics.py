@@ -75,6 +75,7 @@ class TestStatistics(unittest.TestCase):
         self.spearman_stats = ['ksc', 'jks','bss', 'rsc', 'rjks', 'rbss']
         self.kendall_stats = ['kkc', 'jkk', 'bsk', 'rkc', 'rjkk', 'rbsk']
         self.mine_stats = ['mine', 'jkm', 'bsm', 'rmine', 'rjkm', 'rbsm']
+        self.correlation_types = ['kpc', 'ksc', 'kkc', 'mine']
 
         self.functions = ['stats.pearsonr', 'stats.spearmanr', 'stats.kendalltau']
         self.mapf = {'stats.pearsonr': stats.pearsonr,
@@ -145,6 +146,26 @@ class TestStatistics(unittest.TestCase):
                                 [0.1763774 , 1.        , 0.94274506],
                                 [0.1763774 , 0.94274506, 1.        ]])}}
 
+        self.threshold_results = np.array([
+            (0.05, 6, False, 0.0002009),
+            (0.05, 6, False, 0.00481823047),
+            (0.05, 6, False, 0.0229774),
+            (0.05, 6, False, 2.56e-07),
+            (0.016666666666666666, 6, False, 0.0002009),
+            (0.016666666666666666, 6, False, 0.00481823047),
+            (0.016666666666666666, 6, False, 0.0229774),
+            (0.016666666666666666, 6, False, 2.56e-07),
+            (0.016952427508441503, 6, False, 0.0002009),
+            (0.016952427508441503, 6, False, 0.00481823047),
+            (0.016952427508441503, 6, False, 0.0229774),
+            (0.016952427508441503, 6, False, 2.56e-07),
+            (0.05, 6, False, 0.0002009),
+            (0.016666666666666666, 6, False, 0.00481823047),
+            (0.05, 6, True, 0.0229774),
+            (0.05, 6, False, 2.56e-07)])
+
+        self.initial_corr, self.all_pairs = ([(1, 0), (2, 0), (2, 1)],
+                   [(0, 1), (0, 2), (1, 0), (1, 2), (2, 0), (2, 1)])
 
     def test_compute_pc(self):
         assert_almost_equal((1,0), statistics.compute_pc(self.undef_corr[0],
@@ -183,22 +204,48 @@ class TestStatistics(unittest.TestCase):
                 self.samp_var1, self.mine_bins, self.pvalue_bins), decimal=7)
 
     def test_assign_statistics(self):
+        keys = ['pvalues','logpvals','correlations','r2vals']
         # tests kpc, ksc, kkc and mine
-        for stat in ['kpc', 'ksc', 'kkc', 'mine']:
-            stat_to_matrix = statistics.assign_statistics(self.samp_var1,
+        for stat in self.correlation_types:
+            stats_vals = statistics.assign_statistics(self.samp_var1,
                 self.samp_var1, stat, self.pearson_stats, self.spearman_stats,
                 self.kendall_stats, self.mine_stats, self.mine_bins,
                 self.pvalue_bins)
 
-            for k in stat_to_matrix.keys():
-                assert_almost_equal(self.assign_statistics_truths[stat][k],
-                                    stat_to_matrix[k], decimal=7)
+            for k in range(len(keys)):
+                assert_almost_equal(self.assign_statistics_truths[stat][keys[k]],
+                                    stats_vals[k], decimal=7)
 
         # assertRaise for valuerror, 'kpp' not a valid stat string
         self.assertRaises(ValueError, statistics.assign_statistics,
             self.samp_var1, self.samp_var2, 'kpp',
             self.pearson_stats, self.spearman_stats, self.kendall_stats,
             self.mine_stats, self.mine_bins, self.pvalue_bins)
+
+    def test_set_threshold(self):
+        mc_types = ['nomc', 'bc', 'fwer', 'fdr']
+        results = []
+        for mc in mc_types:
+            for stat in self.correlation_types:
+                results.append(statistics.set_threshold(
+                    self.assign_statistics_truths[stat]['pvalues'],
+                    0.05, mc, paired=True))
+        assert_almost_equal(self.threshold_results, np.array(results), decimal=7)
+
+    def test_get_initial_corr(self):
+        pvalues = self.assign_statistics_truths['kpc']['pvalues']
+        threshold, n_corr, defaulted, minp = statistics.set_threshold(pvalues,
+            0.05, 'nomc', True)
+        n_var1, n_var2, n_samp = utils.get_param(self.samp_var1, self.samp_var1)
+        assert (self.initial_corr, self.all_pairs) == statistics.get_initial_corr(
+            n_var1, n_var2, pvalues, threshold, True)
+
+
+
+
+
+
+
 
 
     def test_zero_replacement(self):
@@ -233,13 +280,9 @@ class TestStatistics(unittest.TestCase):
         self.assertRaises(ValueError, statistics.multi_zeros, samp_var)
 
     def test_log_transform(self):
-         # /tests/data_processing/
-        tmpdir = os.path.dirname(os.path.realpath(__file__)) + '/'
-        var_number = 2
-
         # Check no zeros are returned
         samp_var = np.array([np.array([i for i in range(10)]) for j in range(10)])
-        transformed = statistics.log_transform(samp_var, tmpdir, var_number)
+        transformed = statistics.log_transform(samp_var)
 
         # Further checking of the values would just involve repeating code
         assert not transformed.any() == 0
@@ -248,7 +291,7 @@ class TestStatistics(unittest.TestCase):
         samp_var = [[0 for i in range(10)] for j in range(10)]
 
         # Should raise a value error
-        self.assertRaises(ValueError, statistics.log_transform, samp_var, str(tmpdir), var_number)
+        self.assertRaises(ValueError, statistics.log_transform, samp_var)
 
 if __name__ == '__main__':
     unittest.main()
