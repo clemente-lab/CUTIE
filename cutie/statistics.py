@@ -54,41 +54,25 @@ def assign_statistics(samp_var1, samp_var2, statistic, pearson_stats,
     stat_to_matrix = {}
 
     if statistic in pearson_stats:
-        stat_array = initial_stats_SLR(samp_var1, samp_var2, stats.pearsonr)
+        corrs, pvalues = initial_stats_SLR(samp_var1, samp_var2, stats.pearsonr)
         # Index 0 gets you the r values, 1 gets the p values
-        stat_to_matrix['pvalues'] = stat_array[1]
-        stat_to_matrix['logpvals'] = np.log(stat_array[1])
-        stat_to_matrix['correlations'] = stat_array[0]
-        stat_to_matrix['r2vals'] = np.square(stat_array[0])
 
     elif statistic in spearman_stats:
-        stat_dict = initial_stats_SLR(samp_var1, samp_var2, stats.spearmanr)
-
-        stat_to_matrix['pvalues'] = stat_array[1]
-        stat_to_matrix['logpvals'] = np.log(stat_array[1])
-        stat_to_matrix['correlations'] = stat_array[0]
-        stat_to_matrix['r2vals'] = stat_array[0]
-        # filler, same as correlations
+        corrs, pvalues = initial_stats_SLR(samp_var1, samp_var2, stats.spearmanr)
 
     elif statistic in kendall_stats:
-        stat_dict = initial_stats_SLR(samp_var1, samp_var2, stats.kendalltau)
-        stat_to_matrix['pvalues'] = stat_array[1]
-        stat_to_matrix['logpvals'] = np.log(stat_array[1])
-        stat_to_matrix['correlations'] = stat_array[0]
-        stat_to_matrix['r2vals'] = stat_array[0]
-        # filler, same as correlations
+        corrs, pvalues = initial_stats_SLR(samp_var1, samp_var2, stats.kendalltau)
 
     elif statistic in mine_stats:
-        MIC_str, MIC_pvalues = initial_stats_MINE(n_var1, samp_var1,
+        corrs, pvalues = initial_stats_MINE(n_var1, samp_var1,
                                                   mine_bins, pvalue_bins)
-        stat_to_matrix['pvalues'] = MIC_pvalues
-        stat_to_matrix['logpvals'] = np.log(stat_to_matrix['pvalues'])
-        stat_to_matrix['correlations'] = MIC_str
-        stat_to_matrix['r2vals'] = MIC_str
-        # filler, same as correlations
-
     else:
         raise ValueError('Invalid statistic chosen: ' + statistic)
+
+    stat_to_matrix['pvalues'] = pvalues
+    stat_to_matrix['logpvals'] = np.log(pvalues)
+    stat_to_matrix['correlations'] = corrs
+    stat_to_matrix['r2vals'] = np.square(corrs)
 
     return stat_to_matrix
 
@@ -117,27 +101,18 @@ def initial_stats_SLR(samp_var1, samp_var2, corr_func):
     """
     n_var1, n_var2, n_samp = utils.get_param(samp_var1, samp_var2)
 
-    # retrieve relevant stats and create dictionary entry, 3D array
-    rel_stats = ['correlation', 'pvalue']
-    stat_array = np.zeros((len(rel_stats), n_var1, n_var2))
+    corrs = np.zeros(n_var1, n_var2)
+    pvalues = np.zeros(n_var1, n_var2)
 
     # subset the data matrices into the cols needed
     for var1 in range(n_var1):
         for var2 in range(n_var2):
-            var1_values = samp_var1[:, var1]
-            var2_values = samp_var2[:, var2]
-            var1_values, var2_values = remove_nans(var1_values, var2_values)
+            var1_values, var2_values = remove_nans(samp_var1[:, var1],
+                                                   samp_var2[:, var2])
+            corrs[var1][var2], pvalues[var1][var2] = corr_func(var1_values,
+                                                               var2_values)
 
-            # values is a list of the relevant_stats in order
-            if len(var1_values) == 0 or len(var2_values) == 0:
-                values = np.zeros([len(rel_stats)])
-                values[:] = np.nan
-            else:
-                values = corr_func(var1_values, var2_values)
-            for s in range(len(values)):
-                stat_array[s][var1][var2] = values[s]
-
-    return stat_array
+    return corrs, pvalues
 
 
 def initial_stats_MINE(n_var, samp_var, mine_bins, pvalue_bins):
