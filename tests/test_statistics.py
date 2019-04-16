@@ -1,8 +1,8 @@
 #!/usr/bin/python
 
 import unittest
-
 import os
+import itertools
 import numpy as np
 from scipy import stats
 from numpy.testing import assert_almost_equal, assert_equal
@@ -168,12 +168,28 @@ class TestStatistics(unittest.TestCase):
             (0.05, 6, False, 2.56e-07)])
 
         # specific to pearson, bonferroni
+        self.resample_k = 1
         self.pvalues = self.assign_statistics_truths['kpc']['pvalues']
         self.correlations = self.assign_statistics_truths['kpc']['correlations']
         self.threshold = self.threshold_results[5][0]
         self.initial_corr, self.all_pairs = ([(0, 1), (1, 0), (1, 2), (2, 1)],
             [(0, 1), (0, 2), (1, 0), (1, 2), (2, 0), (2, 1)])
         self.fold_value = 100
+        self.CI_results = {
+            'log': ((-171.62134974793022, 12.116703383175945),
+                    -79.75232318237714, 104.80887164658711),
+            'cbrt': ((0.023205742593382067, 0.22102055617426344),
+                     0.12211314938382276, 0.11283861482737229),
+            'none': ((1.8032903153653718e-05, 0.013368393763513012),
+                     0.006693213333333333, 0.007615386328550027)}
+        self.CI_exceeds = {
+            'log': ([1., 1., 1., 1., 1.], [1., 1., 1., 1., 1.]),
+            'cbrt': ([0., 0., 0., 0., 0.], [1., 1., 1., 1., 1.]),
+            'none': ([0., 0., 0., 0., 0.], [1., 1., 1., 1., 1.])
+        }
+
+
+
 
     def test_compute_pc(self):
         assert_almost_equal((1,0), statistics.compute_pc(self.undef_corr[0],
@@ -307,16 +323,25 @@ class TestStatistics(unittest.TestCase):
                           infln_mapping, threshold, fold, fold_value):'''
 
     def test_get_pCI(self):
-        CI_results = {
-            'log': ((-171.62134974793022, 12.116703383175945),
-                    -79.75232318237714, 104.80887164658711),
-            'cbrt': ((0.023205742593382067, 0.22102055617426344),
-                     0.12211314938382276, 0.11283861482737229),
-            'none': ((1.8032903153653718e-05, 0.013368393763513012),
-                     0.006693213333333333, 0.007615386328550027)}
+        # test generation of CI for p value
         for method in ['log', 'cbrt', 'none']:
-            assert(CI_results[method] == statistics.get_pCI(self.pvalues,
+            assert(self.CI_results[method] == statistics.get_pCI(self.pvalues,
                 self.n_samp,method))
+
+    def test_test_CI(self):
+        # test testing of confidence interval
+        combs = [list(x) for x in itertools.combinations(range(self.n_samp), self.resample_k)]
+        for method in ['log', 'cbrt', 'none']:
+            exceeds = np.zeros(self.n_samp)
+            # if forward is True i.e. TP/FP
+            assert_almost_equal(self.CI_exceeds[method][0], statistics.test_CI(
+                self.CI_results[method][0], self.threshold, exceeds,
+                [item for sublist in combs for item in sublist], True, method))
+            # if forward is False i.e. TN/FN
+            exceeds = np.zeros(self.n_samp)
+            assert_almost_equal(self.CI_exceeds[method][1], statistics.test_CI(
+                self.CI_results[method][0], self.threshold, exceeds,
+                [item for sublist in combs for item in sublist], False, method))
 
 
     def test_zero_replacement(self):
