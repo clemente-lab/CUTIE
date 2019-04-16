@@ -120,10 +120,10 @@ def calculate_cutie(defaults_fp, config_fp):
 
     # log transform of data (if log_transform1 or log_transform2 are true)
     if log_transform1:
-        samp_var1 = statistics.log_transform(samp_var1, working_dir, 1)
+        samp_var1 = statistics.log_transform(samp_var1)
         output.write_log('Variable 1 was log-transformed')
     if log_transform2:
-        samp_var2 = statistics.log_transform(samp_var2, working_dir, 2)
+        samp_var2 = statistics.log_transform(samp_var2)
         output.write_log('Variable 2 was log-transformed')
 
     ###
@@ -151,8 +151,13 @@ def calculate_cutie(defaults_fp, config_fp):
     r2vals = stat_to_matrix['r2vals']
 
     # determine significance threshold and number of correlations
-    threshold, n_corr = statistics.set_threshold(pvalues, alpha, mc, log_fp,
-                                                 paired)
+    output.write_log('The type of mc correction used was ' + mc, log_fp)
+    threshold, n_corr, defaulted, minp = statistics.set_threshold(pvalues,
+        alpha, mc, paired)
+    if defaulted:
+        output.write_log('Warning: no p-values below threshold, defaulted \
+            with min(p) = ' + str(minp), log_fp)
+    output.write_log('The threshold value was ' + str(threshold), log_fp)
 
     # calculate initial sig candidates
     initial_corr, all_pairs = statistics.get_initial_corr(n_var1, n_var2,
@@ -181,6 +186,23 @@ def calculate_cutie(defaults_fp, config_fp):
             region_sets) = statistics.pointwise_comparison(samp_var1, samp_var2,
             pvalues, corrs, working_dir, n_corr, initial_corr, threshold,
             statistic, fold_value, log_fp, paired, fold)
+
+        for region in region_combs:
+            output.write_log('The amount of unique elements in set ' +
+                             str(region) + ' is ' +
+                             str(len(region_sets[str(region)])), log_fp)
+
+        output.generate_pair_matrix(infln_metrics, FP_infln_sets, n_var1, n_var2,
+                                samp_var1, samp_var2, working_dir)
+
+        # report results
+        for metric in infln_metrics:
+            metric_FP = FP_infln_sets[metric]
+            output.write_log('The number of false correlations according to ' +
+                             metric + ' is ' + str(len(metric_FP)), log_fp)
+            output.write_log('The number of true correlations according to ' +
+                             metric + ' is ' + str(len(initial_corr) - len(metric_FP)),
+                             log_fp)
 
     ###
     # Determine indicator matrix of significance

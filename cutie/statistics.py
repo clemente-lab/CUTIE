@@ -8,11 +8,13 @@ import minepy
 import pandas as pd
 import statsmodels.api as sm
 from scipy import stats
-from cutie import output
 from cutie import utils
 from collections import defaultdict
 
 matplotlib.use('Agg')
+
+# silences divide by 0 warnings and NaN division with correlations
+np.seterr(divide='ignore', invalid='ignore')
 
 
 def assign_statistics(samp_var1, samp_var2, statistic, pearson_stats,
@@ -168,7 +170,7 @@ def initial_stats_MINE(n_var, samp_var, mine_bins, pvalue_bins):
     return MIC_str, MIC_pvalues
 
 
-def set_threshold(pvalues, alpha, mc, log_fp, paired=False):
+def set_threshold(pvalues, alpha, mc, paired=False):
     """
     Computes p-value threshold for alpha according to FDR, Bonferroni, or FWER.
     ----------------------------------------------------------------------------
@@ -184,42 +186,42 @@ def set_threshold(pvalues, alpha, mc, log_fp, paired=False):
 
     OUTPUTS
     threshold - Float. Cutoff of pvalues.
+    n_corr    - Integer. Number of correlations.
+    defaulted - Boolean. True if FDR correction could not be obtained.
     """
-    output.write_log('The type of mc correction used was ' + mc, log_fp)
-    pvalues_copy = np.copy(pvalues)
     if paired:
         # fill the upper diagonal with nan as to not double count pvalues in FDR
-        pvalues_copy[np.triu_indices(pvalues_copy.shape[1], 0)] = np.nan
+        pvalues[np.triu_indices(pvalues.shape[1], 0)] = np.nan
         # currently computing all pairs double counting
-        n_corr = np.size(pvalues_copy, 1) * (np.size(pvalues_copy, 1) - 1)
+        n_corr = np.size(pvalues, 1) * (np.size(pvalues, 1) - 1)
     else:
-        n_corr = np.size(pvalues_copy, 0) * np.size(pvalues_copy, 1)
+        n_corr = np.size(pvalues, 0) * np.size(pvalues, 1)
 
     # determine threshold based on multiple comparisons setting
-    pvalues_copy = np.sort(pvalues_copy.flatten())
-    pvalues_copy = pvalues_copy[~np.isnan(pvalues_copy)]
+    pvalues = np.sort(pvalues.flatten())
+    pvalues = pvalues[~np.isnan(pvalues)]
+    defaulted = False
+    minp = min(pvalues)
     if mc == 'nomc':
         threshold = alpha
     elif mc == 'bc':
-        threshold = alpha / pvalues_copy.size
+        threshold = alpha / pvalues.size
     elif mc == 'fwer':
-        threshold = 1.0 - (1.0 - alpha) ** (1/(pvalues_copy.size))
+        threshold = 1.0 - (1.0 - alpha) ** (1/(pvalues.size))
     elif mc == 'fdr':
         # compute FDR cutoff
         # https://brainder.org/2011/09/05/fdr-corrected-fdr-adjusted-p-values/
         # http://www.biostathandbook.com/multiplecomparisons.html
         cn = 1.0
-        thresholds = np.array([(float(k+1))/(len(pvalues_copy))
-                               * alpha / cn for k in range(len(pvalues_copy))])
-        compare = np.where(pvalues_copy <= thresholds)[0]
+        thresholds = np.array([(float(k+1))/(len(pvalues))
+                               * alpha / cn for k in range(len(pvalues))])
+        compare = np.where(pvalues <= thresholds)[0]
         if len(compare) is 0:
             threshold = alpha
-            output.write_log('Warning: no p-values below threshold, defaulted \
-                with min(p) = ' + str(min(pvalues_copy)), log_fp)
+            defaulted = True
         else:
             threshold = thresholds[max(compare)]
-    output.write_log('The threshold value was ' + str(threshold), log_fp)
-    return threshold, n_corr
+    return threshold, n_corr, defaulted, minp
 
 
 ###
@@ -734,26 +736,13 @@ def pointwise_comparison(samp_var1, samp_var2, pvalues, corrs, working_dir,
     for metric in infln_metrics:
         FP_infln_sets_list.append(FP_infln_sets[metric])
 
-    region_sets = utils.calculate_intersection(infln_metrics,
-                                               FP_infln_sets_list,
-                                               log_fp)
-
-    # base regions == infln_metriics for this
-    output.generate_pair_matrix(infln_metrics, FP_infln_sets, n_var1, n_var2,
-                                samp_var1, samp_var2, infln_metrics, working_dir)
-
-    # report results
-    for metric in infln_metrics:
-        metric_FP = FP_infln_sets[metric]
-        output.write_log('The number of false correlations according to ' +
-                         metric + ' is ' + str(len(metric_FP)), log_fp)
-        output.write_log('The number of true correlations according to ' +
-                         metric + ' is ' + str(len(initial_corr) - len(metric_FP)), log_fp)
+    region_sets, region_combs = utils.calculate_intersection(infln_metrics,
+                                               FP_infln_sets_list)
 
     return infln_metrics, infln_mapping, FP_infln_sets, region_combs, region_sets
 
 
-def log_transform(samp_var, working_dir, var_number):
+def log_transform(samp_var):
     """
     Computes log-transform of 2D np array after 0 replacement is performed.
     ----------------------------------------------------------------------------
@@ -761,19 +750,10 @@ def log_transform(samp_var, working_dir, var_number):
     samp_var     - 2D array. Each value in row i col j is the level of
                    variable j corresponding to sample i in the order that the
                    samples are presented in samp_ids.
-    working_dir  - String. File path of working directory specified by user.
-                   Should end in '/'
-    var_number   - Integer. Represents if file 1 or file 2 is being
-                   log-transformed (or both).
     """
     n_var, n_var, n_samp = utils.get_param(samp_var, samp_var)
 
     samp_var_mr, samp_var_clr, samp_var_lclr, samp_var_varlog = multi_zeros(samp_var)
-
-    header = [str(x + 1) for x in range(n_var)]
-    output.print_matrix(samp_var_mr, working_dir + 'data_processing/samp_var' +
-                        str(var_number) + '_mr.txt', header, '\t')
-
     return np.log(samp_var_mr)
 
 
