@@ -139,16 +139,10 @@ def calculate_cutie(defaults_fp, config_fp):
         mine_bins = np.nan
         pvalue_bins = np.nan
 
-    # statistic-specific initial output
-    stat_to_matrix = statistics.assign_statistics(samp_var1, samp_var2,
-        statistic, pearson_stats, spearman_stats, kendall_stats, mine_stats,
-        mine_bins, pvalue_bins, f1type, log_fp)
-
-    # unpack statistic matrices
-    pvalues = stat_to_matrix['pvalues']
-    corrs = stat_to_matrix['correlations']
-    logpvals = stat_to_matrix['logpvals']
-    r2vals = stat_to_matrix['r2vals']
+    # initial output
+    pvalues, logpvals, corrs, r2vals = statistics.assign_statistics(samp_var1,
+        samp_var2, statistic, pearson_stats, spearman_stats, kendall_stats,
+        mine_stats, mine_bins, pvalue_bins, f1type, log_fp)
 
     # determine significance threshold and number of correlations
     output.write_log('The type of mc correction used was ' + mc, log_fp)
@@ -182,10 +176,16 @@ def calculate_cutie(defaults_fp, config_fp):
     # if interested in evaluating dffits, dsr, etc.
     region_sets = []
     if corr_compare:
-        (infln_metrics, infln_mapping, FP_infln_sets, region_combs,
-            region_sets) = statistics.pointwise_comparison(samp_var1, samp_var2,
-            pvalues, corrs, working_dir, n_corr, initial_corr, threshold,
-            statistic, fold_value, log_fp, paired, fold)
+        infln_metrics = ['cutie_1pc', 'cookd', 'dffits', 'dsr']
+        infln_mapping = {
+            'cutie_1pc': statistics.resample1_cutie_pc,
+            'cookd': statistics.cookd,
+            'dffits': statistics.dffits,
+            'dsr': statistics.dsr
+        }
+        (FP_infln_sets, region_combs, region_sets) = statistics.pointwise_comparison(
+            infln_metrics, infln_mapping, samp_var1, samp_var2, pvalues, corrs,
+            n_corr, initial_corr, threshold, statistic, fold_value, paired, fold)
 
         for region in region_combs:
             output.write_log('The amount of unique elements in set ' +

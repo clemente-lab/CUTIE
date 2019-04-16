@@ -5,7 +5,7 @@ import os
 import itertools
 import numpy as np
 from scipy import stats
-from numpy.testing import assert_almost_equal, assert_equal
+from numpy.testing import assert_almost_equal, assert_equal, assert_array_almost_equal
 
 from cutie import output, parse, utils, statistics
 
@@ -169,6 +169,7 @@ class TestStatistics(unittest.TestCase):
 
         # specific to pearson, bonferroni
         self.resample_k = 1
+        self.n_corr = self.threshold_results[0][1]
         self.pvalues = self.assign_statistics_truths['kpc']['pvalues']
         self.correlations = self.assign_statistics_truths['kpc']['correlations']
         self.threshold = self.threshold_results[5][0]
@@ -188,8 +189,56 @@ class TestStatistics(unittest.TestCase):
             'none': ([0., 0., 0., 0., 0.], [1., 1., 1., 1., 1.])
         }
 
+        # specific to pearson, paired var1 = 1 var2 = 2 with bonferonni
+        self.pointwise_results = {
+            'cutie_1pc': (np.array([0., 0., 0., 0., 0.]),
+                np.array([0., 0., 0., 0., 1.]),
+                np.array([0.99680549, 0.99715323, 0.9969853 , 1.        , 0.94672926]),
+                np.array([0.00319451, 0.00284677, 0.0030147 , 0.        , 0.05327074])),
+            'cookd': (np.array([0., 0., 0., 0., 0.]),
+                np.array([0., 0., 0., 0., 1.]),
+                np.array([0.09404442, 0.02992931, 0.05956787, 0.45      , 4.2525    ]),
+                np.array([0.91282234, 0.97080017, 0.94325794, 0.67466001, 0.1331533 ])),
+            'dffits': (np.array([0., 0., 0., 0., 0.]),
+                np.array([0., 0., 0., 1., 1.]),
+                np.array([-3.79941633e-01, -2.07830404e-01, -2.98360772e-01, 1.56747721e+14, -2.49615088]),
+                np.array([1.26491106, 1.26491106, 1.26491106, 1.26491106, 1.26491106])),
+            'dsr': (np.array([0., 0., 0., 0., 0.]),
+                np.array([0., 0., 0., 1., 0.]),
+                np.array([-5.49963131e-01, -4.05925012e-01, -4.91552039e-01,  2.86180876e+14, -4.44749590e-01]),
+                np.array([-5.49963131e-01, -4.05925012e-01, -4.91552039e-01,  2.86180876e+14, -4.44749590e-01]))}
 
+        self.infln_metrics = ['cutie_1pc', 'cookd', 'dffits', 'dsr']
+        self.infln_mapping = {
+            'cutie_1pc': statistics.resample1_cutie_pc,
+            'cookd': statistics.cookd,
+            'dffits': statistics.dffits,
+            'dsr': statistics.dsr
+        }
+        self.infln_results = {
+            'cutie_1pc': set(),
+            'cookd': {(0, 1), (1, 0), (2, 1), (1, 2)},
+            'dffits': {(0, 1), (1, 0), (2, 1), (1, 2)},
+            'dsr': {(1, 2), (1, 0), (2, 1)}}
 
+        self.complete_pointwise_results = (
+            {'cutie_1pc': {(0, 1), (1, 0), (2, 1), (1, 2)},
+            'cookd': {(0, 1), (1, 0), (2, 1), (1, 2)},
+            'dffits': {(0, 1), (1, 0), (2, 1), (1, 2)},
+            'dsr': {(1, 2), (1, 0), (2, 1)}},
+            [['cutie_1pc'], ['cookd'], ['dffits'], ['dsr'], ['cutie_1pc', 'cookd'],
+            ['cutie_1pc', 'dffits'], ['cutie_1pc', 'dsr'], ['cookd', 'dffits'],
+            ['cookd', 'dsr'], ['dffits', 'dsr'], ['cutie_1pc', 'cookd', 'dffits'],
+            ['cutie_1pc', 'cookd', 'dsr'], ['cutie_1pc', 'dffits', 'dsr'],
+            ['cookd', 'dffits', 'dsr'], ['cutie_1pc', 'cookd', 'dffits', 'dsr']],
+            {"['cutie_1pc']": set(), "['cookd']": set(), "['dffits']": set(),
+            "['dsr']": set(), "['cutie_1pc', 'cookd']": set(),
+            "['cutie_1pc', 'dffits']": set(), "['cutie_1pc', 'dsr']": set(),
+            "['cookd', 'dffits']": set(), "['cookd', 'dsr']": set(),
+            "['dffits', 'dsr']": set(), "['cutie_1pc', 'cookd', 'dffits']": {(0, 1)},
+            "['cutie_1pc', 'cookd', 'dsr']": set(), "['cutie_1pc', 'dffits', 'dsr']": set(),
+            "['cookd', 'dffits', 'dsr']": set(),
+            "['cutie_1pc', 'cookd', 'dffits', 'dsr']": {(1, 2), (1, 0), (2, 1)}})
 
     def test_compute_pc(self):
         assert_almost_equal((1,0), statistics.compute_pc(self.undef_corr[0],
@@ -261,30 +310,13 @@ class TestStatistics(unittest.TestCase):
         assert (self.initial_corr, self.all_pairs) == statistics.get_initial_corr(
             self.n_var1, self.n_var2, self.pvalues, self.threshold, True)
 
-
     # no unit test written for return_influence() because the return vars
     # are objects of the sm.OLS class
 
     def test_calculate_FP_sets(self):
-        infln_metrics = ['cutie_1pc', 'cookd', 'dffits', 'dsr']
-        infln_mapping = {
-            'cutie_1pc': statistics.resample1_cutie_pc,
-            'cookd': statistics.cookd,
-            'dffits': statistics.dffits,
-            'dsr': statistics.dsr
-        }
-
-        # results: key is metric, entry is set of points FP to that metric
-        # True signifies that fold is true
-        FP_infln_sets = statistics.calculate_FP_sets(self.initial_corr,
-            self.correlations, self.samp_var1, self.samp_var2, infln_metrics,
-            infln_mapping, self.threshold, True, self.fold_value)
-
-        results = {'cutie_1pc': set(),
-                   'cookd': {(0, 1), (1, 0), (2, 1), (1, 2)},
-                   'dffits': {(0, 1), (1, 0), (2, 1), (1, 2)},
-                   'dsr': {(1, 2), (1, 0), (2, 1)}}
-        assert FP_infln_sets == results
+        assert self.infln_results == statistics.calculate_FP_sets(self.initial_corr,
+            self.correlations, self.samp_var1, self.samp_var2, self.infln_metrics,
+            self.infln_mapping, self.threshold, True, self.fold_value)
 
     def test_str_to_pvalues(self):
         # test str to pvalue conversion for MINE
@@ -307,20 +339,31 @@ class TestStatistics(unittest.TestCase):
         # entry stronger than highest strs
         assert (True, 0) == statistics.binary_search_bins([0.9,0.8,0.7], 0.95)
 
-    '''
-        def test_pointwise_metrics(self):
-            functions = [statistics.resample1_cutie_pc,
-                statistics.resample1_cutie_sc,
-                statistics.cookd,
-                statistics.dffits,
-                statistics.dsr]
-            for f in functions:
-                print(f)
-                print(f(var1_index, var2_index, samp_var1, samp_var2,
-            influence1, influence2, threshold, sign, fold, fold_value))
 
-    def calculate_FP_sets(initial_corr, corrs, samp_var1, samp_var2, infln_metrics,
-                          infln_mapping, threshold, fold, fold_value):'''
+    def test_pointwise_metrics(self):
+        # test cutie, cookd, dffits, dsr for just var1 = 1 var2 = 2
+        var1, var2 = 1,2
+        sign = np.sign(self.correlations[var1][var2])
+        influence1, influence2 = statistics.return_influence(var1=var1,var2=var2,
+            samp_var1=self.samp_var1,samp_var2=self.samp_var1)
+        for f in self.infln_mapping:
+            # -7 because numbers get large
+            assert_almost_equal(self.pointwise_results[f],
+                self.infln_mapping[f](var1, var2, self.samp_var1, self.samp_var1,
+                influence1, influence2, self.threshold, sign, False, self.fold_value), decimal=-7)
+
+    def test_pointwise_comparison(self):
+        assert self.complete_pointwise_results == statistics.pointwise_comparison(
+            self.infln_mapping, self.infln_metrics, self.samp_var1,
+            self.samp_var2, self.pvalues, self.correlations, self.n_corr, self.initial_corr,
+                         self.threshold, 'kpc', self.fold_value, paired=True, fold=False)
+
+
+
+
+
+
+
 
     def test_get_pCI(self):
         # test generation of CI for p value
