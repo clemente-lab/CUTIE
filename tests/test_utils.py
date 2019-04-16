@@ -108,3 +108,62 @@ def test_return_indicators():
 
     # Test a partially empty cases
     assert not utils.return_indicators(n_var1, n_var2, initial_corr, true_corr, 0)
+
+
+def test_indicator():
+    # Test regular input
+    len_var1 = 8
+    len_var2 = 10
+    initial_corr = {(0, 5), (4, 5), (5, 5)}
+    true_corr = {(0, 4), (5, 4), (5, 5)}
+    indicators = utils.indicator(len_var1, len_var2, initial_corr, true_corr)
+
+    for corr in initial_corr:
+        # Should be overwritten by 1 if it's also a true corr
+        if corr not in true_corr:
+            assert indicators[corr[0]][corr[1]] == -1
+
+    for corr in true_corr:
+        assert indicators[corr[0]][corr[1]] == 1
+
+    # Test no corrs
+    indicators = utils.indicator(len_var1, len_var2, {}, {})
+    assert np.all(indicators == 0)
+
+    # Test no vars
+    indicators = utils.indicator(0, 0, {}, {})
+    assert not indicators
+
+
+def test_init_var_indicators():
+    # Test forward
+    forward = True
+    var1_index = 1
+    var2_index = 2
+    samp_var1 = np.array([[x for x in range(5)] for x in range(5)])
+    samp_var2 = np.array([[x for x in range(5)] for x in range(5)])
+    exceeds, reverse, extrema_p, extrema_r, var1, var2 = utils.init_var_indicators(var1_index, var2_index,
+                                                                                   samp_var1, samp_var2,
+                                                                                   forward)
+    assert np.all(exceeds == 0)
+    assert np.all(reverse == 0)
+    assert np.all(extrema_p == 0)
+    assert np.all(extrema_r == 1, axis=0)
+    assert np.all(var1 == 1)
+    assert np.all(var2 == 2)
+
+    # Test reverse
+    forward = False
+    var1_index = 4
+    var2_index = 3
+    samp_var1 = np.array([[x for x in range(5)] for x in range(5)])
+    samp_var2 = np.array([[x for x in range(5)] for x in range(5)])
+    exceeds, reverse, extrema_p, extrema_r, var1, var2 = utils.init_var_indicators(var1_index, var2_index,
+                                                                                   samp_var1, samp_var2,
+                                                                                   forward)
+    assert np.all(exceeds == 0)
+    assert np.all(reverse == 0)
+    assert np.all(extrema_p == 1)
+    assert np.all(extrema_r == 0)
+    assert np.all(var1 == 4)
+    assert np.all(var2 == 3)
