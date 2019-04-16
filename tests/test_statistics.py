@@ -146,7 +146,6 @@ class TestStatistics(unittest.TestCase):
                                 [0.1763774 , 0.94274506, 1.        ]])}}
 
 
-
     def test_compute_pc(self):
         assert_almost_equal((1,0), statistics.compute_pc(self.undef_corr[0],
                                                          self.undef_corr[1]))
