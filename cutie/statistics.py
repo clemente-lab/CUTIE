@@ -64,8 +64,7 @@ def assign_statistics(samp_var1, samp_var2, statistic, pearson_stats,
         corrs, pvalues = initial_stats_SLR(samp_var1, samp_var2, stats.kendalltau)
 
     elif statistic in mine_stats:
-        corrs, pvalues = initial_stats_MINE(n_var1, samp_var1,
-                                                  mine_bins, pvalue_bins)
+        corrs, pvalues = initial_stats_MINE(n_var1, samp_var1, mine_bins, pvalue_bins)
     else:
         raise ValueError('Invalid statistic chosen: ' + statistic)
 
@@ -101,8 +100,8 @@ def initial_stats_SLR(samp_var1, samp_var2, corr_func):
     """
     n_var1, n_var2, n_samp = utils.get_param(samp_var1, samp_var2)
 
-    corrs = np.zeros(n_var1, n_var2)
-    pvalues = np.zeros(n_var1, n_var2)
+    corrs = np.zeros([n_var1, n_var2])
+    pvalues = np.zeros([n_var1, n_var2])
 
     # subset the data matrices into the cols needed
     for var1 in range(n_var1):
