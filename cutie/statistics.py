@@ -47,13 +47,12 @@ def assign_statistics(samp_var1, samp_var2, statistic, pearson_stats,
                      by MINE to bin the MIC_str.
 
     OUTPUTS
-    stat_to_matrix - Dictionary. Key is string representing particular quantity
-                     e.g. pvalue, correlation for given statistic while entry is
-                     a 2D array representing numerical value of that quantity.
+    pvalues        - 2D arrays where entry i,j represents corresponding value
+    np.log(pvalues)  for var i and var j.
+    corrs
+    np.square(corrs)
     """
     n_var1, n_var2, n_samp = utils.get_param(samp_var1, samp_var2)
-
-    stat_to_matrix = {}
 
     if statistic in pearson_stats:
         corrs, pvalues = initial_stats_SLR(samp_var1, samp_var2, stats.pearsonr)
@@ -67,15 +66,11 @@ def assign_statistics(samp_var1, samp_var2, statistic, pearson_stats,
 
     elif statistic in mine_stats:
         corrs, pvalues = initial_stats_MINE(n_var1, samp_var1, mine_bins, pvalue_bins)
+
     else:
         raise ValueError('Invalid statistic chosen: ' + statistic)
 
-    stat_to_matrix['pvalues'] = pvalues
-    stat_to_matrix['logpvals'] = np.log(pvalues)
-    stat_to_matrix['correlations'] = corrs
-    stat_to_matrix['r2vals'] = np.square(corrs)
-
-    return stat_to_matrix
+    return pvalues, np.log(pvalues), corrs, np.square(corrs)
 
 
 def initial_stats_SLR(samp_var1, samp_var2, corr_func):
@@ -351,14 +346,11 @@ def resample1_cutie_pc(var1_index, var2_index, samp_var1, samp_var2, influence1,
     p_values = np.zeros(n_samp)
 
     # iteratively delete one sample and recompute statistics
-    s, i, r, original_p, s = stats.linregress(var1, var2)
+    original_p, original_r = compute_pc(var1, var2)
 
     for s in range(n_samp):
         new_var1 = var1[~np.in1d(range(n_samp), s)]
         new_var2 = var2[~np.in1d(range(n_samp), s)]
-
-        # remove NaNs
-        new_var1, new_var2 = utils.remove_nans(new_var1, new_var2)
 
         # compute new p_value and r_value
         p_value, r_value = compute_pc(new_var1, new_var2)
@@ -369,8 +361,7 @@ def resample1_cutie_pc(var1_index, var2_index, samp_var1, samp_var2, influence1,
                                                     True)
         if fold:
             if (p_value > threshold and
-                p_value > p_values[var1_index][var2_index] * fold_value) or \
-                    np.isnan(p_value):
+                p_value > original_p * fold_value) or np.isnan(p_value):
                 exceeds[s] += 1
         elif p_value > threshold or np.isnan(p_value):
             exceeds[s] += 1
@@ -379,75 +370,6 @@ def resample1_cutie_pc(var1_index, var2_index, samp_var1, samp_var2, influence1,
         p_values[s] = p_value
 
     return reverse, exceeds, corrs, p_values
-
-
-def resample1_cutie_sc(var1_index, var2_index, samp_var1, samp_var2, influence1,
-                       influence2, threshold, sign, fold, fold_value):
-    """
-    Takes a given var1 and var2 by indices and recomputes Spearman correlation
-    by removing 1 out of n (sample_size) points from samp_ids.
-    ----------------------------------------------------------------------------
-    INPUTS
-    var1_index - Integer. Index for variable from file 1 in pairwise correlation.
-    var2_index - Integer. Index for variable from file 2 in pairwise correlation.
-    samp_var1  - 2D array. Each value in row i col j is the level of variable j
-                 corresponding to sample i in the order that the samples are
-                 presented in samp_ids.
-    samp_var2  - 2D array. Same as samp_var1 but for file 2.
-    influence1 - sm.OLS object. Not relevant to Pearson/Spearman but needed as a
-                 placeholder argument (for Cook's D, etc.)
-    influence2 - sm.OLS object. Same remarks as for influence1.
-    threshold  - Float. Level of significance testing (after adjusting for
-                 multiple comparisons)
-    sign       - Integer. -1 or 1, depending on original sign of correlation to
-                 check against following re-evaluation.
-    fold       - Boolean. Determines whether you require the new P value to be a
-                 certain fold greater to be classified as a CUtIe.
-    fold_value - Float. Determines fold difference constraint imposed on the
-                 resampled p-value needed for a correlation to be classified as
-                 a CUtIe.
-
-    OUTPUTS
-    reverse    - 1D array. Index i is 1 if the correlation changes sign upon
-                 removing sample i.
-    exceeds    - 1D array. Index i is 1 if removing that sample causes the
-                 correlation to become insignificant in at least 1 different
-                 pairwise correlations
-    corrs      - 1D array. Contains values of correlation strength with sample i
-                 removed.
-    p_values   - 1D array. Contains values of pvalues with sample i removed.
-    """
-    n_var1, n_var2, n_samp = utils.get_param(samp_var1, samp_var2)
-
-    exceeds = np.zeros(n_samp)
-    reverse = np.zeros(n_samp)
-    corrs = np.zeros(n_samp)
-    p_values = np.zeros(n_samp)
-    var1_values = samp_var1[:, var1_index]
-    var2_values = samp_var2[:, var2_index]
-
-    # iteratively delete one sample and recompute statistics
-    for sample_index in range(n_samp):
-        new_var1_values = var1_values[~np.in1d(range(n_samp), sample_index)]
-        new_var2_values = var2_values[~np.in1d(range(n_samp), sample_index)]
-        if new_var1_values.size <= 3 or new_var2_values.size <= 3:
-            p_value = 1
-            corr = 0
-        else:
-            corr, p_value = stats.spearmanr(new_var1_values, new_var2_values)
-        if fold:
-            if (p_value > threshold and p_value > original_p * fold_value) or \
-                    np.isnan(p_value):
-                exceeds[sample_index] = 1
-        elif p_value > threshold or np.isnan(p_value):
-            exceeds[sample_index] = 1
-        if np.sign(corr) != sign:
-            reverse[sample_index] = 1
-        corrs[sample_index] = corr
-        p_values[sample_index] = p_value
-
-    return reverse, exceeds, corrs, p_values
-
 
 def cookd(var1_index, var2_index, samp_var1, samp_var2,
           influence1, influence2, threshold, sign, fold, fold_value):
@@ -718,7 +640,7 @@ def pointwise_comparison(samp_var1, samp_var2, pvalues, corrs, working_dir,
     """
     n_var1, n_var2, n_samp = utils.get_param(samp_var1, samp_var2)
 
-    infln_metrics = ['cookd', 'cutie_1pc']  # 'dffits', 'dsr'] # 'dsr'
+    infln_metrics = ['cookd', 'cutie_1pc']
     infln_mapping = {
         'cutie_1pc': resample1_cutie_pc,
         'cookd': cookd,
@@ -1277,14 +1199,13 @@ def compute_mine(new_var1, new_var2, pvalue_bins, mine_str, mine_bins):
     new_var1          - Array. Length sample size containing observations for
                         given variable from file 1.
     new_var2          - Array. Same as new_var1 but for file 2.
-    pvalue_bins       - List. Sorted list of pvalues from greatest to least used
-                        by MINE to bin the MIC_str.
+    pvalue_bins       - 1D Array. Sorted list of pvalues from greatest to least
+                        used by MINE to bin the MIC_str.
     mine_str          - 2D array. Entry in i-th row, j-th column corresponds to
                         MIC strength between var i and var j.
-    mine_bins         - 2D Array. Obtained from parse_minep. Each row is in
-                        format [MIC_str, pvalue, stderr of pvalue]. Pvalue
-                        corresponds to probability of observing MIC_str as or
-                        more extreme as observed MIC_str.
+    mine_bins         - 1D Array. Obtained from parse_minep. Entry corresponds
+                        to pvalue in pvalue_bins where pvalue is probability of
+                        observing MIC_str as or more extreme as observed MIC_str.
     """
 
     # if resulting variables do not contain enough points
@@ -1304,27 +1225,25 @@ def str_to_pvalues(pvalue_bins, mine_str, mine_bins):
     Convert MIC_str to pvalue using parsed table from MINE.
     ----------------------------------------------------------------------------
     INPUTS
-    pvalue_bins       - List. Sorted list of pvalues from greatest to least used
-                        by MINE to bin the MIC_str.
-    mine_str          - 2D array. Entry in i-th row, j-th column corresponds to
-                        MIC strength between var i and var j.
-    mine_bins         - 2D Array. Obtained from parse_minep. Each row is in
+    pvalue_bins       - 1D Array. Sorted array of pvalues from greatest to least
+                        used by MINE to bin the MIC_str.
+    mine_str          - Float. Should be entry in i-th row, j-th column of MIC_str
+                        corresponding to MIC strength between var i and var j.
+    mine_bins         - 1D Array. Obtained from parse_minep. Each row is in
                         format [MIC_str, pvalue, stderr of pvalue]. Pvalue
                         corresponds to probability of observing MIC_str as or
                         more extreme as observed MIC_str.
-    mine_p            - 2D np array where each entry corresponds to MINE pvalue
-                        of the correlation between var i and var j.
     """
-    found, midpoint = binarySearchBins(pvalue_bins, mine_str)
+    found, midpoint = binary_search_bins(mine_bins, mine_str)
     if found:
-        mine_p = mine_bins[midpoint][1]
+        mine_p = pvalue_bins[midpoint]
     else:
         mine_p = 1
 
     return mine_p
 
 
-def binarySearchBins(alist, item):
+def binary_search_bins(alist, item):
     """
     FUNCTION
     Takes an item (float) and returns the index (midpoint) and boolean (found)
@@ -1336,12 +1255,16 @@ def binarySearchBins(alist, item):
     copy = [1]
     copy.extend(alist[:])
     copy.append(0)
+    # mine_bins is thus 2 entries larger than the pvalues_bins
+    if item == 2:
+        print(copy)
     midpoint = 0
     while first <= last and not found:
         midpoint = (first + last)//2
         if copy[midpoint] >= item and copy[midpoint + 1] < item:
             found = True
         else:
+            # if item is larger than the midpoint 'bin'
             if item > copy[midpoint] and item > copy[midpoint + 1]:
                 last = midpoint-1
             else:

@@ -41,6 +41,9 @@ class TestStatistics(unittest.TestCase):
                                    [1,2,3],
                                    [3,6,2]])
 
+        self.n_var1, self.n_var2, self.n_samp = utils.get_param(self.samp_var1,
+                                                                self.samp_var1)
+
         self.true_paired_sampvar1_arrays = {
             'stats.pearsonr': (np.array([
                 [1.        , 0.95279653, 0.93951252],
@@ -164,8 +167,13 @@ class TestStatistics(unittest.TestCase):
             (0.05, 6, True, 0.0229774),
             (0.05, 6, False, 2.56e-07)])
 
-        self.initial_corr, self.all_pairs = ([(1, 0), (2, 0), (2, 1)],
-                   [(0, 1), (0, 2), (1, 0), (1, 2), (2, 0), (2, 1)])
+        # specific to pearson, bonferroni
+        self.pvalues = self.assign_statistics_truths['kpc']['pvalues']
+        self.correlations = self.assign_statistics_truths['kpc']['correlations']
+        self.threshold = self.threshold_results[5][0]
+        self.initial_corr, self.all_pairs = ([(0, 1), (1, 0), (1, 2), (2, 1)],
+            [(0, 1), (0, 2), (1, 0), (1, 2), (2, 0), (2, 1)])
+        self.fold_value = 100
 
     def test_compute_pc(self):
         assert_almost_equal((1,0), statistics.compute_pc(self.undef_corr[0],
@@ -223,6 +231,7 @@ class TestStatistics(unittest.TestCase):
             self.mine_stats, self.mine_bins, self.pvalue_bins)
 
     def test_set_threshold(self):
+        # test the different allowed multiple corrections adjustments
         mc_types = ['nomc', 'bc', 'fwer', 'fdr']
         results = []
         for mc in mc_types:
@@ -233,19 +242,81 @@ class TestStatistics(unittest.TestCase):
         assert_almost_equal(self.threshold_results, np.array(results), decimal=7)
 
     def test_get_initial_corr(self):
-        pvalues = self.assign_statistics_truths['kpc']['pvalues']
-        threshold, n_corr, defaulted, minp = statistics.set_threshold(pvalues,
-            0.05, 'nomc', True)
-        n_var1, n_var2, n_samp = utils.get_param(self.samp_var1, self.samp_var1)
         assert (self.initial_corr, self.all_pairs) == statistics.get_initial_corr(
-            n_var1, n_var2, pvalues, threshold, True)
+            self.n_var1, self.n_var2, self.pvalues, self.threshold, True)
 
 
+    # no unit test written for return_influence() because the return vars
+    # are objects of the sm.OLS class
 
+    def test_calculate_FP_sets(self):
+        infln_metrics = ['cutie_1pc', 'cookd', 'dffits', 'dsr']
+        infln_mapping = {
+            'cutie_1pc': statistics.resample1_cutie_pc,
+            'cookd': statistics.cookd,
+            'dffits': statistics.dffits,
+            'dsr': statistics.dsr
+        }
 
+        # results: key is metric, entry is set of points FP to that metric
+        # True signifies that fold is true
+        FP_infln_sets = statistics.calculate_FP_sets(self.initial_corr,
+            self.correlations, self.samp_var1, self.samp_var2, infln_metrics,
+            infln_mapping, self.threshold, True, self.fold_value)
 
+        results = {'cutie_1pc': set(),
+                   'cookd': {(0, 1), (1, 0), (2, 1), (1, 2)},
+                   'dffits': {(0, 1), (1, 0), (2, 1), (1, 2)},
+                   'dsr': {(1, 2), (1, 0), (2, 1)}}
+        assert FP_infln_sets == results
 
+    def test_str_to_pvalues(self):
+        # test str to pvalue conversion for MINE
+        MIC_pvalues = np.ones(shape=[self.n_var1, self.n_var1])
+        for i in range(self.n_var1):
+            for j in range(self.n_var1):
+                MIC_pvalues[i][j] = statistics.str_to_pvalues(self.pvalue_bins,
+                    self.assign_statistics_truths['mine']['correlations'][i][j],
+                    self.mine_bins)
+        assert_almost_equal(self.assign_statistics_truths['mine']['pvalues'],
+            MIC_pvalues)
 
+    def test_binary_search_bins(self):
+        # entry less than lowest str
+        assert (False, 2) == statistics.binary_search_bins([0.9,0.8,0.7], 0.6)
+
+        # entry in list
+        assert (True, 1) == statistics.binary_search_bins([0.9,0.8,0.7], 0.85)
+
+        # entry stronger than highest strs
+        assert (True, 0) == statistics.binary_search_bins([0.9,0.8,0.7], 0.95)
+
+    '''
+        def test_pointwise_metrics(self):
+            functions = [statistics.resample1_cutie_pc,
+                statistics.resample1_cutie_sc,
+                statistics.cookd,
+                statistics.dffits,
+                statistics.dsr]
+            for f in functions:
+                print(f)
+                print(f(var1_index, var2_index, samp_var1, samp_var2,
+            influence1, influence2, threshold, sign, fold, fold_value))
+
+    def calculate_FP_sets(initial_corr, corrs, samp_var1, samp_var2, infln_metrics,
+                          infln_mapping, threshold, fold, fold_value):'''
+
+    def test_get_pCI(self):
+        CI_results = {
+            'log': ((-171.62134974793022, 12.116703383175945),
+                    -79.75232318237714, 104.80887164658711),
+            'cbrt': ((0.023205742593382067, 0.22102055617426344),
+                     0.12211314938382276, 0.11283861482737229),
+            'none': ((1.8032903153653718e-05, 0.013368393763513012),
+                     0.006693213333333333, 0.007615386328550027)}
+        for method in ['log', 'cbrt', 'none']:
+            assert(CI_results[method] == statistics.get_pCI(self.pvalues,
+                self.n_samp,method))
 
 
     def test_zero_replacement(self):

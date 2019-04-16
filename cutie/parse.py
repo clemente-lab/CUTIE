@@ -31,7 +31,7 @@ def md5_checksum(fp):
 
 def parse_input(ftype, fp, startcol, endcol, delimiter, skip, log_fp):
     """
-    Parses data in OTU-table format (samples as cols, taxa/variables as rows) 
+    Parses data in OTU-table format (samples as cols, taxa/variables as rows)
     or data in traditional 'mapping' format (samples as rows, variables as
     cols). Span of columns must be continuous. Variables must be
     numeric. Returns dataframe.
@@ -71,12 +71,12 @@ def parse_input(ftype, fp, startcol, endcol, delimiter, skip, log_fp):
     if ftype == 'otu':
         df = df.T
 
-    # -1 are the defaults; if no start and endcols are specified, read in all 
+    # -1 are the defaults; if no start and endcols are specified, read in all
     # cols
     if startcol != -1 or endcol != -1:
         df = df.iloc[:, (startcol-1):(endcol-1)]
 
-    # obtain list of sample ids, variable names, number of var, and number of 
+    # obtain list of sample ids, variable names, number of var, and number of
     # samples
     samp_ids = df.index.values
     var_names = list(df)
@@ -93,11 +93,11 @@ def parse_input(ftype, fp, startcol, endcol, delimiter, skip, log_fp):
 def process_df(samp_var_df, samp_ids):
     """
     Reads in dataframe. Returns matrix of values as well as
-    matrices for average and variance of each variable(unnormalized). 
+    matrices for average and variance of each variable(unnormalized).
     Nans are ignored in all cases.
     ----------------------------------------------------------------------------
     INPUTS
-    samp_var_df     - Dataframe. Index is sample id and columns are variables 
+    samp_var_df     - Dataframe. Index is sample id and columns are variables
                       of metadata.
     samp_ids        - List of strings. Contains sample names in order that they
                       were read.
@@ -173,10 +173,9 @@ def parse_minep(pvalue_fp, delimiter=',', pskip=13):
                   is 13, to bypass various comments)
 
     OUTPUTS
-    MINE_bins   - 2D Array. Each row is in format [MIC_str, pvalue, stderr of
-                  pvalue]. Pvalue corresponds to probability of observing
-                  MIC_str as or more extreme as observed MIC_str.
-    pvalue_bins - List. Sorted list of pvalues from greatest to least used
+    MINE_bins   - 1D Array. Entry is MIC_str corresponding to pvalue of
+                  pvalue_bins.
+    pvalue_bins - 1D Array. Sorted list of pvalues from greatest to least used
                   by MINE to bin the MIC_str.
     """
     MINE_bins = []
@@ -188,12 +187,12 @@ def parse_minep(pvalue_fp, delimiter=',', pskip=13):
     for line in pvalue_fp.readlines():
         # example line: 1.000000,0.000000256,0.000000181
         # corresonding to [MIC_str, pvalue, stderr of pvalue]
-        split_line = line.rstrip().split(delimiter)
+        split_line = line.strip().split(delimiter)
         # make sure line is valid; last line is 'xla'
         if len(split_line) > 1:
             row = [float(x) for x in split_line]
-            MINE_bins.append(row)
-            pvalue_bins.append(row[0]) # row[0] is the pvalue
+            MINE_bins.append(row[0])
+            pvalue_bins.append(row[1])
 
     # convert list to array
     MINE_bins = np.array(MINE_bins)
