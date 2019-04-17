@@ -747,12 +747,6 @@ def plot_corr(row, df_folder_fp, f1type, f2type, var1_names, var2_names,
     var1_name = var1_names[var1]
     var2_name = var2_names[var2]
 
-    # if the ftype is OTU, reduce the taxa name into abridged form
-    if f1type == 'otu' and not sim:
-        var1_name = parse.read_taxa(var1_name)
-    if f2type == 'otu' and not sim:
-        var2_name = parse.read_taxa(var2_name)
-
     # shorten var name
     if len(var1_name) > 25:
         var1_name = var1_name[0:25]

@@ -7,7 +7,7 @@ import collections
 import numpy as np
 from scipy import stats
 from collections import defaultdict
-from numpy.testing import assert_almost_equal, assert_equal, assert_array_almost_equal
+from numpy.testing import assert_almost_equal, assert_equal
 
 from cutie import output, parse, utils, statistics
 
@@ -90,12 +90,11 @@ class TestStatistics(unittest.TestCase):
                      'stats.spearmanr': stats.spearmanr,
                      'stats.kendalltau': stats.kendalltau}
 
-        self.minep_fp = 'n=50,alpha=0.6.csv'
+        self.minep_fp = os.path.dirname(os.path.realpath(__file__)) + '/n=50,alpha=0.6.csv'
         # technically improper usage of the p value file but suffices
         # for testing purposes (sample size does not match)
-        with open(os.path.dirname(os.path.realpath(__file__)) + '/' + \
-            self.minep_fp, 'r') as f:
-                self.mine_bins, self.pvalue_bins = parse.parse_minep(f, ',', 13)
+        with open(self.minep_fp, 'r') as f:
+            self.mine_bins, self.pvalue_bins = parse.parse_minep(f, ',', 13)
 
         self.assign_statistics_truths = {
             'kpc': {
