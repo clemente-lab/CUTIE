@@ -167,14 +167,13 @@ def get_param(samp_var1, samp_var2):
     return n_var1, n_var2, n_samp
 
 
-def calculate_intersection(names, sets, log_fp):
+def calculate_intersection(names, sets):
     """
     Calculates all possible intersection (i.e. Venn Diagram) of sets.
     ----------------------------------------------------------------------------
     INPUTS
     names        - List. Strings referring to names of sets.
     sets         - List of sets. Order of sets must match order of sets in names.
-    log_fp       - String. File path of log file.
 
     e.g.
     names = ['a','b','c']
@@ -219,7 +218,4 @@ def calculate_intersection(names, sets, log_fp):
 
         region_sets[str(region)] = final_set
 
-        output.write_log('The amount of unique elements in set ' +
-                         str(region) + ' is ' + str(len(final_set)), log_fp)
-
-    return region_sets
+    return region_sets, region_combs

@@ -8,11 +8,13 @@ import minepy
 import pandas as pd
 import statsmodels.api as sm
 from scipy import stats
-from cutie import output
 from cutie import utils
 from collections import defaultdict
 
 matplotlib.use('Agg')
+
+# silences divide by 0 warnings and NaN division with correlations
+np.seterr(divide='ignore', invalid='ignore')
 
 
 def assign_statistics(samp_var1, samp_var2, statistic, pearson_stats,
@@ -45,126 +47,68 @@ def assign_statistics(samp_var1, samp_var2, statistic, pearson_stats,
                      by MINE to bin the MIC_str.
 
     OUTPUTS
-    stat_to_matrix - Dictionary. Key is string representing particular quantity
-                     e.g. pvalue, correlation for given statistic while entry is
-                     a 2D array representing numerical value of that quantity.
+    pvalues        - 2D arrays where entry i,j represents corresponding value
+    np.log(pvalues)  for var i and var j.
+    corrs
+    np.square(corrs)
     """
     n_var1, n_var2, n_samp = utils.get_param(samp_var1, samp_var2)
 
-    stat_to_matrix = {}
-
     if statistic in pearson_stats:
-        # define function and dictionary mapping string to function
-        # for statistic of interest
-        functions = ['stats.linregress']
-        mapf = {'stats.linregress': stats.linregress}
-        # f_stats must match the output of stats.linregress
-        f_stats = {'stats.linregress':
-                   ['b1', 'b0', 'pcorr', 'ppvalue', 'stderr']}
-        stat_dict = initial_stats_SLR(samp_var1, samp_var2, functions, mapf,
-                                      f_stats)
-
-        stat_to_matrix['pvalues'] = stat_dict['stats.linregress'][3]
-        stat_to_matrix['correlations'] = stat_dict['stats.linregress'][2]
-        stat_to_matrix['logpvals'] = np.log(stat_dict['stats.linregress'][3])
-        stat_to_matrix['r2vals'] = np.square(stat_dict['stats.linregress'][2])
+        corrs, pvalues = initial_stats_SLR(samp_var1, samp_var2, stats.pearsonr)
+        # Index 0 gets you the r values, 1 gets the p values
 
     elif statistic in spearman_stats:
-        functions = ['stats.spearmanr']
-        mapf = {'stats.spearmanr': stats.spearmanr}
-        f_stats = {'stats.spearmanr': ['scorr', 'spvalue']}
-        stat_dict = initial_stats_SLR(samp_var1, samp_var2, functions, mapf,
-                                      f_stats)
-
-        stat_to_matrix['pvalues'] = stat_dict['stats.spearmanr'][1]
-        stat_to_matrix['logpvals'] = np.log(stat_to_matrix['pvalues'])
-        stat_to_matrix['correlations'] = stat_dict['stats.spearmanr'][0]
-        stat_to_matrix['r2vals'] = stat_dict['stats.spearmanr'][0]
-        # filler, same as correlations
+        corrs, pvalues = initial_stats_SLR(samp_var1, samp_var2, stats.spearmanr)
 
     elif statistic in kendall_stats:
-        functions = ['stats.kendalltau']
-        mapf = {'stats.kendalltau': stats.kendalltau}
-        f_stats = {'stats.kendalltau': ['scorr', 'spvalue']}
-        stat_dict = initial_stats_SLR(samp_var1, samp_var2, functions, mapf,
-                                      f_stats)
-
-        stat_to_matrix['pvalues'] = stat_dict['stats.kendalltau'][1]
-        stat_to_matrix['logpvals'] = np.log(stat_to_matrix['pvalues'])
-        stat_to_matrix['correlations'] = stat_dict['stats.kendalltau'][0]
-        stat_to_matrix['r2vals'] = stat_dict['stats.kendalltau'][0]
-        # filler, same as correlations
+        corrs, pvalues = initial_stats_SLR(samp_var1, samp_var2, stats.kendalltau)
 
     elif statistic in mine_stats:
-        MIC_str, MIC_pvalues = initial_stats_MINE(n_var1, samp_var1,
-                                                  mine_bins, pvalue_bins)
-        stat_to_matrix['pvalues'] = MIC_pvalues
-        stat_to_matrix['logpvals'] = np.log(stat_to_matrix['pvalues'])
-        stat_to_matrix['correlations'] = MIC_str
-        stat_to_matrix['r2vals'] = MIC_str
-        # filler, same as correlations
+        corrs, pvalues = initial_stats_MINE(n_var1, samp_var1, mine_bins, pvalue_bins)
 
     else:
         raise ValueError('Invalid statistic chosen: ' + statistic)
 
-    return stat_to_matrix
+    return pvalues, np.log(pvalues), corrs, np.square(corrs)
 
 
-def initial_stats_SLR(samp_var1, samp_var2, functions, mapf, f_stats):
+def initial_stats_SLR(samp_var1, samp_var2, corr_func):
     """
-    Helper function for assign_statistics. Forks between SLR (simple linear
-    regression/inclusive of Pearson and Spearman) and MINE. Computes an initial
+    Helper function for assign_statistics. Forks between desired correlation
+    coefficient (Pearson, Spearman, Kendall and MINE). Computes an initial
     set of statistics per the specified functions. Returns a dict where the key
     is a statistical function and the element is an initial matrix with
     dimensions n_rel_stats x n_var1 x n_var2, corresponding to the relevant
-    statistics from simple linear regression (SLR) between each var1 and var2.
+    statistic between each var1 and var2.
     ----------------------------------------------------------------------------
     INPUTS
     samp_var1  - 2D array. Each value in row i col j is the level of variable j
                  corresponding to sample i in the order that the samples are
                  presented in samp_ids.
     samp_var2  - 2D array. Same as samp_var1 but for file 2.
-    functions  - List of strings. Function names verbatim from libraries.
-    mapf       - Dictionary. Maps function names to the function object.
-    f_stats    - Dictionary. Maps function name to list of output strings
-                 corresponding to what each function returns.
+    corr_func  - Function. Desired function for computing correlation (e.g.
+                 stats.pearsonr, stats.spearmanr, stats.kendalltau).
 
     OUTPUTS
-    statistics - Dictionary. Each key is a particular statistics function and
-                 each entry is a 3D np array where depth k, row i, col j corresponds
-                 to the value of that quantity k for the correlation between
-                 var i and var j.
+    stat_array - 3D array. Depth k = 2, row i, col j corresponds to the value of
+                 that quantity k (correlation or pvalue) for the correlation
+                 between var i and var j.
     """
     n_var1, n_var2, n_samp = utils.get_param(samp_var1, samp_var2)
 
-    stat_dict = {}
-
-    # retrieve relevant stats and create dictionary entry, 3D array
-    for f in functions:
-        rel_stats = f_stats[f]
-        stat_dict[f] = np.zeros((len(rel_stats), n_var1, n_var2))
+    corrs = np.zeros([n_var1, n_var2])
+    pvalues = np.zeros([n_var1, n_var2])
 
     # subset the data matrices into the cols needed
     for var1 in range(n_var1):
         for var2 in range(n_var2):
-            var1_values = samp_var1[:, var1]
-            var2_values = samp_var2[:, var2]
-            stacked = np.stack([var1_values, var2_values], 0)
-            # remove NANs
-            stacked = stacked[:, np.all(~np.isnan(stacked), axis=0)]
-            var1_values = stacked[0]
-            var2_values = stacked[1]
-            for f in functions:
-                # values is a list of the relevant_stats in order
-                if len(var1_values) == 0 or len(var2_values) == 0:
-                    values = np.zeros([len(f_stats[f])])
-                    values[:] = np.nan
-                else:
-                    values = mapf[f](var1_values, var2_values)
-                for s in range(len(values)):
-                    stat_dict[f][s][var1][var2] = values[s]
+            var1_values, var2_values = utils.remove_nans(samp_var1[:, var1],
+                                                         samp_var2[:, var2])
+            corrs[var1][var2], pvalues[var1][var2] = corr_func(var1_values,
+                                                               var2_values)
 
-    return stat_dict
+    return corrs, pvalues
 
 
 def initial_stats_MINE(n_var, samp_var, mine_bins, pvalue_bins):
@@ -192,13 +136,11 @@ def initial_stats_MINE(n_var, samp_var, mine_bins, pvalue_bins):
     MIC_pvalues - 2D array. Entry in i-th row, j-th column corresponds to pvalue
                   of MIC str between var i and var j.
     """
-    df = pd.DataFrame(samp_var)
-
     # mine accepts files in OTU table format, so need to transpose
-    df = df.T
+    df = pd.DataFrame(samp_var).T
 
     # drop NA
-    # df = df.dropna(how = 'any', axis = 1)
+    df = df.dropna(how = 'any', axis = 1)
     MIC_flat = minepy.pstats(df, alpha=0.6, c=15, est="mic_approx")[0]
 
     # see MINE API docstrings for indexing
@@ -223,7 +165,7 @@ def initial_stats_MINE(n_var, samp_var, mine_bins, pvalue_bins):
     return MIC_str, MIC_pvalues
 
 
-def set_threshold(pvalues, alpha, mc, log_fp, paired=False):
+def set_threshold(pvalues, alpha, mc, paired=False):
     """
     Computes p-value threshold for alpha according to FDR, Bonferroni, or FWER.
     ----------------------------------------------------------------------------
@@ -239,42 +181,42 @@ def set_threshold(pvalues, alpha, mc, log_fp, paired=False):
 
     OUTPUTS
     threshold - Float. Cutoff of pvalues.
+    n_corr    - Integer. Number of correlations.
+    defaulted - Boolean. True if FDR correction could not be obtained.
     """
-    output.write_log('The type of mc correction used was ' + mc, log_fp)
-    pvalues_copy = np.copy(pvalues)
     if paired:
         # fill the upper diagonal with nan as to not double count pvalues in FDR
-        pvalues_copy[np.triu_indices(pvalues_copy.shape[1], 0)] = np.nan
+        pvalues[np.triu_indices(pvalues.shape[1], 0)] = np.nan
         # currently computing all pairs double counting
-        n_corr = np.size(pvalues_copy, 1) * (np.size(pvalues_copy, 1) - 1)
+        n_corr = np.size(pvalues, 1) * (np.size(pvalues, 1) - 1)
     else:
-        n_corr = np.size(pvalues_copy, 0) * np.size(pvalues_copy, 1)
+        n_corr = np.size(pvalues, 0) * np.size(pvalues, 1)
 
     # determine threshold based on multiple comparisons setting
-    pvalues_copy = np.sort(pvalues_copy.flatten())
-    pvalues_copy = pvalues_copy[~np.isnan(pvalues_copy)]
+    pvalues = np.sort(pvalues.flatten())
+    pvalues = pvalues[~np.isnan(pvalues)]
+    defaulted = False
+    minp = min(pvalues)
     if mc == 'nomc':
         threshold = alpha
     elif mc == 'bc':
-        threshold = alpha / pvalues_copy.size
+        threshold = alpha / pvalues.size
     elif mc == 'fwer':
-        threshold = 1.0 - (1.0 - alpha) ** (1/(pvalues_copy.size))
+        threshold = 1.0 - (1.0 - alpha) ** (1/(pvalues.size))
     elif mc == 'fdr':
         # compute FDR cutoff
         # https://brainder.org/2011/09/05/fdr-corrected-fdr-adjusted-p-values/
         # http://www.biostathandbook.com/multiplecomparisons.html
         cn = 1.0
-        thresholds = np.array([(float(k+1))/(len(pvalues_copy))
-                               * alpha / cn for k in range(len(pvalues_copy))])
-        compare = np.where(pvalues_copy <= thresholds)[0]
+        thresholds = np.array([(float(k+1))/(len(pvalues))
+                               * alpha / cn for k in range(len(pvalues))])
+        compare = np.where(pvalues <= thresholds)[0]
         if len(compare) is 0:
             threshold = alpha
-            output.write_log('Warning: no p-values below threshold, defaulted \
-                with min(p) = ' + str(min(pvalues_copy)), log_fp)
+            defaulted = True
         else:
             threshold = thresholds[max(compare)]
-    output.write_log('The threshold value was ' + str(threshold), log_fp)
-    return threshold, n_corr
+    return threshold, n_corr, defaulted, minp
 
 
 ###
@@ -404,14 +346,11 @@ def resample1_cutie_pc(var1_index, var2_index, samp_var1, samp_var2, influence1,
     p_values = np.zeros(n_samp)
 
     # iteratively delete one sample and recompute statistics
-    s, i, r, original_p, s = stats.linregress(var1, var2)
+    original_p, original_r = compute_pc(var1, var2)
 
     for s in range(n_samp):
         new_var1 = var1[~np.in1d(range(n_samp), s)]
         new_var2 = var2[~np.in1d(range(n_samp), s)]
-
-        # remove NaNs
-        new_var1, new_var2 = utils.remove_nans(new_var1, new_var2)
 
         # compute new p_value and r_value
         p_value, r_value = compute_pc(new_var1, new_var2)
@@ -422,8 +361,7 @@ def resample1_cutie_pc(var1_index, var2_index, samp_var1, samp_var2, influence1,
                                                     True)
         if fold:
             if (p_value > threshold and
-                p_value > p_values[var1_index][var2_index] * fold_value) or \
-                    np.isnan(p_value):
+                p_value > original_p * fold_value) or np.isnan(p_value):
                 exceeds[s] += 1
         elif p_value > threshold or np.isnan(p_value):
             exceeds[s] += 1
@@ -432,75 +370,6 @@ def resample1_cutie_pc(var1_index, var2_index, samp_var1, samp_var2, influence1,
         p_values[s] = p_value
 
     return reverse, exceeds, corrs, p_values
-
-
-def resample1_cutie_sc(var1_index, var2_index, samp_var1, samp_var2, influence1,
-                       influence2, threshold, sign, fold, fold_value):
-    """
-    Takes a given var1 and var2 by indices and recomputes Spearman correlation
-    by removing 1 out of n (sample_size) points from samp_ids.
-    ----------------------------------------------------------------------------
-    INPUTS
-    var1_index - Integer. Index for variable from file 1 in pairwise correlation.
-    var2_index - Integer. Index for variable from file 2 in pairwise correlation.
-    samp_var1  - 2D array. Each value in row i col j is the level of variable j
-                 corresponding to sample i in the order that the samples are
-                 presented in samp_ids.
-    samp_var2  - 2D array. Same as samp_var1 but for file 2.
-    influence1 - sm.OLS object. Not relevant to Pearson/Spearman but needed as a
-                 placeholder argument (for Cook's D, etc.)
-    influence2 - sm.OLS object. Same remarks as for influence1.
-    threshold  - Float. Level of significance testing (after adjusting for
-                 multiple comparisons)
-    sign       - Integer. -1 or 1, depending on original sign of correlation to
-                 check against following re-evaluation.
-    fold       - Boolean. Determines whether you require the new P value to be a
-                 certain fold greater to be classified as a CUtIe.
-    fold_value - Float. Determines fold difference constraint imposed on the
-                 resampled p-value needed for a correlation to be classified as
-                 a CUtIe.
-
-    OUTPUTS
-    reverse    - 1D array. Index i is 1 if the correlation changes sign upon
-                 removing sample i.
-    exceeds    - 1D array. Index i is 1 if removing that sample causes the
-                 correlation to become insignificant in at least 1 different
-                 pairwise correlations
-    corrs      - 1D array. Contains values of correlation strength with sample i
-                 removed.
-    p_values   - 1D array. Contains values of pvalues with sample i removed.
-    """
-    n_var1, n_var2, n_samp = utils.get_param(samp_var1, samp_var2)
-
-    exceeds = np.zeros(n_samp)
-    reverse = np.zeros(n_samp)
-    corrs = np.zeros(n_samp)
-    p_values = np.zeros(n_samp)
-    var1_values = samp_var1[:, var1_index]
-    var2_values = samp_var2[:, var2_index]
-
-    # iteratively delete one sample and recompute statistics
-    for sample_index in range(n_samp):
-        new_var1_values = var1_values[~np.in1d(range(n_samp), sample_index)]
-        new_var2_values = var2_values[~np.in1d(range(n_samp), sample_index)]
-        if new_var1_values.size <= 3 or new_var2_values.size <= 3:
-            p_value = 1
-            corr = 0
-        else:
-            corr, p_value = stats.spearmanr(new_var1_values, new_var2_values)
-        if fold:
-            if (p_value > threshold and p_value > original_p * fold_value) or \
-                    np.isnan(p_value):
-                exceeds[sample_index] = 1
-        elif p_value > threshold or np.isnan(p_value):
-            exceeds[sample_index] = 1
-        if np.sign(corr) != sign:
-            reverse[sample_index] = 1
-        corrs[sample_index] = corr
-        p_values[sample_index] = p_value
-
-    return reverse, exceeds, corrs, p_values
-
 
 def cookd(var1_index, var2_index, samp_var1, samp_var2,
           influence1, influence2, threshold, sign, fold, fold_value):
@@ -771,7 +640,7 @@ def pointwise_comparison(samp_var1, samp_var2, pvalues, corrs, working_dir,
     """
     n_var1, n_var2, n_samp = utils.get_param(samp_var1, samp_var2)
 
-    infln_metrics = ['cookd', 'cutie_1pc']  # 'dffits', 'dsr'] # 'dsr'
+    infln_metrics = ['cookd', 'cutie_1pc']
     infln_mapping = {
         'cutie_1pc': resample1_cutie_pc,
         'cookd': cookd,
@@ -789,26 +658,13 @@ def pointwise_comparison(samp_var1, samp_var2, pvalues, corrs, working_dir,
     for metric in infln_metrics:
         FP_infln_sets_list.append(FP_infln_sets[metric])
 
-    region_sets = utils.calculate_intersection(infln_metrics,
-                                               FP_infln_sets_list,
-                                               log_fp)
-
-    # base regions == infln_metriics for this
-    output.generate_pair_matrix(infln_metrics, FP_infln_sets, n_var1, n_var2,
-                                samp_var1, samp_var2, infln_metrics, working_dir)
-
-    # report results
-    for metric in infln_metrics:
-        metric_FP = FP_infln_sets[metric]
-        output.write_log('The number of false correlations according to ' +
-                         metric + ' is ' + str(len(metric_FP)), log_fp)
-        output.write_log('The number of true correlations according to ' +
-                         metric + ' is ' + str(len(initial_corr) - len(metric_FP)), log_fp)
+    region_sets, region_combs = utils.calculate_intersection(infln_metrics,
+                                               FP_infln_sets_list)
 
     return infln_metrics, infln_mapping, FP_infln_sets, region_combs, region_sets
 
 
-def log_transform(samp_var, working_dir, var_number):
+def log_transform(samp_var):
     """
     Computes log-transform of 2D np array after 0 replacement is performed.
     ----------------------------------------------------------------------------
@@ -816,19 +672,10 @@ def log_transform(samp_var, working_dir, var_number):
     samp_var     - 2D array. Each value in row i col j is the level of
                    variable j corresponding to sample i in the order that the
                    samples are presented in samp_ids.
-    working_dir  - String. File path of working directory specified by user.
-                   Should end in '/'
-    var_number   - Integer. Represents if file 1 or file 2 is being
-                   log-transformed (or both).
     """
     n_var, n_var, n_samp = utils.get_param(samp_var, samp_var)
 
     samp_var_mr, samp_var_clr, samp_var_lclr, samp_var_varlog = multi_zeros(samp_var)
-
-    header = [str(x + 1) for x in range(n_var)]
-    output.print_matrix(samp_var_mr, working_dir + 'data_processing/samp_var' +
-                        str(var_number) + '_mr.txt', header, '\t')
-
     return np.log(samp_var_mr)
 
 
@@ -1352,14 +1199,13 @@ def compute_mine(new_var1, new_var2, pvalue_bins, mine_str, mine_bins):
     new_var1          - Array. Length sample size containing observations for
                         given variable from file 1.
     new_var2          - Array. Same as new_var1 but for file 2.
-    pvalue_bins       - List. Sorted list of pvalues from greatest to least used
-                        by MINE to bin the MIC_str.
+    pvalue_bins       - 1D Array. Sorted list of pvalues from greatest to least
+                        used by MINE to bin the MIC_str.
     mine_str          - 2D array. Entry in i-th row, j-th column corresponds to
                         MIC strength between var i and var j.
-    mine_bins         - 2D Array. Obtained from parse_minep. Each row is in
-                        format [MIC_str, pvalue, stderr of pvalue]. Pvalue
-                        corresponds to probability of observing MIC_str as or
-                        more extreme as observed MIC_str.
+    mine_bins         - 1D Array. Obtained from parse_minep. Entry corresponds
+                        to pvalue in pvalue_bins where pvalue is probability of
+                        observing MIC_str as or more extreme as observed MIC_str.
     """
 
     # if resulting variables do not contain enough points
@@ -1379,27 +1225,25 @@ def str_to_pvalues(pvalue_bins, mine_str, mine_bins):
     Convert MIC_str to pvalue using parsed table from MINE.
     ----------------------------------------------------------------------------
     INPUTS
-    pvalue_bins       - List. Sorted list of pvalues from greatest to least used
-                        by MINE to bin the MIC_str.
-    mine_str          - 2D array. Entry in i-th row, j-th column corresponds to
-                        MIC strength between var i and var j.
-    mine_bins         - 2D Array. Obtained from parse_minep. Each row is in
+    pvalue_bins       - 1D Array. Sorted array of pvalues from greatest to least
+                        used by MINE to bin the MIC_str.
+    mine_str          - Float. Should be entry in i-th row, j-th column of MIC_str
+                        corresponding to MIC strength between var i and var j.
+    mine_bins         - 1D Array. Obtained from parse_minep. Each row is in
                         format [MIC_str, pvalue, stderr of pvalue]. Pvalue
                         corresponds to probability of observing MIC_str as or
                         more extreme as observed MIC_str.
-    mine_p            - 2D np array where each entry corresponds to MINE pvalue
-                        of the correlation between var i and var j.
     """
-    found, midpoint = binarySearchBins(pvalue_bins, mine_str)
+    found, midpoint = binary_search_bins(mine_bins, mine_str)
     if found:
-        mine_p = mine_bins[midpoint][1]
+        mine_p = pvalue_bins[midpoint]
     else:
         mine_p = 1
 
     return mine_p
 
 
-def binarySearchBins(alist, item):
+def binary_search_bins(alist, item):
     """
     FUNCTION
     Takes an item (float) and returns the index (midpoint) and boolean (found)
@@ -1411,12 +1255,16 @@ def binarySearchBins(alist, item):
     copy = [1]
     copy.extend(alist[:])
     copy.append(0)
+    # mine_bins is thus 2 entries larger than the pvalues_bins
+    if item == 2:
+        print(copy)
     midpoint = 0
     while first <= last and not found:
         midpoint = (first + last)//2
         if copy[midpoint] >= item and copy[midpoint + 1] < item:
             found = True
         else:
+            # if item is larger than the midpoint 'bin'
             if item > copy[midpoint] and item > copy[midpoint + 1]:
                 last = midpoint-1
             else:
