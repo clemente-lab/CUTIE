@@ -121,10 +121,10 @@ def process_df(samp_var_df, samp_ids):
     samp_var = samp_var_df.values
 
     # obtain average and variance
-    avg_var = np.array([np.nanmean(samp_var, 0)])
+    avg_var = np.nanmean(samp_var, 0)]
 
     # retrieve variances
-    var_var = np.array([np.nanvar(samp_var, 0)])
+    var_var = np.nanvar(samp_var, 0)]
 
     return samp_var, avg_var, var_var
 

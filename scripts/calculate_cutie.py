@@ -89,6 +89,8 @@ def calculate_cutie(defaults_fp, config_fp):
     mine_stats = ['mine', 'jkm', 'bsm', 'rmine', 'rjkm', 'rbsm']
     if statistic not in all_stats:
         raise ValueError('Invalid statistic: %s chosen' % statistic)
+    if corr_compare and resample_k != 1:
+        raise ValueError('Resample_k must be 1 for pointwise stats')
 
     # file handling and parsing decisions
     # file 1 is the 'dominant' file type and should always contain the OTU file
@@ -168,10 +170,10 @@ def calculate_cutie(defaults_fp, config_fp):
     # on the statistic
     (true_corr, true_comb_to_rev, false_comb_to_rev, corr_extrema_p,
     corr_extrema_r, samp_counter, var1_counter,
-    var2_counter, exceeds_points, rev_points) = statistics.updatek_cutie(
-        initial_corr, pvalues, samp_var1, samp_var2, threshold, resample_k,
-        corrs, fold, fold_value, working_dir, CI_method, forward_stats,
-        reverse_stats, pvalue_bins, mine_bins, paired, statistic, n_replicates)
+    var2_counter, exceeds_points, rev_points) = statistics.update_cutiek_true_corr(
+        initial_corr, samp_var1, samp_var2, pvalues, corrs, threshold, paired,
+        statistic, forward_stats, reverse_stats, resample_k, fold,
+        fold_value, n_replicates, CI_method, pvalue_bins, mine_bins)
 
     # if interested in evaluating dffits, dsr, etc.
     region_sets = []

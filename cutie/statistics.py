@@ -464,7 +464,7 @@ def dffits(var1_index, var2_index, samp_var1, samp_var2,
                 np.isnan(dffits_[i]) or dffits_[i] == 0.0:
             exceeds[i] = 1
 
-    return reverse, exceeds, dffits_, [dffits_threshold] * n_samp
+    return reverse, exceeds, np.array(dffits_), np.array([dffits_threshold] * n_samp)
 
 
 def dsr(var1_index, var2_index, samp_var1, samp_var2,
@@ -511,7 +511,7 @@ def dsr(var1_index, var2_index, samp_var1, samp_var2,
         if dsr_[i] < -2 or dsr_[i] > 2 or np.isnan(dsr_[i]) or dsr_[i] == 0.0:
             exceeds[i] = 1
 
-    return reverse, exceeds, dsr_, dsr_
+    return reverse, exceeds, np.array(dsr_), np.array(dsr_)
 
 
 def return_influence(var1, var2, samp_var1, samp_var2):
@@ -603,15 +603,18 @@ def calculate_FP_sets(initial_corr, corrs, samp_var1, samp_var2, infln_metrics,
     return FP_infln_sets
 
 
-def pointwise_comparison(samp_var1, samp_var2, pvalues, corrs, working_dir,
-                         n_corr, initial_corr, threshold, statistic, fold_value,
-                         log_fp, paired, fold):
+def pointwise_comparison(infln_mapping, infln_metrics, samp_var1, samp_var2,
+                         pvalues, corrs, n_corr, initial_corr,
+                         threshold, statistic, fold_value, paired, fold):
     """
     Perform pointwise analysis of each correlation, comparing between CUtIe,
     Cook's D, DFFITS (and optionally DSR). Logs number of correlations belonging
     to each set (Venn Diagram) of outlier metrics as well as a JSON table.
     ----------------------------------------------------------------------------
     INPUTS
+    infln_metrics - List. Contains strings of infln_metrics (such as 'cookd').
+    infln_mapping - Dictionary. Maps strings of function names to function
+                    objects (e.g. 'cookd')
     samp_var1    - 2D array. Each value in row i col j is the level of
                    variable j corresponding to sample i in the order that the
                    samples are presented in samp_ids.
@@ -619,8 +622,6 @@ def pointwise_comparison(samp_var1, samp_var2, pvalues, corrs, working_dir,
     pvalues      - 2D array. Contains pvalue between var i and var j.
     corrs        - 2D array. Contains values of correlation strength between
                    var i and var j.
-    working_dir  - String. File path of working directory specified by user.
-                   Should end in '/'
     n_corr       - Integer. Number of correlations being computed. If var1 and
                    var2 are the same, correlations are double counted but
                    corr(i,i) are not computed.
@@ -634,19 +635,10 @@ def pointwise_comparison(samp_var1, samp_var2, pvalues, corrs, working_dir,
     fold_value   - Float. Determines fold difference constraint imposed on the
                    resampled p-value needed for a correlation to be classified
                    as a CUtIe.
-    log_fp       - String. Points to file path of log file.
     fold         - Boolean. Determines whether you require the new P value to
                    be a certain fold greater to be classified as a CUtIe.
     """
     n_var1, n_var2, n_samp = utils.get_param(samp_var1, samp_var2)
-
-    infln_metrics = ['cookd', 'cutie_1pc']
-    infln_mapping = {
-        'cutie_1pc': resample1_cutie_pc,
-        'cookd': cookd,
-        # 'dffits': dffits,
-        # 'dsr': dsr
-    }
 
     # key is metric, entry is set of points FP to that metric
     FP_infln_sets = calculate_FP_sets(initial_corr, corrs, samp_var1, samp_var2,
@@ -661,7 +653,7 @@ def pointwise_comparison(samp_var1, samp_var2, pvalues, corrs, working_dir,
     region_sets, region_combs = utils.calculate_intersection(infln_metrics,
                                                FP_infln_sets_list)
 
-    return infln_metrics, infln_mapping, FP_infln_sets, region_combs, region_sets
+    return FP_infln_sets, region_combs, region_sets
 
 
 def log_transform(samp_var):
@@ -717,55 +709,55 @@ def get_initial_corr(n_var1, n_var2, pvalues, threshold, paired):
 # RESAMPLE K
 ###
 
+def update_cutiek_true_corr(initial_corr, samp_var1, samp_var2, pvalues, corrs,
+                     threshold, paired, statistic, forward_stats, reverse_stats,
+                     resample_k, fold, fold_value,
+                     n_replicates, CI_method, pvalue_bins=0, mine_bins=0):
 
-def updatek_cutie(initial_corr, pvalues, samp_var1, samp_var2, threshold,
-                  resample_k, corrs, fold, fold_value, working_dir, CI_method,
-                  forward_stats, reverse_stats, pvalue_bins, mine_bins, paired,
-                  statistic, n_replicates=1000):
     """
-    Perform cutie resampling up to k points or other statistical analysis
-    (bootstrapping, jackknifing).
+    Determine true correlations via resampling of k points. Defaults for
+    pvalue_bins and mine_bins are to handle cases where statistic is not MINE
+    based.
     ----------------------------------------------------------------------------
     INPUTS
     initial_corr      - Set of integer tuples. Contains variable pairs initially
                         classified as significant (forward CUtIe) or
                         insignificant (reverse CUtIe). Note variable pairs (i,j)
                         and (j,i) are double counted.
-    pvalues           - 2D array. Entry row i, col j represents p value of
-                        correlation between i-th var1 and j-th var2.
     samp_var1         - 2D array. Each value in row i col j is the level of
                         variable j corresponding to sample i in the order that
                         the samples are presented in samp_ids when parsed.
     samp_var2         - 2D array. Same as samp_var1 but for file 2.
+    pvalues           - 2D array. Entry row i, col j represents p value of
+                        correlation between i-th var1 and j-th var2.
+    corrs             - 2D array. Contains values of correlation strength
+                        between var i and var j.
     threshold         - Float. Level of significance testing (after adjusting
                         for multiple comparisons)
-    resample_k        - Integer. Number of points being resampled by CUtIe.
-    corrs             - 2D array. Contains values of correlation strength between
-                        var i and var j.
-    fold              - Boolean. Determines whether you require the new P value
-                        to be a certain fold greater to be classified as a CUtIe.
-    fold_value        - Float. Determines fold difference constraint imposed on
-                        the resampled p-value needed for a correlation to be
-                        classified as a CUtIe.
-    working_dir       - String. File path of working directory specified by user.
-    method            - String. 'log', 'cbrt' or 'none' depending on method used
-                        for evaluating confidence interval (bootstrapping and
-                        jackknifing only).
+    paired            - Boolean. True if variables are paired (i.e. file 1 and
+                        file 2 are the same), False otherwise.
+    statistic         - String. Describes analysis being performed.
     forward_stats     - List of strings. Contains list of statistics e.g. 'kpc'
                         'jkp' that pertain to forward (non-reverse) CUtIe
                         analysis.
     reverse_stats     - List of strings. Contains list of statistics e.g. 'rpc'
                         'rjkp' that pertain to reverse CUtIe analysis.
+    resample_k        - Integer. Number of points being resampled by CUtIe.
+    fold              - Boolean. Determines whether you require the new P value
+                        to be a certain fold greater to be classified as a CUtIe.
+    fold_value        - Float. Determines fold difference constraint imposed on
+                        the resampled p-value needed for a correlation to be
+                        classified as a CUtIe.
+    n_replicates      - Integer. Number of replicates for bootstrap resampling.
+    CI_method         - String. 'log', 'cbrt' or 'none' depending on method used
+                        for evaluating confidence interval (bootstrapping and
+                        jackknifing only).
+    pvalue_bins       - List. Sorted list of pvalues from greatest to least used
+                        by MINE to bin the MIC_str.
     mine_bins         - 2D Array. Obtained from parse_minep. Each row is in
                         format [MIC_str, pvalue, stderr of pvalue]. Pvalue
                         corresponds to probability of observing MIC_str as or
                         more extreme as observed MIC_str.
-    pvalue_bins       - List. Sorted list of pvalues from greatest to least used
-                        by MINE to bin the MIC_str.
-    paired            - Boolean. True if variables are paired (i.e. file 1 and
-                        file 2 are the same), False otherwise.
-    statistic         - String. Describes analysis being performed.
-    n_replicates      - Integer. Number of replicates for bootstrap resampling.
 
     OUTPUTS
     initial_corr      - Set of integer tuples. Contains variable pairs initially
@@ -822,132 +814,14 @@ def updatek_cutie(initial_corr, pvalues, samp_var1, samp_var2, threshold,
     false_comb_to_rev = defaultdict(list)
 
     # create matrices dict to hold the most extreme values of p and r (for R-sq)
-    extrema_p = {}
-    extrema_r = {}
+    corr_extrema_p = {}
+    corr_extrema_r = {}
     if statistic in forward_stats:
-        extrema_p = defaultdict(lambda: np.ones([n_var1, n_var2]))
-        extrema_r = defaultdict(lambda: np.zeros([n_var1, n_var2]))
+        corr_extrema_p = defaultdict(lambda: np.ones([n_var1, n_var2]))
+        corr_extrema_r = defaultdict(lambda: np.zeros([n_var1, n_var2]))
     elif statistic in reverse_stats:
-        extrema_p = defaultdict(lambda: np.zeros([n_var1, n_var2]))
-        extrema_r = defaultdict(lambda: np.ones([n_var1, n_var2]))
-
-    # true sig and false insig are lists of tuples
-    # where each tuple is a pair of variable indices
-
-    # TP_comb_to_rev, etc. all represent dicts
-    # where the key is the number of points being resampled and the entry is
-    # a list of tuples if that particular correlation of variable pair
-    # undergoes a sign reversed
-
-    # P_wprst_p and P_worst_r etc. all represent dict
-    # where the key is the number of points being resampled and the entry is
-    # a 2D array where entry i , j is the worst or best p value or R value
-
-    # separate FP and TP
-    (true_corr, true_comb_to_rev, false_comb_to_rev, corr_extrema_p,
-     corr_extrema_r, samp_counter, var1_counter, var2_counter, exceeds_points,
-     rev_points) = cutiek_true_corr(initial_corr, samp_var1, samp_var2, pvalues,
-                                    corrs, threshold, paired, statistic,
-                                    forward_stats, reverse_stats, resample_k,
-                                    true_corr, true_comb_to_rev,
-                                    false_comb_to_rev, extrema_p, extrema_r,
-                                    fold, fold_value, n_replicates, CI_method,
-                                    pvalue_bins, mine_bins)
-
-    return (true_corr, true_comb_to_rev, false_comb_to_rev, corr_extrema_p,
-            corr_extrema_r, samp_counter, var1_counter, var2_counter,
-            exceeds_points, rev_points)
-
-
-def cutiek_true_corr(initial_corr, samp_var1, samp_var2, pvalues, corrs,
-                     threshold, paired, statistic, forward_stats, reverse_stats,
-                     resample_k, true_corr, true_comb_to_rev, false_comb_to_rev,
-                     corr_extrema_p, corr_extrema_r, fold, fold_value,
-                     n_replicates, CI_method, pvalue_bins=0, mine_bins=0):
-    """
-    Helper function for updatek_cutie(). Determine true correlations via
-    resampling of k points. Defaults for pvalue_bins and mine_bins are to handle
-    cases where statistic is not MINE based.
-    ----------------------------------------------------------------------------
-    INPUTS
-    initial_corr      - Set of integer tuples. Contains variable pairs initially
-                        classified as significant (forward CUtIe) or
-                        insignificant (reverse CUtIe). Note variable pairs (i,j)
-                        and (j,i) are double counted.
-    samp_var1         - 2D array. Each value in row i col j is the level of
-                        variable j corresponding to sample i in the order that
-                        the samples are presented in samp_ids when parsed.
-    samp_var2         - 2D array. Same as samp_var1 but for file 2.
-    pvalues           - 2D array. Entry row i, col j represents p value of
-                        correlation between i-th var1 and j-th var2.
-    corrs             - 2D array. Contains values of correlation strength
-                        between var i and var j.
-    threshold         - Float. Level of significance testing (after adjusting
-                        for multiple comparisons)
-    paired            - Boolean. True if variables are paired (i.e. file 1 and
-                        file 2 are the same), False otherwise.
-    statistic         - String. Describes analysis being performed.
-    forward_stats     - List of strings. Contains list of statistics e.g. 'kpc'
-                        'jkp' that pertain to forward (non-reverse) CUtIe
-                        analysis.
-    reverse_stats     - List of strings. Contains list of statistics e.g. 'rpc'
-                        'rjkp' that pertain to reverse CUtIe analysis.
-    resample_k        - Integer. Number of points being resampled by CUtIe.
-    true_corr         - Set of integer tuples. Contains variable pairs
-                        classified as true correlations (TP or FN, depending on
-                        forward or reverse CUtIe respectively).
-    true_comb_to_rev  - Dictionary. Key is string of number of points being
-                        resampled, and entry is a 2D array of indicators where
-                        the entry in the i-th row and j-th column is 1 if that
-                        particular correlation in the set of true_corr (either
-                        TP or FN) reverses sign upon removal of a point.
-    false_comb_to_rev - Dictionary. Same as true_comb_to_rev but for TN/FP.
-    corr_extrema_p    - Dictionary. Key is number of points being resampled and
-                        entry is 2D array where row i col j refers to worst or
-                        best (if CUtIe or reverse CUtIe is run, respectively)
-                        for correlation between var i and var j.
-    corr_extrema_r    - Dictionary. Same as extrema_p except values stored are
-                        correlation strengths.
-    fold              - Boolean. Determines whether you require the new P value
-                        to be a certain fold greater to be classified as a CUtIe.
-    fold_value        - Float. Determines fold difference constraint imposed on
-                        the resampled p-value needed for a correlation to be
-                        classified as a CUtIe.
-    n_replicates      - Integer. Number of replicates for bootstrap resampling.
-    CI_method         - String. 'log', 'cbrt' or 'none' depending on method used
-                        for evaluating confidence interval (bootstrapping and
-                        jackknifing only).
-    pvalue_bins       - List. Sorted list of pvalues from greatest to least used
-                        by MINE to bin the MIC_str.
-    mine_bins         - 2D Array. Obtained from parse_minep. Each row is in
-                        format [MIC_str, pvalue, stderr of pvalue]. Pvalue
-                        corresponds to probability of observing MIC_str as or
-                        more extreme as observed MIC_str.
-
-    OUTPUTS (in addition to the above)
-    samp_counter      - Dictionary. Key is the index of CUtIe resampling
-                        (k = 1, 2, 3, ... etc.) and entry is an array of length
-                        n_samp corresponding to how many times the i-th sample
-                        appears in CUtIe's when evaluated at resampling = k
-                        points).
-    var1_counter      - Dictionary. Key is the index of CUtIe resampling
-                        (k = 1, 2, 3, ... etc.) and entry is an array of length
-                        n_var1 corresponding to how many times the j-th variable
-                        appears in CUtIe's when evaluated at resampling = k
-                        points)
-    var2_counter      - Same as var1_counter except for var2.
-    exceeds_points    - Dict of dict. Outer key is resampling index (k = 1),
-                        entry is dict where key is variable pair ('(3,4)') and
-                        entry is np array of length n where entry is number of
-                        resampling values (from 0 to k) in which that point is
-                        cutie-ogenic.
-    rev_points        - Dict of dict. Outer key is resampling index (k = 1),
-                        entry is dict where key is variable pair ('(3,4)') and
-                        entry is np array of length n where entry is number of
-                        resampling values (from 0 to k) in which that point
-                        induces a sign change.
-    """
-    n_var1, n_var2, n_samp = utils.get_param(samp_var1, samp_var2)
+        corr_extrema_p = defaultdict(lambda: np.zeros([n_var1, n_var2]))
+        corr_extrema_r = defaultdict(lambda: np.ones([n_var1, n_var2]))
 
     # determine forward or reverse handling
     if statistic in forward_stats:
@@ -965,8 +839,8 @@ def cutiek_true_corr(initial_corr, samp_var1, samp_var2, pvalues, corrs,
     # initialize counter dictionaries for tracking sample and var freq in CUtIes
     for i in range(resample_k):
         samp_counter[str(i+1)] = np.zeros(n_samp)
-        var1_counter[str(i+1)] = np.zeros(np.size(samp_var1, 1))
-        var2_counter[str(i+1)] = np.zeros(np.size(samp_var2, 1))
+        var1_counter[str(i+1)] = np.zeros(n_var1)
+        var2_counter[str(i+1)] = np.zeros(n_var2)
         rev_points[str(i+1)] = {}
         exceeds_points[str(i+1)] = {}
 
