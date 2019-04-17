@@ -101,10 +101,10 @@ def print_Rmatrix(avg_var1, avg_var2, var_var1, var_var2, n_var1, n_var2,
         for var2 in range(n_var2):
             if not (paired and (var1 == var2)):
                 entries = [var1, var2,
-                           avg_var1[0][var1],
-                           avg_var2[0][var2],
-                           var_var1[0][var1],
-                           var_var2[0][var2]]
+                           avg_var1[var1],
+                           avg_var2[var2],
+                           var_var1[var1],
+                           var_var2[var2]]
                 for col_var in col_vars:
                     entries.append(col_var[var1][var2])
                 R_matrix[row] = np.array([entries])
