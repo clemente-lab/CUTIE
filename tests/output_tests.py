@@ -17,9 +17,15 @@ class OutputTest(TestCase):
 
     @classmethod
     def setUpClass(OutputTests):
-        OutputTest.headers = ['head1', 'head2', 'head3', 'head4', 'head5']
+        OutputTest.headers1 = ['head1', 'head2', 'head3', 'head4', 'head5']
+        OutputTest.headers2 = ['var1_index', 'var2_index', 'avg_var1',
+                               'avg_var2', 'var_var1', 'var_var2', 'pvalues']
+        OutputTest.headers3 = ['var1_index', 'var2_index', 'avg_var1',
+                               'avg_var2', 'var_var1', 'var_var2']
         OutputTest.empty_array1 = []
         OutputTest.empty_array2 = [[]]
+        OutputTest.simple_array = [1, 2, 3]
+        OutputTest.simple_pval_matrix = [[1, 1, 1], [1, 1, 1], [0, 0, 0]]
         OutputTest.even_array1 = [[1, 2, 3, 4, 5],
                                   [5, 4, 3, 2, 1],
                                   [6, 7, 8, 9, 0],
@@ -27,6 +33,12 @@ class OutputTest(TestCase):
         OutputTest.uneven_array = [[1, 2, 3, 4, 5],
                                    [1, 2],
                                    [3, 4, 5, 6, 7, 8, 9, 0]]
+        OutputTest.test_Rmatrix = [[0, 1, 1, 2, 1, 2, 1],
+                                   [0, 2, 1, 3, 1, 3, 1],
+                                   [1, 0, 2, 1, 2, 1, 1],
+                                   [1, 2, 2, 3, 2, 3, 1],
+                                   [2, 0, 3, 1, 3, 1, 0],
+                                   [2, 1, 3, 2, 3, 2, 0]]
 
         OutputTest.test_dir = os.path.abspath(os.path.dirname(__file__))
         OutputTest.data_dir = os.path.join(OutputTest.test_dir, '\\data\\')
@@ -57,7 +69,7 @@ class OutputTest(TestCase):
 
         output.print_matrix(self.empty_array1, empty1, self.empty_array1, '\t')
         output.print_matrix(self.empty_array2, empty2, self.empty_array1, '\t')
-        output.print_matrix(self.even_array1, even1, self.headers, '\t')
+        output.print_matrix(self.even_array1, even1, self.headers1, '\t')
         output.print_matrix(self.even_array1, even2, self.empty_array1, ':')
         output.print_matrix(self.uneven_array, uneven1, self.empty_array1, '\t')
         self.assertTrue(filecmp.cmp(open(empty1, 'r'),
@@ -75,3 +87,24 @@ class OutputTest(TestCase):
         self.assertTrue(filecmp.cmp(open(uneven1, 'r'),
                                     open(self.test_matrix3, 'r'),
                                     shallow=False))
+
+    def test_print_Rmatrix(self):
+        matrix1, test_headers1 = output.print_Rmatrix(self.simple_array,
+                                                      self.simple_array,
+                                                      self.simple_array,
+                                                      self.simple_array, 3, 3,
+                                                      ['pvalues'],
+                                                      [self.simple_pval_matrix],
+                                                      testing_dir, 1, 'test', 6,
+                                                      paired = True)
+        np.testing.assert_array_equal(self.test_Rmatrix, matrix1)
+        np.testing.assert_array_equal(self.headers2, test_headers1)
+
+        matrix2, test_headers2 = output.print_Rmatrix(self.empty_array1,
+                                                      self.empty_array1,
+                                                      self.empty_array1,
+                                                      self.empty_array1, 0, 0,
+                                                      self.empty_array1,
+                                                      self.empty_array1,
+                                                      testing_dir, 1, 'test', 0)
+        np.testing.assert_array_equal(self.empty_array1, matrix2)
