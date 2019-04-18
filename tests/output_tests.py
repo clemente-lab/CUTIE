@@ -66,6 +66,8 @@ class OutputTest(TestCase):
                                               'true_corr1.txt')
         OutputTest.true_corr2 = os.path.join(OutputTest.data_dir,
                                               'true_corr2.txt')
+        with open(devnull, 'w') as dn:
+            call('mkdir ' + OutputTest.workdir, stderr=dn, shell=True)
 
     @classmethod
     def tearDownClass(OutputTest):
