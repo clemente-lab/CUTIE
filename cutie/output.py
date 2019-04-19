@@ -228,6 +228,7 @@ def generate_pair_matrix(base_regions, regions_set, n_var1, n_var2, working_dir)
     working_dir   - String. Path of working directory as specified by user.
                     Should end in '/'
     """
+
     headers = ['var1', 'var2']
     for metric in base_regions:
         headers.append(metric)
@@ -941,9 +942,12 @@ def init_log(log_dir, defaults_fp, config_fp):
     # initialize log, write md5 of config files
     with open(log_fp, 'w') as f:
         f.write('Begin logging at ' + str(now.isoformat()))
-        f.write('\nThe original command was -df ' + defaults_fp + ' -cp ' + config_fp)
-        f.write('\nThe defaults_fp config file was '+ parse.md5Checksum(defaults_fp))
-        f.write('\nThe config_fp config file was '+ parse.md5Checksum(config_fp))
+        f.write('\nThe original command was -df ' + defaults_fp
+                + ' -cp ' + config_fp)
+        f.write('\nThe defaults_fp config file was '
+                + parse.md5Checksum(defaults_fp))
+        f.write('\nThe config_fp config file was '
+                + parse.md5Checksum(config_fp))
 
     return log_fp
 
