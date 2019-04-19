@@ -158,7 +158,8 @@ class OutputTest(TestCase):
         with open(devnull, 'w') as dn:
             call('mkdir ' + data_processing, stderr=dn, shell=True)
         test_file1 = os.path.join(data_processing, 'all_pairs.txt')
-        output.generate_pair_matrix(self.base_regions1, self.regions_set1, 3, 3, self.base_regions1, self.work_dir)
+        output.generate_pair_matrix(self.base_regions1, self.regions_set1, 3, 3,
+                                    self.base_regions1, self.work_dir, self.work_dir)
         self.assertTrue(filecmp.cmp(open(test_file1, 'r'),
                                     open(self.all_pairs1, 'r'), shallow=True))
 
