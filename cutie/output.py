@@ -51,7 +51,7 @@ def print_matrix(matrix, output_fp, header, delimiter='\t'):
 
 def print_Rmatrix(avg_var1, avg_var2, var_var1, var_var2, n_var1, n_var2,
                   col_names, col_vars, working_dir, resample_index, label,
-                  n_corr, statistic='kpc', paired=False):
+                  n_corr, paired=False):
     """
     Creates dataframe easily loaded into R containing CUtIe's analysis results.
     Each row is a correlation and columns contain relevant statistics e.g.
@@ -73,12 +73,12 @@ def print_Rmatrix(avg_var1, avg_var2, var_var1, var_var2, n_var1, n_var2,
                      array, the entry in i-th row, j-th column contains the
                      value of that particular statistic for the correlation
                      between variable i and j (i in file 1, j in file 2).
-    resample_index - Integer. Number of points being resampled by CUtIe.
+    resample_index - String (cast from int). Number of points being resampled by
+                     CUtIe.
     label          - String. Name of project assigned by user.
     n_corr         - Number of correlations performed by CUtIe. If variables are
                      paired, n_corr = (n choose 2) * 2 as correlations are
                      double counted (only corr(i,i) are ignored)
-    statistic      - String. Describes type of analysis.
     paired         - Boolean. True if variables are paired (i.e. file 1 and file
                      2 are the same), False otherwise.
 
@@ -111,7 +111,7 @@ def print_Rmatrix(avg_var1, avg_var2, var_var1, var_var2, n_var1, n_var2,
                 row += 1
 
     print_matrix(R_matrix, working_dir + 'data_processing/R_matrix_' + label + \
-                        '_resample_' + resample_index + '.txt', headers, '\t')
+                        '_resample_' + str(resample_index) + '.txt', headers, '\t')
 
     return R_matrix, headers
 
@@ -126,9 +126,9 @@ def print_true_false_corr(initial_corr, true_corr, working_dir, statistic,
                    classified as significant (forward CUtIe) or insignificant
                    (reverse CUtIe). Note variable pairs (i,j) and (j,i) are
                    double counted.
-    true_corr    - Set of integer tuples. Contains variable pairs classified as
-                   true correlations (TP or FN, depending on forward or reverse
-                   CUtIe respectively).
+    true_corr    - Dictionary mapping resample index to set of integer tuples.
+                   Contains variable pairs classified as true correlations
+                   (TP or FN, depending on forward or reverse CUtIe respectively).
     working_dir  - String. File path of working directory specified by user.
     statistic    - String. Analysis being performed.
     resample_k   - Integer. Number of points being resampled by CUtIe.
@@ -153,7 +153,7 @@ def print_true_false_corr(initial_corr, true_corr, working_dir, statistic,
         print_sig(false_corr, output_fp)
         output_fp = working_dir + 'data_processing/' + statistic + method + \
             str(k+1) + '_truesig.txt'
-        print_sig(true_corr, output_fp)
+        print_sig(true_corr[str(k+1)], output_fp)
 
 def report_results(n_var1, n_var2, working_dir, label, initial_corr, true_corr,
                    true_comb_to_rev, false_comb_to_rev, resample_k, log_fp):
@@ -213,11 +213,10 @@ def report_results(n_var1, n_var2, working_dir, label, initial_corr, true_corr,
                  + '_resample' + str(i+1) + '.txt'
             dict_to_print_matrix(false_comb_to_rev, fp, i)
 
-def generate_pair_matrix(base_regions, regions_set, n_var1, n_var2, samp_var1,
-                         samp_var2, working_dir):
+def generate_pair_matrix(base_regions, regions_set, n_var1, n_var2, working_dir):
     """
     Generate matrix for R where each row is a correlation and each column
-    is an indicator value (-1, 1, 0) for FP, TP, or not-screened respectively.
+    is an indicator value -1 for FP as identified by that metric.
     ----------------------------------------------------------------------------
     INPUTS
     base_regions  - List of strings. Each string describes one group among which
@@ -226,10 +225,6 @@ def generate_pair_matrix(base_regions, regions_set, n_var1, n_var2, samp_var1,
                     that set (e.g. variable pairs)
     n_var1        - Integer. Number of variables in file 1.
     n_var2        - Integer. Number of variables in file 2.
-    samp_var1     - 2D array. Each value in row i col j is the level of
-                     variable j corresponding to sample i in the order that the
-                     samples are presented in samp_ids
-    samp_var2     - 2D array. Same as samp_var1 but for file 2.
     working_dir   - String. Path of working directory as specified by user.
                     Should end in '/'
     """

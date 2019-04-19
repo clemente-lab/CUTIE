@@ -508,6 +508,7 @@ def dsr(var1_index, var2_index, samp_var1, samp_var2,
     exceeds = np.zeros(n_samp)
     dsr_ = influence1.resid_studentized_external
     for i in range(n_samp):
+        # threshold useed by DSR to signify outlier status
         if dsr_[i] < -2 or dsr_[i] > 2 or np.isnan(dsr_[i]) or dsr_[i] == 0.0:
             exceeds[i] = 1
 

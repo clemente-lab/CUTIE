@@ -284,31 +284,21 @@ def calculate_cutie(defaults_fp, config_fp):
 
         # Output results, write R matrix
         if statistic in forward_stats:
-            output.report_results(n_var1, n_var2, working_dir, label,
-                                  initial_corr, true_corr, true_comb_to_rev,
-                                  false_comb_to_rev, resample_key, log_fp)
-
             R_matrix, headers = output.print_Rmatrix(avg_var1, avg_var2,
                 var_var1, var_var2, n_var1, n_var2, variable_names, variables,
-                working_dir, resample_key, label, n_corr, statistic, paired)
-
-            # print pairs of false_sig and true_sig (for create_json.py)
-            output.print_true_false_corr(initial_corr, true_corr, working_dir,
-                statistic, resample_k, CI_method)
+                working_dir, resample_key, label, n_corr, paired)
 
         elif statistic in reverse_stats:
-            output.report_results(n_var1, n_var2, working_dir, label,
-                                  initial_corr, true_corr, true_comb_to_rev,
-                                  false_comb_to_rev, resample_key, log_fp)
-
             R_matrix, headers = output.print_Rmatrix(avg_var1, avg_var2,
                 var_var1, var_var2, n_var1, n_var2, variable_names, variables,
-                working_dir, resample_key, label + 'rev', n_corr, statistic,
-                paired)
+                working_dir, resample_key, label + 'rev', n_corr, paired)
 
-            # print pairs of false_sig and true_sig(for create_json.py)
-            output.print_true_false_corr(initial_corr, true_corr, working_dir,
-                statistic, resample_k, CI_method)
+        output.report_results(n_var1, n_var2, working_dir, label,
+                              initial_corr, true_corr, true_comb_to_rev,
+                              false_comb_to_rev, resample_key, log_fp)
+
+        output.print_true_false_corr(initial_corr, true_corr, working_dir,
+            statistic, resample_k, CI_method)
 
     ###
     # Graphing

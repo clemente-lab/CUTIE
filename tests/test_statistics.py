@@ -441,7 +441,7 @@ class TestStatistics(unittest.TestCase):
 
     def test_pointwise_metrics(self):
         # test cutie, cookd, dffits, dsr for just var1 = 1 var2 = 2
-        influence1, influence2 = statistics.return_influence(self.var1,self.var2,
+        influence1, influence2 = statistics.return_influence(self.var1, self.var2,
             samp_var1=self.samp_var1,samp_var2=self.samp_var1)
         for f in self.infln_mapping:
             # -7 because numbers get large
