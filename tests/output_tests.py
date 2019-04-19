@@ -4,8 +4,6 @@ from os import devnull
 from subprocess import call
 from unittest import TestCase, main
 
-
-import pandas as pd
 import numpy as np
 
 from cutie import output
@@ -14,12 +12,17 @@ from cutie import output
 class OutputTest(TestCase):
 
     @classmethod
-    def setUpClass(OutputTests):
+    def setUpClass(OutputTest):
         OutputTest.headers1 = ['head1', 'head2', 'head3', 'head4', 'head5']
         OutputTest.headers2 = ['var1_index', 'var2_index', 'avg_var1',
                                'avg_var2', 'var_var1', 'var_var2', 'pvalues']
         OutputTest.headers3 = ['var1_index', 'var2_index', 'avg_var1',
                                'avg_var2', 'var_var1', 'var_var2']
+        OutputTest.base_regions1 = ['cutie_1pc', 'cookd', 'difits', 'dfs']
+        OutputTest.regions_set1 = {'cutie_1pc': [(0, 1), (1, 0), (2, 1), (1, 2)],
+                                   'cookd': [(0, 1), (1, 0), (2, 1), (1, 2)],
+                                   'diffits': [(0, 1), (1, 0), (2, 1), (1, 2)],
+                                   'dfs': [(1, 0), (2, 1), (1, 2)]}
         OutputTest.empty_array1 = []
         OutputTest.empty_array2 = [[]]
         OutputTest.simple_array = [1, 2, 3]
@@ -56,8 +59,6 @@ class OutputTest(TestCase):
                                                'test_matrix2.txt')
         OutputTest.test_matrix3 = os.path.join(OutputTest.data_dir,
                                                'test_matrix3.txt')
-
-
         OutputTest.false_corr1 = os.path.join(OutputTest.data_dir,
                                               'false_corr1.txt')
         OutputTest.false_corr2 = os.path.join(OutputTest.data_dir,
@@ -66,6 +67,8 @@ class OutputTest(TestCase):
                                              'true_corr1.txt')
         OutputTest.true_corr2 = os.path.join(OutputTest.data_dir,
                                              'true_corr2.txt')
+        OutputTest.all_pairs1 = os.path.join(OutputTest.data_dir,
+                                             'all_pairs.txt')
         with open(devnull, 'w') as dn:
             call('mkdir ' + OutputTest.work_dir, stderr=dn, shell=True)
 
@@ -151,6 +154,15 @@ class OutputTest(TestCase):
                                     open(self.true_corr2, 'r'), shallow=True))
 
     def test_generate_pair_matrix(self):
+        data_processing = os.path.join(self.work_dir, 'data_processing/')
+        with open(devnull, 'w') as dn:
+            call('mkdir ' + data_processing, stderr=dn, shell=True)
+        test_file1 = os.path.join(data_processing, 'all_pairs.txt')
+        output.generate_pair_matrix(self.base_regions1, self.regions_set1,
+                                    3, 3, self.base_regions1,
+                                    self.work_dir)
+        self.assertTrue(filecmp.cmp(open(test_file1, 'r'),
+                                    open(self.all_pairs1, 'r'), shallow=True))
 
 
 
