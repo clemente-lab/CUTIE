@@ -3,11 +3,16 @@
 import unittest
 import os
 import itertools
+import collections
 import numpy as np
 from scipy import stats
-from numpy.testing import assert_almost_equal, assert_equal, assert_array_almost_equal
+from collections import defaultdict
+from numpy.testing import assert_almost_equal, assert_equal
 
 from cutie import output, parse, utils, statistics
+
+# ensure reproducible results for bootstrapping
+np.random.seed(2)
 
 class TestStatistics(unittest.TestCase):
 
@@ -85,12 +90,11 @@ class TestStatistics(unittest.TestCase):
                      'stats.spearmanr': stats.spearmanr,
                      'stats.kendalltau': stats.kendalltau}
 
-        self.minep_fp = 'n=50,alpha=0.6.csv'
+        self.minep_fp = os.path.dirname(os.path.realpath(__file__)) + '/n=50,alpha=0.6.csv'
         # technically improper usage of the p value file but suffices
         # for testing purposes (sample size does not match)
-        with open(os.path.dirname(os.path.realpath(__file__)) + '/' + \
-            self.minep_fp, 'r') as f:
-                self.mine_bins, self.pvalue_bins = parse.parse_minep(f, ',', 13)
+        with open(self.minep_fp, 'r') as f:
+            self.mine_bins, self.pvalue_bins = parse.parse_minep(f, ',', 13)
 
         self.assign_statistics_truths = {
             'kpc': {
@@ -169,13 +173,19 @@ class TestStatistics(unittest.TestCase):
 
         # specific to pearson, bonferroni
         self.resample_k = 1
+        self.fold = False
+        self.fold_value = 100
+        self.forward = True
+        self.alpha = 0.05
+        self.paired = True
         self.n_corr = self.threshold_results[0][1]
         self.pvalues = self.assign_statistics_truths['kpc']['pvalues']
         self.correlations = self.assign_statistics_truths['kpc']['correlations']
+        self.mine_str = self.assign_statistics_truths['mine']['correlations']
         self.threshold = self.threshold_results[5][0]
         self.initial_corr, self.all_pairs = ([(0, 1), (1, 0), (1, 2), (2, 1)],
             [(0, 1), (0, 2), (1, 0), (1, 2), (2, 0), (2, 1)])
-        self.fold_value = 100
+        self.CI_method = 'none'
         self.CI_results = {
             'log': ((-171.62134974793022, 12.116703383175945),
                     -79.75232318237714, 104.80887164658711),
@@ -190,6 +200,8 @@ class TestStatistics(unittest.TestCase):
         }
 
         # specific to pearson, paired var1 = 1 var2 = 2 with bonferonni
+        self.var1, self.var2 = 1, 2
+        self.sign = np.sign(self.correlations[self.var1][self.var2])
         self.pointwise_results = {
             'cutie_1pc': (np.array([0., 0., 0., 0., 0.]),
                 np.array([0., 0., 0., 0., 1.]),
@@ -239,6 +251,92 @@ class TestStatistics(unittest.TestCase):
             "['cutie_1pc', 'cookd', 'dsr']": set(), "['cutie_1pc', 'dffits', 'dsr']": set(),
             "['cookd', 'dffits', 'dsr']": set(),
             "['cutie_1pc', 'cookd', 'dffits', 'dsr']": {(1, 2), (1, 0), (2, 1)}})
+
+        self.update_results = {
+            '[0]': (np.array([1., 0., 0., 0., 0.]),
+                    np.array([0.41612579, 0.,         0.,         0.,         0.        ]),
+                    np.array([-0.58387421,  1.,          1.,          1.,          1.        ])),
+            '[1]': (np.array([1., 1., 0., 0., 0.]),
+                    np.array([0.41612579, 0.34289777, 0.,         0.,         0.        ]),
+                    np.array([-0.58387421, -0.65710223,  1.,          1.,          1.        ])),
+            '[2]': (np.array([1., 1., 1., 0., 0.]),
+                    np.array([0.41612579, 0.34289777, 0.3117528,  0.,         0.        ]),
+                    np.array([-0.58387421, -0.65710223, -0.6882472,   1.,          1.,        ])),
+            '[3]': (np.array([1., 1., 1., 1., 0.]),
+                    np.array([0.41612579, 0.34289777, 0.3117528,  0.45227744, 0.        ]),
+                    np.array([-0.58387421, -0.65710223, -0.6882472,  -0.54772256,  1.        ])),
+            '[4]': (np.array([1., 1., 1., 1., 1.]),
+                    np.array([0.41612579, 0.34289777, 0.3117528,  0.45227744, 0.48701082]),
+                    np.array([-0.58387421, -0.65710223, -0.6882472, -0.54772256, -0.51298918]))}
+
+
+        self.resamplek_results = {
+            '1': (np.array([0., 0., 0., 0., 0.]),
+                  np.array([0., 0., 0., 0., 1.]),
+                  np.array([0.00319451, 0.00284677, 0.0030147 , 0.        , 0.05327074]),
+                  np.array([0.99680549, 0.99715323, 0.9969853 , 1.        , 0.94672926])),
+            '2': (np.array([0., 0., 0., 0., 0.]),
+                  np.array([3., 3., 3., 0., 3.]),
+                  np.array([0.33333333, 0.12103772, 0.21229562, 0.        , 0.33333333]),
+                  np.array([0.8660254 , 0.98198051, 0.94491118, 1.        , 0.8660254 ]))}
+
+        self.jackknifek_results = {
+            '1': (np.array([0., 0., 0., 0., 0.]),
+                  np.array([1., 1., 1., 1., 1.]),
+                  np.array([1.        , 0.99715323, 1.        , 1.        , 1.        ]),
+                  np.array([0.        , 0.00284677, 0.        , 0.        , 0.        ])),
+            '2': (np.array([0., 0., 0., 0., 0.]),
+                  np.array([4., 4., 4., 4., 4.]),
+                  np.array([0.33333333, 0.        , 0.04785132, 0.        , 0.33333333]),
+                  np.array([0.8660254 , 1.        , 0.99717646, 1.        , 0.8660254 ]))}
+
+        self.n_replicates = 100
+        self.bootstrap_results = {
+            '1': (np.array([1., 1., 1., 1., 1.]),
+                  np.array([1., 1., 1., 1., 1.]),
+                  np.array([1., 1., 1., 1., 1.]),
+                  np.array([0., 0., 0., 0., 0.])),
+            '2': (np.array([1., 1., 1., 1., 1.]),
+                  np.array([1., 1., 1., 1., 1.]),
+                  np.array([1., 1., 1., 1., 1.]),
+                  np.array([0., 0., 0., 0., 0.]))}
+
+        self.forward_stats = ['kpc', 'jkp', 'bsp', 'ksc', 'jks', 'bss',
+                     'kkc', 'jkk', 'bsk', 'mine', 'jkm', 'bsm']
+        self.reverse_stats = ['rpc', 'rjkp', 'rbsp', 'rsc', 'rjks', 'rbss',
+                     'rkc', 'rjkk', 'rbsk', 'rmine', 'rjkm', 'rbsm']
+
+        self.evaluate_correlation_k_results = {
+            '0': (np.array([0., 0., 0., 0., 0.]),
+                  np.array([0., 0., 0., 0., 1.]),
+                  0.05327073759374248, 0.9467292624062575),
+            '1': (np.array([0., 0., 0., 0., 0.]),
+                  np.array([3., 3., 3., 0., 3.]),
+                  0.3333333333333333, 0.8660254037844387)}
+
+        self.update_cutiek_true_corr_results = {
+            '1': (defaultdict(list),
+                  defaultdict(list),
+                  {'1': [(0, 1), (1, 0)]},
+                    {'1': np.array([[1.        , 0.32580014, 1.        ],
+                                 [0.32580014, 1.        , 0.05327074],
+                                 [1.        , 0.05327074, 1.        ]])},
+                    {'1': np.array([[ 0.        , -0.67419986,  0.        ],
+                                 [-0.67419986,  0.        ,  0.94672926],
+                                 [ 0.        ,  0.94672926,  0.        ]])},
+                  {'1': np.array([2., 2., 2., 2., 4.])},
+                  {'1': np.array([1., 2., 1.])},
+                  {'1': np.array([1., 2., 1.])},
+                  {'1': {'(0, 1)': np.array([1., 1., 1., 1., 1.]),
+                         '(1, 0)': np.array([1., 1., 1., 1., 1.]),
+                         '(1, 2)': np.array([0., 0., 0., 0., 1.]),
+                         '(2, 1)': np.array([0., 0., 0., 0., 1.])}},
+                  {'1': {'(0, 1)': np.array([0., 0., 0., 0., 2.]),
+                         '(1, 0)': np.array([0., 0., 0., 0., 2.]),
+                         '(1, 2)': np.array([0., 0., 0., 0., 0.]),
+                         '(2, 1)': np.array([0., 0., 0., 0., 0.])}})}
+
+
 
     def test_compute_pc(self):
         assert_almost_equal((1,0), statistics.compute_pc(self.undef_corr[0],
@@ -303,17 +401,18 @@ class TestStatistics(unittest.TestCase):
             for stat in self.correlation_types:
                 results.append(statistics.set_threshold(
                     self.assign_statistics_truths[stat]['pvalues'],
-                    0.05, mc, paired=True))
+                    self.alpha, mc, self.paired))
         assert_almost_equal(self.threshold_results, np.array(results), decimal=7)
 
     def test_get_initial_corr(self):
         assert (self.initial_corr, self.all_pairs) == statistics.get_initial_corr(
-            self.n_var1, self.n_var2, self.pvalues, self.threshold, True)
+            self.n_var1, self.n_var2, self.pvalues, self.threshold, self.paired)
 
     # no unit test written for return_influence() because the return vars
     # are objects of the sm.OLS class
 
     def test_calculate_FP_sets(self):
+        # True for self.fold
         assert self.infln_results == statistics.calculate_FP_sets(self.initial_corr,
             self.correlations, self.samp_var1, self.samp_var2, self.infln_metrics,
             self.infln_mapping, self.threshold, True, self.fold_value)
@@ -342,24 +441,97 @@ class TestStatistics(unittest.TestCase):
 
     def test_pointwise_metrics(self):
         # test cutie, cookd, dffits, dsr for just var1 = 1 var2 = 2
-        var1, var2 = 1,2
-        sign = np.sign(self.correlations[var1][var2])
-        influence1, influence2 = statistics.return_influence(var1=var1,var2=var2,
+        influence1, influence2 = statistics.return_influence(self.var1, self.var2,
             samp_var1=self.samp_var1,samp_var2=self.samp_var1)
         for f in self.infln_mapping:
             # -7 because numbers get large
             assert_almost_equal(self.pointwise_results[f],
-                self.infln_mapping[f](var1, var2, self.samp_var1, self.samp_var1,
-                influence1, influence2, self.threshold, sign, False, self.fold_value), decimal=-7)
+                self.infln_mapping[f](self.var1, self.var2, self.samp_var1,
+                    self.samp_var1, influence1, influence2, self.threshold,
+                    self.sign, self.fold, self.fold_value), decimal=-7)
 
     def test_pointwise_comparison(self):
         assert self.complete_pointwise_results == statistics.pointwise_comparison(
             self.infln_mapping, self.infln_metrics, self.samp_var1,
             self.samp_var2, self.pvalues, self.correlations, self.n_corr, self.initial_corr,
-                         self.threshold, 'kpc', self.fold_value, paired=True, fold=False)
+                         self.threshold, 'kpc', self.fold_value, self.paired, self.fold)
 
 
+    def test_update_rev_extrema_rp(self):
+        # tests updating of indicator arrays
+        exceeds, reverse, extrema_p, extrema_r, var1, var2 = utils.init_var_indicators(
+            self.var1, self.var2, self.samp_var1, self.samp_var2, self.forward)
 
+        combs = [list(x) for x in itertools.combinations(range(self.n_samp), self.resample_k)]
+        for indices in combs:
+            new_var1 = var1[~np.in1d(range(len(var1)), indices)]
+            new_var2 = var2[~np.in1d(range(len(var2)), indices)]
+
+            p_value, r_value = statistics.compute_pc(new_var1, new_var2)
+
+            assert_almost_equal(self.update_results[str(indices)], statistics.update_rev_extrema_rp(
+                self.sign, r_value, p_value, indices, reverse, extrema_p, extrema_r, self.forward), decimal=5)
+
+    def test_resamplek_cutie(self):
+        # test cutie
+        for k in [1,2]:
+            assert_almost_equal(self.resamplek_results[str(k)],
+                statistics.resamplek_cutie(self.var1, self.var2, self.n_samp,
+                    self.samp_var1, self.samp_var1,self.pvalues, self.threshold,
+                    k, self.sign, self.forward, 'kpc', self.fold, self.fold_value,
+                    self.pvalue_bins, self.mine_str, self.mine_bins))
+
+    def test_jackknifek_cutie(self):
+        # test jackknifing
+        for k in [1,2]:
+            assert_almost_equal(self.jackknifek_results[str(k)],
+                statistics.jackknifek_cutie(self.var1, self.var2, self.n_samp,
+                    self.samp_var1, self.samp_var1, self.pvalues, self.threshold,
+                    k, self.sign, self.forward, 'jkp', self.CI_method,
+                    self.pvalue_bins, self.mine_str, self.mine_bins))
+
+    def test_bootstrap_cutie(self):
+        # test bootstrapping
+        for k in [1,2]:
+            assert_almost_equal(self.bootstrap_results[str(k)],
+                statistics.bootstrap_cutie(self.var1, self.var2, self.n_samp,
+                    self.samp_var1, self.samp_var1, self.pvalues, self.threshold,
+                    self.sign, self.forward, 'bsp', self.CI_method,
+                    self.n_replicates, self.pvalue_bins, self.mine_str, self.mine_bins))
+
+
+    def test_evaluation_correlation_k(self):
+        # 0, 1 as opposed to 1, 2 because you add 1 insidee evaluate_correlation_k()
+        for k in [0,1]:
+            results = statistics.evaluate_correlation_k(
+                self.var1, self.var2, self.n_samp, self.samp_var1,
+                self.samp_var1, self.pvalues, self.threshold, 'kpc', k,
+                self.sign, self.fold, self.fold_value, self.n_replicates,
+                self.CI_method, self.forward, self.forward_stats,
+                self.reverse_stats, self.pvalue_bins, self.mine_str,
+                self.mine_bins)
+            for r in range(len(results)):
+                assert_almost_equal(results[r],
+                    self.evaluate_correlation_k_results[str(k)][r])
+
+    def test_update_cutiek_true_corr(self):
+        statistic = 'kpc'
+        for k in [1]:
+            results = statistics.update_cutiek_true_corr(self.initial_corr,
+                self.samp_var1, self.samp_var1, self.pvalues, self.correlations,
+                self.threshold, self.paired, 'kpc', self.forward_stats,
+                self.reverse_stats, k, self.fold, self.fold_value,
+                self.n_replicates, self.CI_method, self.pvalue_bins, self.mine_bins)
+
+            for r in range(2,len(results)):
+                # if not dictionary
+                if not isinstance(results[r][str(k)], collections.Mapping):
+                    assert_almost_equal(results[r][str(k)],
+                        self.update_cutiek_true_corr_results[str(k)][r][str(k)])
+                else:
+                    for key in results[r][str(k)].keys():
+                        assert_almost_equal(results[r][str(k)][key],
+                            self.update_cutiek_true_corr_results[str(k)][r][str(k)][key])
 
 
 

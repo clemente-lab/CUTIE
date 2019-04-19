@@ -89,18 +89,23 @@ def calculate_cutie(defaults_fp, config_fp):
     mine_stats = ['mine', 'jkm', 'bsm', 'rmine', 'rjkm', 'rbsm']
     if statistic not in all_stats:
         raise ValueError('Invalid statistic: %s chosen' % statistic)
+    if corr_compare and resample_k != 1:
+        raise ValueError('Resample_k must be 1 for pointwise stats')
 
     # file handling and parsing decisions
     # file 1 is the 'dominant' file type and should always contain the OTU file
     # we let the dominant fil 'override' the sample_id list ordering
-    samp_ids2, var2_names, samp_var2_df, n_var2, n_samp = \
-        parse.parse_input(f2type, samp_var2_fp, startcol2, endcol2, delimiter2,
-                          skip2, log_fp)
+    samp_ids2, var2_names, samp_var2_df, n_var2, n_samp = parse.parse_input(
+        f2type, samp_var2_fp, startcol2, endcol2, delimiter2, skip2)
+    output.write_log('The length of variables for file 2 is ' + str(n_var2))
+    output.write_log('The number of samples for file 2 is ' + str(n_samp))
     output.write_log('The md5 of samp_var2 was ' + \
         str(parse.md5_checksum(samp_var2_fp)), log_fp)
-    samp_ids1, var1_names, samp_var1_df, n_var1, n_samp = \
-        parse.parse_input(f1type, samp_var1_fp, startcol1, endcol1, delimiter1,
-                          skip1, log_fp)
+
+    samp_ids1, var1_names, samp_var1_df, n_var1, n_samp = parse.parse_input(
+        f1type, samp_var1_fp, startcol1, endcol1, delimiter1, skip1)
+    output.write_log('The length of variables for file 1 is ' + str(n_var1))
+    output.write_log('The number of samples for file 1 is ' + str(n_samp))
     output.write_log('The md5 of samp_var1 was ' + \
         str(parse.md5_checksum(samp_var1_fp)), log_fp)
 
@@ -168,10 +173,10 @@ def calculate_cutie(defaults_fp, config_fp):
     # on the statistic
     (true_corr, true_comb_to_rev, false_comb_to_rev, corr_extrema_p,
     corr_extrema_r, samp_counter, var1_counter,
-    var2_counter, exceeds_points, rev_points) = statistics.updatek_cutie(
-        initial_corr, pvalues, samp_var1, samp_var2, threshold, resample_k,
-        corrs, fold, fold_value, working_dir, CI_method, forward_stats,
-        reverse_stats, pvalue_bins, mine_bins, paired, statistic, n_replicates)
+    var2_counter, exceeds_points, rev_points) = statistics.update_cutiek_true_corr(
+        initial_corr, samp_var1, samp_var2, pvalues, corrs, threshold, paired,
+        statistic, forward_stats, reverse_stats, resample_k, fold,
+        fold_value, n_replicates, CI_method, pvalue_bins, mine_bins)
 
     # if interested in evaluating dffits, dsr, etc.
     region_sets = []
@@ -279,31 +284,21 @@ def calculate_cutie(defaults_fp, config_fp):
 
         # Output results, write R matrix
         if statistic in forward_stats:
-            output.report_results(n_var1, n_var2, working_dir, label,
-                                  initial_corr, true_corr, true_comb_to_rev,
-                                  false_comb_to_rev, resample_key, log_fp)
-
             R_matrix, headers = output.print_Rmatrix(avg_var1, avg_var2,
                 var_var1, var_var2, n_var1, n_var2, variable_names, variables,
-                working_dir, resample_key, label, n_corr, statistic, paired)
-
-            # print pairs of false_sig and true_sig (for create_json.py)
-            output.print_true_false_corr(initial_corr, true_corr, working_dir,
-                statistic, resample_k, CI_method)
+                working_dir, resample_key, label, n_corr, paired)
 
         elif statistic in reverse_stats:
-            output.report_results(n_var1, n_var2, working_dir, label,
-                                  initial_corr, true_corr, true_comb_to_rev,
-                                  false_comb_to_rev, resample_key, log_fp)
-
             R_matrix, headers = output.print_Rmatrix(avg_var1, avg_var2,
                 var_var1, var_var2, n_var1, n_var2, variable_names, variables,
-                working_dir, resample_key, label + 'rev', n_corr, statistic,
-                paired)
+                working_dir, resample_key, label + 'rev', n_corr, paired)
 
-            # print pairs of false_sig and true_sig(for create_json.py)
-            output.print_true_false_corr(initial_corr, true_corr, working_dir,
-                statistic, resample_k, CI_method)
+        output.report_results(n_var1, n_var2, working_dir, label,
+                              initial_corr, true_corr, true_comb_to_rev,
+                              false_comb_to_rev, resample_key, log_fp)
+
+        output.print_true_false_corr(initial_corr, true_corr, working_dir,
+            statistic, resample_k, CI_method)
 
     ###
     # Graphing

@@ -29,7 +29,7 @@ def md5_checksum(fp):
             m.update(data)
     return m.hexdigest()
 
-def parse_input(ftype, fp, startcol, endcol, delimiter, skip, log_fp):
+def parse_input(ftype, fp, startcol, endcol, delimiter, skip):
     """
     Parses data in OTU-table format (samples as cols, taxa/variables as rows)
     or data in traditional 'mapping' format (samples as rows, variables as
@@ -47,7 +47,6 @@ def parse_input(ftype, fp, startcol, endcol, delimiter, skip, log_fp):
                   only relevant if data is in mapping format.
     skip        - Integer. Number lines to skip in parsing the file
     delimiter   - String. Character that delimites file.
-    log_fp      - File object. Points to log file.
 
     OUTPUTS
     samp_ids      - List of strings. Contains sample names in order that they
@@ -83,11 +82,6 @@ def parse_input(ftype, fp, startcol, endcol, delimiter, skip, log_fp):
     n_var = len(list(df))
     n_samp = len(df)
 
-    # write to log file
-    with open(log_fp, 'a') as f:
-        f.write('\nThe length of variables is ' + str(n_var))
-        f.write('\nThe number of samples is ' + str(n_samp))
-
     return samp_ids, var_names, df, n_var, n_samp
 
 def process_df(samp_var_df, samp_ids):
@@ -121,40 +115,12 @@ def process_df(samp_var_df, samp_ids):
     samp_var = samp_var_df.values
 
     # obtain average and variance
-    avg_var = np.array([np.nanmean(samp_var, 0)])
+    avg_var = np.nanmean(samp_var, 0)
 
     # retrieve variances
-    var_var = np.array([np.nanvar(samp_var, 0)])
+    var_var = np.nanvar(samp_var, 0)
 
     return samp_var, avg_var, var_var
-
-def read_taxa(taxa, delim=';'):
-    """
-    Converts string of OTU names (e.g. from QIIME) to shortened form.
-    ----------------------------------------------------------------------------
-    INPUTS
-    taxa  - String. Long name of OTU e.g. 'k__Archaea;p__Crenarchaeota;
-            c__Thaumarchaeota;o__Cenarchaeales;f__Cenarchaeaceae;
-            g__Nitrosopumilus' which will become 'Cenarchaeaceae Nitrosopumilus'
-    delim - String. Separates heirarchy.
-
-    OUTPUTS
-    String. Abridged taxa name.
-    """
-    parts = taxa.split(delim) # set as param with default
-    if len(parts) > 1:
-        while parts:
-            if not parts[-1].endswith('__'):
-                t1 = parts[-2].split('__')[1]
-                t2 = parts[-1].split('__')[1]
-                return t1 + ' ' + t2
-            else:
-                parts.pop()
-    else:
-        return parts[0]
-
-    # This should not be reached: "k__;p__..."
-    return 'Uncharacterized'
 
 ###
 # MINE parsing
