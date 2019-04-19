@@ -37,7 +37,7 @@ class OutputTest(TestCase):
                                    [1, 2, 2, 3, 2, 3, 1],
                                    [2, 0, 3, 1, 3, 1, 0],
                                    [2, 1, 3, 2, 3, 2, 0]]
-        OutputTest.test_tuple_list1 = [(1, 2),(3, 1), (4, 2), (2, 1),
+        OutputTest.test_tuple_list1 = [(1, 2), (3, 1), (4, 2), (2, 1),
                                        (1, 3), (2, 4)]
         OutputTest.test_tuple_list2 = [(3, 5), (2, 4), (1, 8),
                                        (8, 1), (4, 2), (5, 3)]
@@ -63,9 +63,9 @@ class OutputTest(TestCase):
         OutputTest.false_corr2 = os.path.join(OutputTest.data_dir,
                                               'false_corr2.txt')
         OutputTest.true_corr1 = os.path.join(OutputTest.data_dir,
-                                              'true_corr1.txt')
+                                             'true_corr1.txt')
         OutputTest.true_corr2 = os.path.join(OutputTest.data_dir,
-                                              'true_corr2.txt')
+                                             'true_corr2.txt')
         with open(devnull, 'w') as dn:
             call('mkdir ' + OutputTest.work_dir, stderr=dn, shell=True)
 
@@ -149,6 +149,9 @@ class OutputTest(TestCase):
                                     open(self.true_corr1, 'r'), shallow=True))
         self.assertTrue(filecmp.cmp(open(test_file4, 'r'),
                                     open(self.true_corr2, 'r'), shallow=True))
+
+    def test_generate_pair_matrix(self):
+
 
 
 
