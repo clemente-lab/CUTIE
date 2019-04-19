@@ -213,8 +213,8 @@ def report_results(n_var1, n_var2, working_dir, label, initial_corr, true_corr,
                  + '_resample' + str(i+1) + '.txt'
             dict_to_print_matrix(false_comb_to_rev, fp, i)
 
-def generate_pair_matrix(base_regions, regions_set, n_var1, n_var2, samp_var1,
-                         samp_var2, infln_metrics, working_dir):
+def generate_pair_matrix(base_regions, regions_set, n_var1, n_var2,
+                         infln_metrics, working_dir):
     """
     Generate matrix for R where each row is a correlation and each column
     is an indicator value (-1, 1, 0) for FP, TP, or not-screened respectively.
@@ -226,10 +226,6 @@ def generate_pair_matrix(base_regions, regions_set, n_var1, n_var2, samp_var1,
                     that set (e.g. variable pairs)
     n_var1        - Integer. Number of variables in file 1.
     n_var2        - Integer. Number of variables in file 2.
-    samp_var1     - 2D array. Each value in row i col j is the level of
-                     variable j corresponding to sample i in the order that the
-                     samples are presented in samp_ids
-    samp_var2     - 2D array. Same as samp_var1 but for file 2.
     infln_metrics - List. Contains strings of infln_metrics (such as 'cookd').
     working_dir   - String. Path of working directory as specified by user.
                     Should end in '/'
