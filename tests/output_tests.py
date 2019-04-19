@@ -13,39 +13,43 @@ class OutputTest(TestCase):
 
     @classmethod
     def setUpClass(OutputTest):
-        OutputTest.headers1 = ['head1', 'head2', 'head3', 'head4', 'head5']
-        OutputTest.headers2 = ['var1_index', 'var2_index', 'avg_var1',
-                               'avg_var2', 'var_var1', 'var_var2', 'pvalues']
-        OutputTest.headers3 = ['var1_index', 'var2_index', 'avg_var1',
-                               'avg_var2', 'var_var1', 'var_var2']
-        OutputTest.base_regions1 = ['cutie_1pc', 'cookd', 'difits', 'dfs']
+        OutputTest.headers1 = np.array(['head1', 'head2', 'head3', 'head4',
+                                        'head5'])
+        OutputTest.headers2 = np.array(['var1_index', 'var2_index', 'avg_var1',
+                                        'avg_var2', 'var_var1', 'var_var2',
+                                        'pvalues'])
+        OutputTest.headers3 = np.array(['var1_index', 'var2_index', 'avg_var1',
+                                        'avg_var2', 'var_var1', 'var_var2'])
+        OutputTest.base_regions1 = np.array(['cutie_1pc', 'cookd', 'difits',
+                                             'dfs'])
         OutputTest.regions_set1 = {'cutie_1pc': [(0, 1), (1, 0), (2, 1), (1, 2)],
                                    'cookd': [(0, 1), (1, 0), (2, 1), (1, 2)],
                                    'diffits': [(0, 1), (1, 0), (2, 1), (1, 2)],
                                    'dfs': [(1, 0), (2, 1), (1, 2)]}
-        OutputTest.empty_array1 = []
-        OutputTest.empty_array2 = [[]]
-        OutputTest.simple_array = [1, 2, 3]
-        OutputTest.simple_pval_matrix = [[1, 1, 1], [1, 1, 1], [0, 0, 0]]
-        OutputTest.even_array1 = [[1, 2, 3, 4, 5],
-                                  [5, 4, 3, 2, 1],
-                                  [6, 7, 8, 9, 0],
-                                  [0, 9, 8, 7, 6]]
-        OutputTest.uneven_array = [[1, 2, 3, 4, 5],
-                                   [1, 2],
-                                   [3, 4, 5, 6, 7, 8, 9, 0]]
-        OutputTest.test_Rmatrix = [[0, 1, 1, 2, 1, 2, 1],
-                                   [0, 2, 1, 3, 1, 3, 1],
-                                   [1, 0, 2, 1, 2, 1, 1],
-                                   [1, 2, 2, 3, 2, 3, 1],
-                                   [2, 0, 3, 1, 3, 1, 0],
-                                   [2, 1, 3, 2, 3, 2, 0]]
-        OutputTest.test_tuple_list1 = [(1, 2), (3, 1), (4, 2), (2, 1),
-                                       (1, 3), (2, 4)]
-        OutputTest.test_tuple_list2 = [(3, 5), (2, 4), (1, 8),
-                                       (8, 1), (4, 2), (5, 3)]
-        OutputTest.test_tuple_list3 = [(1, 2), (3, 5), (2, 4), (2, 1), (5, 3),
-                                       (4, 2)]
+        OutputTest.empty_array1 = np.array([])
+        OutputTest.empty_array2 = np.array([[]])
+        OutputTest.simple_array = np.array([1, 2, 3])
+        OutputTest.simple_pval_matrix = np.array([[1, 1, 1], [1, 1, 1],
+                                                  [0, 0, 0]])
+        OutputTest.even_array1 = np.array([[1, 2, 3, 4, 5],
+                                           [5, 4, 3, 2, 1],
+                                           [6, 7, 8, 9, 0],
+                                           [0, 9, 8, 7, 6]])
+        OutputTest.uneven_array = np.array([[1, 2, 3, 4, 5],
+                                            [1, 2],
+                                            [3, 4, 5, 6, 7, 8, 9, 0]])
+        OutputTest.test_Rmatrix = np.array([[0, 1, 1, 2, 1, 2, 1],
+                                            [0, 2, 1, 3, 1, 3, 1],
+                                            [1, 0, 2, 1, 2, 1, 1],
+                                            [1, 2, 2, 3, 2, 3, 1],
+                                            [2, 0, 3, 1, 3, 1, 0],
+                                            [2, 1, 3, 2, 3, 2, 0]])
+        OutputTest.test_tuple_list1 = np.array([(1, 2), (3, 1), (4, 2), (2, 1),
+                                                (1, 3), (2, 4)])
+        OutputTest.test_tuple_list2 = np.array([(3, 5), (2, 4), (1, 8), (8, 1),
+                                                (4, 2), (5, 3)])
+        OutputTest.test_tuple_list3 = np.array([(1, 2), (3, 5), (2, 4), (2, 1),
+                                                (5, 3), (4, 2)])
         OutputTest.test_tuple_dict1 = {'1':OutputTest.test_tuple_list1,
                                        '2': OutputTest.test_tuple_list2}
 
