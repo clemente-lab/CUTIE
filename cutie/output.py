@@ -162,6 +162,72 @@ def generate_pair_matrix(base_regions, regions_set, n_var1, n_var2, working_dir)
         'data_processing/all_pairs.txt', sep = '\t', index = False)
 
 
+def print_Rmatrix(avg_var1, avg_var2, var_var1, var_var2, n_var1, n_var2,
+                  col_names, col_vars, working_dir, resample_index, label,
+                  n_corr, paired=False):
+    """
+    Creates dataframe easily loaded into R containing CUtIe's analysis results.
+    Each row is a correlation and columns contain relevant statistics e.g.
+    pvalue, correlation strength etc.
+    ----------------------------------------------------------------------------
+    INPUTS
+    avg_var1       - 1D array where k-th entry is mean value for variable k.
+                     Variables are ordered as in original data file (i.e. order
+                     is presered through parsing) for file 1.
+    avg_var2       - 1D array. Same as avg_var1 but for file 2.
+    var_var1       - 1D array where k-th entry is unbiased variance for variable
+                     k for file 1.
+    var_var2       - Same as var_var1 but for file 2.
+    n_var1         - Integer. Number of variables in file 1.
+    n_var2         - Integer. Number of variables in file 2.
+    col_names      - List of strings. Contains names of columns (e.g. pvalues).
+    col_vars       - List of 2D arrays. Contains various statistics (e.g. 2D
+                     array of pvalues, 2D array of correlations). For each
+                     array, the entry in i-th row, j-th column contains the
+                     value of that particular statistic for the correlation
+                     between variable i and j (i in file 1, j in file 2).
+    resample_index - String (cast from int). Number of points being resampled by
+                     CUtIe.
+    label          - String. Name of project assigned by user.
+    n_corr         - Number of correlations performed by CUtIe. If variables are
+                     paired, n_corr = (n choose 2) * 2 as correlations are
+                     double counted (only corr(i,i) are ignored)
+    paired         - Boolean. True if variables are paired (i.e. file 1 and file
+                     2 are the same), False otherwise.
+    OUTPUTS
+    Rmatrix        - Array. 2D array/dataframe-like object easily loaded into R
+                     summarizing above variables per correlation.
+    headers        - List of strings. Refers to column names of Rmatrix.
+    """
+    # create header row
+    headers = ['var1_index', 'var2_index', 'avg_var1', 'avg_var2', 'var_var1',
+               'var_var2']
+
+    for var in col_names:
+        headers.append(var)
+
+    # create matrix locally in python
+    R_matrix = np.zeros([n_corr, len(headers)])
+    row = 0
+    for var1 in range(n_var1):
+        for var2 in range(n_var2):
+            if not (paired and (var1 == var2)):
+                entries = [var1, var2,
+                           avg_var1[var1],
+                           avg_var2[var2],
+                           var_var1[var1],
+                           var_var2[var2]]
+                for col_var in col_vars:
+                    entries.append(col_var[var1][var2])
+                R_matrix[row] = np.array([entries])
+                row += 1
+
+    pd.DataFrame(R_matrix, columns = headers).to_csv(working_dir + \
+        'data_processing/R_matrix_' + label + '_resample_' + \
+        str(resample_index) + '.txt', sep = '\t', index = False)
+
+    return R_matrix, headers
+
 ###
 # Graphing
 ###
@@ -479,7 +545,7 @@ def plot_figure(values, fp, df_R, title):
     plt.tick_params(axis='both', which='both', top=False, right=False)
     sns.despine()
     plt.savefig(fp)
-    plt.close()
+    plt.close('all')
     return
 
 def plot_pdist(df, working_dir):
@@ -538,7 +604,7 @@ def plot_pdist(df, working_dir):
             ax.patch.set_visible(False)
             fig.set_tight_layout(True)
             plt.savefig(dist_fp)
-            plt.close()
+            plt.close('all')
 
     plot_logp_and_logpfold(df, working_dir, stacked1, 'var1')
     plot_logp_and_logpfold(df, working_dir, stacked2, 'var2')
@@ -599,11 +665,8 @@ def plot_logp_and_logpfold(df, working_dir, stacked, var_num):
                                                 vmax=max(avg_var))
         cbar = matplotlib.colorbar.ColorbarBase(cax, cmap=cmap, norm=normalize)
 
-    #plt.legend(loc='upper left', scatterpoints=1, frameon=False,
-    #    title='cbrt norm avg ' + var_num)
-    # fig.set_tight_layout(True)
     plt.savefig(dist_fp)
-    plt.close()
+    plt.close('all')
 
 def plot_corr(row, df_folder_fp, f1type, f2type, var1_names, var2_names,
               samp_var1, samp_var2, sim, resample_k, exceeds_points, rev_points,
@@ -694,7 +757,7 @@ def plot_corr(row, df_folder_fp, f1type, f2type, var1_names, var2_names,
     plt.tick_params(axis='both', which='both', top=False, right=False)
     sns.despine()
     plt.savefig(df_folder_fp + '/' + str(var1) + '_' + str(var2) + '.png')
-    plt.close()
+    plt.close('all')
 
 def plot_corr_sets(graph_bound, df, working_dir, f1type, f2type, var1_names,
                    var2_names, samp_var1, samp_var2, sim, exceeds_points,
@@ -826,7 +889,7 @@ def diag_plots(samp_counter, var1_counter, var2_counter, resample_k,
             plt.tick_params(axis='both', which='both', top=False, right=False)
             sns.despine()
             plt.savefig(diag_fp)
-            plt.close()
+            plt.close('all')
 
 ###
 # Log file handling
