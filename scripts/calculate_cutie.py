@@ -97,15 +97,15 @@ def calculate_cutie(defaults_fp, config_fp):
     # we let the dominant fil 'override' the sample_id list ordering
     samp_ids2, var2_names, samp_var2_df, n_var2, n_samp = parse.parse_input(
         f2type, samp_var2_fp, startcol2, endcol2, delimiter2, skip2)
-    output.write_log('The length of variables for file 2 is ' + str(n_var2))
-    output.write_log('The number of samples for file 2 is ' + str(n_samp))
+    output.write_log('The length of variables for file 2 is ' + str(n_var2), log_fp)
+    output.write_log('The number of samples for file 2 is ' + str(n_samp), log_fp)
     output.write_log('The md5 of samp_var2 was ' + \
         str(parse.md5_checksum(samp_var2_fp)), log_fp)
 
     samp_ids1, var1_names, samp_var1_df, n_var1, n_samp = parse.parse_input(
         f1type, samp_var1_fp, startcol1, endcol1, delimiter1, skip1)
-    output.write_log('The length of variables for file 1 is ' + str(n_var1))
-    output.write_log('The number of samples for file 1 is ' + str(n_samp))
+    output.write_log('The length of variables for file 1 is ' + str(n_var1), log_fp)
+    output.write_log('The number of samples for file 1 is ' + str(n_samp), log_fp)
     output.write_log('The md5 of samp_var1 was ' + \
         str(parse.md5_checksum(samp_var1_fp)), log_fp)
 
