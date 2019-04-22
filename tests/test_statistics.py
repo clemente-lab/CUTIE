@@ -69,7 +69,7 @@ class TestStatistics(unittest.TestCase):
                 [0.10540926, 1.        , 0.9486833 ],
                 [0.11111111, 0.9486833 , 1.        ]]), np.array([
                 [0.01917673, 0.80054211, 0.79468572],
-                [0.80054211, 0.01430588, 0.0229774 ],
+                [0.80054211, 0.01666667, 0.0229774 ],
                 [0.79468572, 0.0229774 , 0.01917673]])),
             'minepy': (np.array([
                 [1.        , 0.41997309, 0.41997309],
@@ -127,10 +127,10 @@ class TestStatistics(unittest.TestCase):
 
             'kkc': {
             'pvalues': np.array([[0.01917673, 0.80054211, 0.79468572],
-                                 [0.80054211, 0.01430588, 0.0229774 ],
+                                 [0.80054211, 0.01666667, 0.0229774 ],
                                  [0.79468572, 0.0229774 , 0.01917673]]),
             'logpvals': np.array([[-3.95405776, -0.22246615, -0.22980857],
-                                  [-0.22246615, -4.24708475, -3.77324409],
+                                  [-0.22246615, -4.0943446, -3.77324409],
                                   [-0.22980857, -3.77324409, -3.95405776]]),
             'correlations': np.array([[1.        , 0.10540926, 0.11111111],
                                       [0.10540926, 1.        , 0.9486833 ],
@@ -357,9 +357,9 @@ class TestStatistics(unittest.TestCase):
     def test_compute_kc(self):
         assert_almost_equal((1,0), statistics.compute_kc(self.undef_corr[0],
                                                          self.undef_corr[1]))
-        assert_almost_equal((0.117,1), statistics.compute_kc(
+        assert_almost_equal((0.333,1), statistics.compute_kc(
             self.perfect_corr[0], self.perfect_corr[1]), decimal=3)
-        assert_almost_equal((0.601,0.333), statistics.compute_kc(
+        assert_almost_equal((1,0.333), statistics.compute_kc(
             self.empirical_corr[0], self.empirical_corr[1]), decimal=3)
 
 
@@ -386,6 +386,7 @@ class TestStatistics(unittest.TestCase):
             for k in range(len(keys)):
                 assert_almost_equal(self.assign_statistics_truths[stat][keys[k]],
                                     stats_vals[k], decimal=7)
+
 
         # assertRaise for valuerror, 'kpp' not a valid stat string
         self.assertRaises(ValueError, statistics.assign_statistics,
@@ -452,7 +453,7 @@ class TestStatistics(unittest.TestCase):
 
     def test_pointwise_comparison(self):
         assert self.complete_pointwise_results == statistics.pointwise_comparison(
-            self.infln_mapping, self.infln_metrics, self.samp_var1,
+            self.infln_metrics, self.infln_mapping, self.samp_var1,
             self.samp_var2, self.pvalues, self.correlations, self.n_corr, self.initial_corr,
                          self.threshold, 'kpc', self.fold_value, self.paired, self.fold)
 
