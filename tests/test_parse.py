@@ -95,9 +95,11 @@ class TestStatistics(unittest.TestCase):
                     np.array([8.50279265e+09, 4.01598194e+12]))}
 
     def test_parse_input(self):
+        # the output of results is as follows
         # samp_ids, var_names, df, n_var, n_samp
         results = parse.parse_input(self.f2type, self.samp_var2_fp, self.startcol2,
             self.endcol2, self.delimiter2, self.skip2)
+        # testing samp_ids match
         for i in range(len(results[0])):
             assert results[0][i] == [
                 '100716FG.C.1.RL', '100804MB.C.1.RL', '100907LG.C.1.RL',
@@ -110,14 +112,17 @@ class TestStatistics(unittest.TestCase):
                 '110720BB.C.1.RL', '110727MK.C.1.RL', '110801EH.C.1.RL',
                 '110808JB.N.1.RL', '110921AR.C.1.RL', '111003JG.C.1.RL',
                 '111115WK.C.1.RL'][i]
+        # testing var_names match
         for i in range(len(results[1])):
             assert results[1][i] == ['glutamic_acid', 'glycine'][i]
 
+        # testing n_var and n_samp match
         assert results[3] == 2
         assert results[4] == 28
 
         results = parse.parse_input(self.f1type, self.samp_var1_fp, self.startcol1,
             self.endcol1, self.delimiter1, self.skip1)
+        # testing samp_ids match
         for i in range(len(results[0])):
             assert results[0][i] == [
                 '101019AB.N.1.RL', '110228CJ.N.1.RL', '110314CS.N.1.RL',
@@ -130,6 +135,8 @@ class TestStatistics(unittest.TestCase):
                 '101007PC.C.1.RL', '101026RM.C.1.RL', '110222MG.C.1.RL',
                 '110330DS.C.1.RL', '110406MB.C.1.RL', '110420JR.C.1.RL',
                 '110523CB.C.1.RL'][i]
+
+        # testing var_names match
         for i in range(len(results[1])):
             assert results[1][i] == [
                 'k__Archaea;p__Euryarchaeota;c__Methanobacteria;o__Methanobacteriales;f__Methanobacteriaceae;g__',
@@ -138,6 +145,7 @@ class TestStatistics(unittest.TestCase):
                 'k__Archaea;p__Euryarchaeota;c__Methanobacteria;o__Methanobacteriales;f__Methanobacteriaceae;g__Methanothermobacter',
                 'k__Archaea;p__Euryarchaeota;c__Methanomicrobia;o__Methanocellales;f__Methanocellaceae;g__Methanocella'][i]
 
+        # testing n_var and n_samp match
         assert results[3] == 5
         assert results[4] == 28
 

@@ -464,6 +464,7 @@ class TestStatistics(unittest.TestCase):
 
         combs = [list(x) for x in itertools.combinations(range(self.n_samp), self.resample_k)]
         for indices in combs:
+            # ~ operator negates the output in the case of a boolean array
             new_var1 = var1[~np.in1d(range(len(var1)), indices)]
             new_var2 = var2[~np.in1d(range(len(var2)), indices)]
 
