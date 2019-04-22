@@ -38,7 +38,6 @@ setup(name='cutie',
       scripts=glob('scripts/*py'),
       install_requires=[
           'click',
-          'configparser',
           'numpy',
           'pandas',
           'statsmodels',
