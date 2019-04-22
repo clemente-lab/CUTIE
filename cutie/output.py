@@ -21,100 +21,6 @@ from cutie import parse
 # Creating matrices/dataframes to hold results
 ###
 
-def print_matrix(matrix, output_fp, header, delimiter='\t'):
-    """
-    Creates .txt file (or desired output format) of a 2D matrix. Open will
-    remove any pre-existing file with the same name.
-    ----------------------------------------------------------------------------
-    INPUTS
-    matrix    - Array. 2D array to be printed.
-    output_fp - String. Path and name of destination of file.
-    delimiter - String. Delimiter used when printing file.
-    header    - List of strings. Contains names of each column. Length must
-                match number of cols of matrix.
-    """
-    # obtain dimensions
-    rows = np.size(matrix, 0)
-    cols = np.size(matrix, 1)
-
-    with open(output_fp, 'w') as f:
-        # write header
-        for h in header:
-            f.write(h + delimiter)
-        f.write('\n')
-        # write rows and columns
-        for r in range(rows):
-            for c in range(cols):
-                f.write(str(matrix[r][c]) + delimiter)
-            f.write('\n')
-
-
-def print_Rmatrix(avg_var1, avg_var2, var_var1, var_var2, n_var1, n_var2,
-                  col_names, col_vars, working_dir, resample_index, label,
-                  n_corr, paired=False):
-    """
-    Creates dataframe easily loaded into R containing CUtIe's analysis results.
-    Each row is a correlation and columns contain relevant statistics e.g.
-    pvalue, correlation strength etc.
-    ----------------------------------------------------------------------------
-    INPUTS
-    avg_var1       - 1D array where k-th entry is mean value for variable k.
-                     Variables are ordered as in original data file (i.e. order
-                     is presered through parsing) for file 1.
-    avg_var2       - 1D array. Same as avg_var1 but for file 2.
-    var_var1       - 1D array where k-th entry is unbiased variance for variable
-                     k for file 1.
-    var_var2       - Same as var_var1 but for file 2.
-    n_var1         - Integer. Number of variables in file 1.
-    n_var2         - Integer. Number of variables in file 2.
-    col_names      - List of strings. Contains names of columns (e.g. pvalues).
-    col_vars       - List of 2D arrays. Contains various statistics (e.g. 2D
-                     array of pvalues, 2D array of correlations). For each
-                     array, the entry in i-th row, j-th column contains the
-                     value of that particular statistic for the correlation
-                     between variable i and j (i in file 1, j in file 2).
-    resample_index - String (cast from int). Number of points being resampled by
-                     CUtIe.
-    label          - String. Name of project assigned by user.
-    n_corr         - Number of correlations performed by CUtIe. If variables are
-                     paired, n_corr = (n choose 2) * 2 as correlations are
-                     double counted (only corr(i,i) are ignored)
-    paired         - Boolean. True if variables are paired (i.e. file 1 and file
-                     2 are the same), False otherwise.
-
-    OUTPUTS
-    Rmatrix        - Array. 2D array/dataframe-like object easily loaded into R
-                     summarizing above variables per correlation.
-    headers        - List of strings. Refers to column names of Rmatrix.
-    """
-    # create header row
-    headers = ['var1_index', 'var2_index', 'avg_var1', 'avg_var2', 'var_var1',
-               'var_var2']
-
-    for var in col_names:
-        headers.append(var)
-
-    # create matrix locally in python
-    R_matrix = np.zeros([n_corr, len(headers)])
-    row = 0
-    for var1 in range(n_var1):
-        for var2 in range(n_var2):
-            if not (paired and (var1 == var2)):
-                entries = [var1, var2,
-                           avg_var1[var1],
-                           avg_var2[var2],
-                           var_var1[var1],
-                           var_var2[var2]]
-                for col_var in col_vars:
-                    entries.append(col_var[var1][var2])
-                R_matrix[row] = np.array([entries])
-                row += 1
-
-    print_matrix(R_matrix, working_dir + 'data_processing/R_matrix_' + label + \
-                        '_resample_' + str(resample_index) + '.txt', headers, '\t')
-
-    return R_matrix, headers
-
 def print_true_false_corr(initial_corr, true_corr, working_dir, statistic,
                           resample_k, method):
     """
@@ -143,7 +49,8 @@ def print_true_false_corr(initial_corr, true_corr, working_dir, statistic,
         for point in corr_set:
             matrix[row] = point
             row += 1
-        print_matrix(matrix, output_fp, header=['var1', 'var2'], delimiter='\t')
+        pd.DataFrame(matrix, columns = ['var1', 'var2']).to_csv(output_fp,
+            sep = '\t', index = False)
 
     # iterates through each resampling index
     for k in range(resample_k):
@@ -188,7 +95,7 @@ def report_results(n_var1, n_var2, working_dir, label, initial_corr, true_corr,
         pairs = np.zeros([n_pairs, 2])
         for p in range(n_pairs):
             pairs[p] = comb_to_rev[str(i+1)][p]
-        print_matrix(pairs, fp, '\t')
+        pd.DataFrame(pairs).to_csv(fp, sep = '\t', index = False)
 
     # for each resampling value of k
     for i in range(int(resample_k)):
@@ -228,6 +135,7 @@ def generate_pair_matrix(base_regions, regions_set, n_var1, n_var2, working_dir)
     working_dir   - String. Path of working directory as specified by user.
                     Should end in '/'
     """
+
     headers = ['var1', 'var2']
     for metric in base_regions:
         headers.append(metric)
@@ -250,8 +158,8 @@ def generate_pair_matrix(base_regions, regions_set, n_var1, n_var2, working_dir)
             row_number = n_var2 * var1 + var2
             pair_matrix[row_number][region_index + 2] = -1
 
-    print_matrix(pair_matrix, working_dir + \
-        'data_processing/all_pairs.txt', headers, '\t')
+    pd.DataFrame(pair_matrix, columns = headers).to_csv(working_dir + \
+        'data_processing/all_pairs.txt', sep = '\t', index = False)
 
 
 ###
@@ -892,9 +800,9 @@ def diag_plots(samp_counter, var1_counter, var2_counter, resample_k,
             for j in range(len(counter[str(i+1)])):
                 counts[j] = np.array([j, counter[str(i+1)][j]])
 
-            print_matrix(counts, working_dir + 'data_processing/' + 'counter_' \
-                         + stats + '_resample' + str(i+1) + '.txt',
-                         ['index', 'count'], '\t')
+            pd.DataFrame(counts, columns = ['index', 'count']).to_csv(
+                working_dir + 'data_processing/' + 'counter_'  + stats + \
+                '_resample' + str(i+1) + '.txt', sep = '\t', index = False)
 
             # create figure
             fig = plt.figure()
@@ -941,9 +849,12 @@ def init_log(log_dir, defaults_fp, config_fp):
     # initialize log, write md5 of config files
     with open(log_fp, 'w') as f:
         f.write('Begin logging at ' + str(now.isoformat()))
-        f.write('\nThe original command was -df ' + defaults_fp + ' -cp ' + config_fp)
-        f.write('\nThe defaults_fp config file was '+ parse.md5Checksum(defaults_fp))
-        f.write('\nThe config_fp config file was '+ parse.md5Checksum(config_fp))
+        f.write('\nThe original command was -df ' + defaults_fp
+                + ' -cp ' + config_fp)
+        f.write('\nThe defaults_fp config file was '
+                + parse.md5Checksum(defaults_fp))
+        f.write('\nThe config_fp config file was '
+                + parse.md5Checksum(config_fp))
 
     return log_fp
 
