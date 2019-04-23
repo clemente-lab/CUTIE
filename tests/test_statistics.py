@@ -445,11 +445,11 @@ class TestStatistics(unittest.TestCase):
         influence1, influence2 = statistics.return_influence(self.var1, self.var2,
             samp_var1=self.samp_var1,samp_var2=self.samp_var1)
         for f in self.infln_mapping:
-            # -7 because numbers get large
+            # -14 because numbers get large
             assert_almost_equal(self.pointwise_results[f],
                 self.infln_mapping[f](self.var1, self.var2, self.samp_var1,
                     self.samp_var1, influence1, influence2, self.threshold,
-                    self.sign, self.fold, self.fold_value), decimal=-7)
+                    self.sign, self.fold, self.fold_value), decimal=-14)
 
     def test_pointwise_comparison(self):
         assert self.complete_pointwise_results == statistics.pointwise_comparison(
@@ -534,9 +534,6 @@ class TestStatistics(unittest.TestCase):
                     for key in results[r][str(k)].keys():
                         assert_almost_equal(results[r][str(k)][key],
                             self.update_cutiek_true_corr_results[str(k)][r][str(k)][key])
-
-
-
 
 
     def test_get_pCI(self):
