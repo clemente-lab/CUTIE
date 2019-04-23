@@ -137,7 +137,7 @@ def calculate_cutie(defaults_fp, config_fp):
     # pull mine-specific data
     if statistic in mine_stats:
         # obtain p_value bins
-        with open(minep_fp, 'rU') as f:
+        with open(minep_fp, 'r') as f:
             mine_bins, pvalue_bins = parse.parse_minep(f, mine_delimiter, pskip)
     else:
         # placeholder variables
@@ -147,7 +147,7 @@ def calculate_cutie(defaults_fp, config_fp):
     # initial output
     pvalues, logpvals, corrs, r2vals = statistics.assign_statistics(samp_var1,
         samp_var2, statistic, pearson_stats, spearman_stats, kendall_stats,
-        mine_stats, mine_bins, pvalue_bins, f1type, log_fp)
+        mine_stats, mine_bins, pvalue_bins)
 
     # determine significance threshold and number of correlations
     output.write_log('The type of mc correction used was ' + mc, log_fp)
@@ -198,7 +198,7 @@ def calculate_cutie(defaults_fp, config_fp):
                              str(len(region_sets[str(region)])), log_fp)
 
         output.generate_pair_matrix(infln_metrics, FP_infln_sets, n_var1, n_var2,
-                                samp_var1, samp_var2, working_dir)
+                                    working_dir)
 
         # report results
         for metric in infln_metrics:
