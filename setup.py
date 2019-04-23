@@ -27,7 +27,7 @@ setup(name='cutie',
       classifiers=[
         'Development Status :: 3 - Alpha',
         'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
-        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.7.3',
         'Topic :: Scientific/Engineering :: Bio-Informatics',
       ],
       url='http://github.com/clemente-lab/cutie',
