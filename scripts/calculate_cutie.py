@@ -91,21 +91,23 @@ def calculate_cutie(defaults_fp, config_fp):
         raise ValueError('Invalid statistic: %s chosen' % statistic)
     if corr_compare and resample_k != 1:
         raise ValueError('Resample_k must be 1 for pointwise stats')
+    if CI_method not in ['log','cbrt','none']:
+        raise ValueError('Invalid CI method chosen: ' + CI_method)
 
     # file handling and parsing decisions
     # file 1 is the 'dominant' file type and should always contain the OTU file
     # we let the dominant fil 'override' the sample_id list ordering
     samp_ids2, var2_names, samp_var2_df, n_var2, n_samp = parse.parse_input(
         f2type, samp_var2_fp, startcol2, endcol2, delimiter2, skip2)
-    output.write_log('The length of variables for file 2 is ' + str(n_var2))
-    output.write_log('The number of samples for file 2 is ' + str(n_samp))
+    output.write_log('The length of variables for file 2 is ' + str(n_var2), log_fp)
+    output.write_log('The number of samples for file 2 is ' + str(n_samp), log_fp)
     output.write_log('The md5 of samp_var2 was ' + \
         str(parse.md5_checksum(samp_var2_fp)), log_fp)
 
     samp_ids1, var1_names, samp_var1_df, n_var1, n_samp = parse.parse_input(
         f1type, samp_var1_fp, startcol1, endcol1, delimiter1, skip1)
-    output.write_log('The length of variables for file 1 is ' + str(n_var1))
-    output.write_log('The number of samples for file 1 is ' + str(n_samp))
+    output.write_log('The length of variables for file 1 is ' + str(n_var1), log_fp)
+    output.write_log('The number of samples for file 1 is ' + str(n_samp), log_fp)
     output.write_log('The md5 of samp_var1 was ' + \
         str(parse.md5_checksum(samp_var1_fp)), log_fp)
 
@@ -137,7 +139,7 @@ def calculate_cutie(defaults_fp, config_fp):
     # pull mine-specific data
     if statistic in mine_stats:
         # obtain p_value bins
-        with open(minep_fp, 'rU') as f:
+        with open(minep_fp, 'r') as f:
             mine_bins, pvalue_bins = parse.parse_minep(f, mine_delimiter, pskip)
     else:
         # placeholder variables
@@ -147,7 +149,7 @@ def calculate_cutie(defaults_fp, config_fp):
     # initial output
     pvalues, logpvals, corrs, r2vals = statistics.assign_statistics(samp_var1,
         samp_var2, statistic, pearson_stats, spearman_stats, kendall_stats,
-        mine_stats, mine_bins, pvalue_bins, f1type, log_fp)
+        mine_stats, mine_bins, pvalue_bins)
 
     # determine significance threshold and number of correlations
     output.write_log('The type of mc correction used was ' + mc, log_fp)
@@ -198,7 +200,7 @@ def calculate_cutie(defaults_fp, config_fp):
                              str(len(region_sets[str(region)])), log_fp)
 
         output.generate_pair_matrix(infln_metrics, FP_infln_sets, n_var1, n_var2,
-                                samp_var1, samp_var2, working_dir)
+                                    working_dir)
 
         # report results
         for metric in infln_metrics:
