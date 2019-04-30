@@ -36,9 +36,7 @@ http://minepy.sourceforge.net/docs/0.3.5/install.html
 The config file test_config.ini will need to be modified depending on where you
 are running CUTIE.
 
-mkdir lungpt_1pc_point_unit_test0.05/
-
-python3 /Users/KevinBu/Desktop/clemente_lab/CUTIE/scripts/calculate_cutie.py -df /Users/KevinBu/Desktop/clemente_lab/CUTIE/tests/config_defaults.ini -cf /Users/KevinBu/Desktop/clemente_lab/CUTIE/tests/lungpt_1pc_point_unit_test_kkc1fdr0.05/test_config.ini
+python3 calculate_cutie.py -df tests/config_defaults.ini -cf tests/lungpt_1pc_point_unit_test_kkc1fdr0.05/test_config.ini
 
 
 
