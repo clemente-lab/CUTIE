@@ -604,7 +604,7 @@ def calculate_FP_sets(initial_corr, corrs, samp_var1, samp_var2, infln_metrics,
     return FP_infln_sets
 
 
-def pointwise_comparison(infln_mapping, infln_metrics, samp_var1, samp_var2,
+def pointwise_comparison(infln_metrics, infln_mapping, samp_var1, samp_var2,
                          pvalues, corrs, n_corr, initial_corr,
                          threshold, statistic, fold_value, paired, fold):
     """
@@ -1511,7 +1511,7 @@ def resamplek_cutie(var1_index, var2_index, n_samp, samp_var1, samp_var2,
 ###
 
 
-def get_pCI(p_values, n_samp, CI_method='log', zero_replace=10e-100):
+def get_pCI(p_values, n_samp, CI_method='none', zero_replace=10e-100):
     """
     Compute logp confidence interval.
     ----------------------------------------------------------------------------

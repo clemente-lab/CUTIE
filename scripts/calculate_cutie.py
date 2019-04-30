@@ -91,6 +91,8 @@ def calculate_cutie(defaults_fp, config_fp):
         raise ValueError('Invalid statistic: %s chosen' % statistic)
     if corr_compare and resample_k != 1:
         raise ValueError('Resample_k must be 1 for pointwise stats')
+    if CI_method not in ['log','cbrt','none']:
+        raise ValueError('Invalid CI method chosen: ' + CI_method)
 
     # file handling and parsing decisions
     # file 1 is the 'dominant' file type and should always contain the OTU file

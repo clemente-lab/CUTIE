@@ -161,7 +161,6 @@ def generate_pair_matrix(base_regions, regions_set, n_var1, n_var2, working_dir)
     pd.DataFrame(pair_matrix, columns = headers).to_csv(working_dir + \
         'data_processing/all_pairs.txt', sep = '\t', index = False)
 
-
 def print_Rmatrix(avg_var1, avg_var2, var_var1, var_var2, n_var1, n_var2,
                   col_names, col_vars, working_dir, resample_index, label,
                   n_corr, paired=False):
