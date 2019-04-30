@@ -33,11 +33,9 @@ def indicator(n_var1, n_var2, initial_corr, true_corr):
                     described as above.
     """
     indicators = np.zeros((n_var1, n_var2))
-    for point in initial_corr:
-        i, j = point
+    for i, j in initial_corr:
         indicators[i][j] = -1
-    for point in true_corr:
-        i, j = point
+    for i, j in true_corr:
         indicators[i][j] = 1
     return indicators
 
@@ -48,7 +46,7 @@ def init_var_indicators(var1_index, var2_index, samp_var1, samp_var2, forward):
     ----------------------------------------------------------------------------
     INPUTS
     var1_index - Integer. Index of variable from file 1 for pairwise correlation.
-    var2_index - Integer. Index of variable from file 1 for pairwise correlation.
+    var2_index - Integer. Index of variable from file 2 for pairwise correlation.
     samp_var1  - 2D array. Each value in row i col j is the level of variable j
                  corresponding to sample i in the order that the samples are
                  presented in samp_ids.
@@ -77,10 +75,10 @@ def init_var_indicators(var1_index, var2_index, samp_var1, samp_var2, forward):
 
     exceeds = np.zeros(n_samp)
     reverse = np.zeros(n_samp)
-    if forward is True:
+    if forward:
         extrema_p = np.zeros(n_samp)
         extrema_r = np.ones(n_samp)
-    elif forward is False:
+    else:
         extrema_p = np.ones(n_samp)
         extrema_r = np.zeros(n_samp)
 
