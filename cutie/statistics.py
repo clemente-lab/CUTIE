@@ -196,7 +196,7 @@ def set_threshold(pvalues, alpha, mc, paired=False):
         # fill the upper diagonal with nan as to not double count pvalues in FDR
         pvalues[np.triu_indices(pvalues.shape[1], 0)] = np.nan
         # currently computing all pairs double counting
-        n_corr = np.size(pvalues, 1) * (np.size(pvalues, 1) - 1) / 2
+        n_corr = np.size(pvalues, 1) * (np.size(pvalues, 1) - 1)//2
     else:
         n_corr = np.size(pvalues, 0) * np.size(pvalues, 1)
 
