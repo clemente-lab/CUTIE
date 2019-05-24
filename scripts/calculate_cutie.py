@@ -149,7 +149,7 @@ def calculate_cutie(defaults_fp, config_fp):
     # initial output
     pvalues, logpvals, corrs, r2vals = statistics.assign_statistics(samp_var1,
         samp_var2, statistic, pearson_stats, spearman_stats, kendall_stats,
-        mine_stats, mine_bins, pvalue_bins)
+        mine_stats, mine_bins, pvalue_bins, paired)
 
     # determine significance threshold and number of correlations
     output.write_log('The type of mc correction used was ' + mc, log_fp)

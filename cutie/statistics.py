@@ -19,7 +19,7 @@ np.seterr(divide='ignore', invalid='ignore')
 
 def assign_statistics(samp_var1, samp_var2, statistic, pearson_stats,
                       spearman_stats, kendall_stats, mine_stats, mine_bins,
-                      pvalue_bins):
+                      pvalue_bins, paired):
     """
     Creates dictionary mapping statistics to 2D matrix containing relevant
     statistics (e.g. pvalue, correlation) for correlation between var i and j.
@@ -45,6 +45,7 @@ def assign_statistics(samp_var1, samp_var2, statistic, pearson_stats,
                      observed MIC_str.
     pvalue_bins    - List. Sorted list of pvalues from greatest to least used
                      by MINE to bin the MIC_str.
+    paired         - Boolean. True if variables are paired.
 
     OUTPUTS
     pvalues        - 2D arrays where entry i,j represents corresponding value
