@@ -120,7 +120,8 @@ def report_results(n_var1, n_var2, working_dir, label, initial_corr, true_corr,
                  + '_resample' + str(i+1) + '.txt'
             dict_to_print_matrix(false_comb_to_rev, fp, i)
 
-def generate_pair_matrix(base_regions, regions_set, n_var1, n_var2, working_dir):
+def generate_pair_matrix(base_regions, regions_set, n_var1, n_var2, working_dir,
+                         paired):
     """
     Generate matrix for R where each row is a correlation and each column
     is an indicator value -1 for FP as identified by that metric.
@@ -134,20 +135,28 @@ def generate_pair_matrix(base_regions, regions_set, n_var1, n_var2, working_dir)
     n_var2        - Integer. Number of variables in file 2.
     working_dir   - String. Path of working directory as specified by user.
                     Should end in '/'
+    paired        - Boolean. True if input files are the same.
     """
 
     headers = ['var1', 'var2']
     for metric in base_regions:
         headers.append(metric)
-    pair_matrix = np.zeros([n_var1 * n_var2, len(headers)])
+    if paired:
+        pair_matrix = np.zeros([n_var1 * (n_var2 - 1)/2, len(headers)])
+    else:
+        pair_matrix = np.zeros([n_var1 * n_var2, len(headers)])
 
     # initialize the indices of the correlations of the row matrix,
     # each row is a correlation
     for var1 in range(n_var1):
         for var2 in range(n_var2):
-            row_number = n_var2 * var1 + var2
-            pair_matrix[row_number][0] = var1
-            pair_matrix[row_number][1] = var2
+            # if paired is true and var1 <= var2,
+            # then the statement is overall false
+            # this excludes var pairs like (3, 5)
+            if not (paired and (var1 <= var2)):
+                row_number = n_var2 * var1 + var2
+                pair_matrix[row_number][0] = var1
+                pair_matrix[row_number][1] = var2
 
     for region in base_regions:
         # region_set is a list of tuples
@@ -210,7 +219,7 @@ def print_Rmatrix(avg_var1, avg_var2, var_var1, var_var2, n_var1, n_var2,
     row = 0
     for var1 in range(n_var1):
         for var2 in range(n_var2):
-            if not (paired and (var1 == var2)):
+            if not (paired and (var1 <= var2)):
                 entries = [var1, var2,
                            avg_var1[var1],
                            avg_var2[var2],

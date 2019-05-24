@@ -200,7 +200,7 @@ def calculate_cutie(defaults_fp, config_fp):
                              str(len(region_sets[str(region)])), log_fp)
 
         output.generate_pair_matrix(infln_metrics, FP_infln_sets, n_var1, n_var2,
-                                    working_dir)
+                                    working_dir, paired)
 
         # report results
         for metric in infln_metrics:

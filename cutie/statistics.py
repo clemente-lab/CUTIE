@@ -55,17 +55,21 @@ def assign_statistics(samp_var1, samp_var2, statistic, pearson_stats,
     n_var1, n_var2, n_samp = utils.get_param(samp_var1, samp_var2)
 
     if statistic in pearson_stats:
-        corrs, pvalues = initial_stats_SLR(samp_var1, samp_var2, stats.pearsonr)
+        corrs, pvalues = initial_stats_SLR(samp_var1, samp_var2, stats.pearsonr,
+                                           paired)
         # Index 0 gets you the r values, 1 gets the p values
 
     elif statistic in spearman_stats:
-        corrs, pvalues = initial_stats_SLR(samp_var1, samp_var2, stats.spearmanr)
+        corrs, pvalues = initial_stats_SLR(samp_var1, samp_var2, stats.spearmanr,
+                                           paired)
 
     elif statistic in kendall_stats:
-        corrs, pvalues = initial_stats_SLR(samp_var1, samp_var2, stats.kendalltau)
+        corrs, pvalues = initial_stats_SLR(samp_var1, samp_var2, stats.kendalltau,
+                                           paired)
 
     elif statistic in mine_stats:
-        corrs, pvalues = initial_stats_MINE(n_var1, samp_var1, mine_bins, pvalue_bins)
+        corrs, pvalues = initial_stats_MINE(n_var1, samp_var1, mine_bins, pvalue_bins,
+                                            paired)
 
     else:
         raise ValueError('Invalid statistic chosen: ' + statistic)
@@ -73,7 +77,7 @@ def assign_statistics(samp_var1, samp_var2, statistic, pearson_stats,
     return pvalues, np.log(pvalues), corrs, np.square(corrs)
 
 
-def initial_stats_SLR(samp_var1, samp_var2, corr_func):
+def initial_stats_SLR(samp_var1, samp_var2, corr_func, paired):
     """
     Helper function for assign_statistics. Forks between desired correlation
     coefficient (Pearson, Spearman, Kendall and MINE). Computes an initial
@@ -89,6 +93,7 @@ def initial_stats_SLR(samp_var1, samp_var2, corr_func):
     samp_var2  - 2D array. Same as samp_var1 but for file 2.
     corr_func  - Function. Desired function for computing correlation (e.g.
                  stats.pearsonr, stats.spearmanr, stats.kendalltau).
+    paired     - Boolean. True if variables are paired.
 
     OUTPUTS
     stat_array - 3D array. Depth k = 2, row i, col j corresponds to the value of
@@ -103,15 +108,16 @@ def initial_stats_SLR(samp_var1, samp_var2, corr_func):
     # subset the data matrices into the cols needed
     for var1 in range(n_var1):
         for var2 in range(n_var2):
-            var1_values, var2_values = utils.remove_nans(samp_var1[:, var1],
-                                                         samp_var2[:, var2])
-            corrs[var1][var2], pvalues[var1][var2] = corr_func(var1_values,
-                                                               var2_values)
+            if not (paired and (var1 <= var2)):
+                var1_values, var2_values = utils.remove_nans(samp_var1[:, var1],
+                                                             samp_var2[:, var2])
+                corrs[var1][var2], pvalues[var1][var2] = corr_func(var1_values,
+                                                                   var2_values)
 
     return corrs, pvalues
 
 
-def initial_stats_MINE(n_var, samp_var, mine_bins, pvalue_bins):
+def initial_stats_MINE(n_var, samp_var, mine_bins, pvalue_bins, paired):
     """
     Helper function for assign_statistics.  Computes an initial
     set of values (MIC_str and corresponding pvalue) for the MIC statistic for
@@ -129,6 +135,7 @@ def initial_stats_MINE(n_var, samp_var, mine_bins, pvalue_bins):
                   observed MIC_str.
     pvalue_bins - List. Sorted list of pvalues from greatest to least used by
                   MINE to bin the MIC_str.
+    paired      - Boolean. True if variables are paired.
 
     OUTPUTS
     MIC_str     - 2D array. Entry in i-th row, j-th column corresponds to MIC
@@ -148,19 +155,19 @@ def initial_stats_MINE(n_var, samp_var, mine_bins, pvalue_bins):
     MIC_str = np.zeros(shape=[n_var, n_var])
     for i in range(n_var):
         for j in range(n_var):
-            if i == j:
-                MIC_str[i][j] = 1
-            elif i < j:
+            if i < j:
                 k = int(abs(n_var*i - i*(i+1)/2 - i - 1 + j))
-                MIC_str[i][j] = MIC_flat[k]
+                # consistent with other stats, we only populate the lower half
+                # of the matrix
                 MIC_str[j][i] = MIC_flat[k]
 
     # convert MIC strength into p value
     MIC_pvalues = np.ones(shape=[n_var, n_var])
     for i in range(n_var):
         for j in range(n_var):
-            MIC_pvalues[i][j] = str_to_pvalues(pvalue_bins, MIC_str[i][j],
-                                               mine_bins)
+            if i < j :
+                MIC_pvalues[i][j] = str_to_pvalues(pvalue_bins, MIC_str[j][i],
+                                                   mine_bins)
 
     return MIC_str, MIC_pvalues
 
@@ -188,7 +195,7 @@ def set_threshold(pvalues, alpha, mc, paired=False):
         # fill the upper diagonal with nan as to not double count pvalues in FDR
         pvalues[np.triu_indices(pvalues.shape[1], 0)] = np.nan
         # currently computing all pairs double counting
-        n_corr = np.size(pvalues, 1) * (np.size(pvalues, 1) - 1)
+        n_corr = np.size(pvalues, 1) * (np.size(pvalues, 1) - 1) / 2
     else:
         n_corr = np.size(pvalues, 0) * np.size(pvalues, 1)
 
@@ -695,14 +702,12 @@ def get_initial_corr(n_var1, n_var2, pvalues, threshold, paired):
     for var1 in range(n_var1):
         for var2 in range(n_var2):
             pair = (var1, var2)
-            # if paired is true and var1 == var2,
-            # then the statement is overall false
-            if not (paired and (var1 == var2)):
+            # if variables are paired then avoid double counting e.g.
+            # then don't compute corr(i,j) for i <= j
+            if not (paired and (var1 <= var2)):
                 all_pairs.append(pair)
-            # if variables are paired i.e. both x1 and x2 are the same
-            # then don't compute corr(i,i)
-            if pvalues[var1][var2] < threshold and not (paired and (var1 == var2)):
-                initial_corr.append(pair)
+                if pvalues[var1][var2] < threshold:
+                    initial_corr.append(pair)
 
     return initial_corr, all_pairs
 
