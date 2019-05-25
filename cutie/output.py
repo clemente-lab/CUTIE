@@ -142,7 +142,7 @@ def generate_pair_matrix(base_regions, regions_set, n_var1, n_var2, working_dir,
     for metric in base_regions:
         headers.append(metric)
     if paired:
-        pair_matrix = np.zeros([n_var1 * (n_var2 - 1)/2, len(headers)])
+        pair_matrix = np.zeros([n_var1 * (n_var2 - 1)//2, len(headers)])
     else:
         pair_matrix = np.zeros([n_var1 * n_var2, len(headers)])
 
