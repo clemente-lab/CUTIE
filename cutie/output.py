@@ -154,7 +154,7 @@ def generate_pair_matrix(base_regions, regions_set, n_var1, n_var2, working_dir,
             # then the statement is overall false
             # this excludes var pairs like (3, 5)
             if not (paired and (var1 <= var2)):
-                row_number = n_var2 * var1 + var2
+                row_number = n_var1 * var2 + var1
                 pair_matrix[row_number][0] = var1
                 pair_matrix[row_number][1] = var2
 
@@ -164,7 +164,7 @@ def generate_pair_matrix(base_regions, regions_set, n_var1, n_var2, working_dir,
         region_index = base_regions.index(region)
         for pair in region_set:
             var1, var2 = pair
-            row_number = n_var2 * var1 + var2
+            row_number = n_var1 * var2 + var1
             pair_matrix[row_number][region_index + 2] = -1
 
     pd.DataFrame(pair_matrix, columns = headers).to_csv(working_dir + \
