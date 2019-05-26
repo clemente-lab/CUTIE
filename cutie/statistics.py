@@ -167,7 +167,7 @@ def initial_stats_MINE(n_var, samp_var, mine_bins, pvalue_bins, paired):
     for i in range(n_var):
         for j in range(n_var):
             if i < j :
-                MIC_pvalues[i][j] = str_to_pvalues(pvalue_bins, MIC_str[j][i],
+                MIC_pvalues[j][i] = str_to_pvalues(pvalue_bins, MIC_str[j][i],
                                                    mine_bins)
 
     return MIC_str, MIC_pvalues
