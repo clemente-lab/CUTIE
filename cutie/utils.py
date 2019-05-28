@@ -219,3 +219,29 @@ def calculate_intersection(names, sets):
         region_sets[str(region)] = final_set
 
     return region_sets, region_combs
+
+
+def read_taxa(taxa, delim = ';'):
+    """
+    Converts string of OTU names (e.g. from QIIME) to shortened form.
+    ----------------------------------------------------------------------------
+    INPUTS
+    taxa  - String. Long name of OTU e.g. 'k__Archaea;p__Crenarchaeota;
+            c__Thaumarchaeota;o__Cenarchaeales;f__Cenarchaeaceae;
+            g__Nitrosopumilus' which will become 'Cenarchaeaceae Nitrosopumilus'
+    delim - String. Separates heirarchy.
+
+    OUTPUTS
+    String. Abridged taxa name.
+    """
+    parts = taxa.split(delim) # set as param with default
+    while parts:
+        if not parts[-1].endswith('__'):
+            t1 = parts[-2].split('__')[1]
+            t2 = parts[-1].split('__')[1]
+            return t1 + ' ' + t2
+        else:
+            parts.pop()
+
+    # This should not be reached: "k__;p__..."
+    return 'Uncharacterized'

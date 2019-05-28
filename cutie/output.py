@@ -730,6 +730,13 @@ def plot_corr(row, df_folder_fp, f1type, f2type, var1_names, var2_names,
     var1_name = var1_names[var1]
     var2_name = var2_names[var2]
 
+    # convert variable name of otu formats
+    if var1_name[0:3] == 'k__':
+        var1_name = utils.read_taxa(var1_name)
+
+    if var2_name[0:3] == 'k__':
+        var2_name = utils.read_taxa(var2_name)
+
     # shorten var name
     if len(var1_name) > 25:
         var1_name = var1_name[0:25]
