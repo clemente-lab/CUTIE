@@ -154,8 +154,8 @@ def initial_stats_MINE(samp_var1, samp_var2, mine_bins, pvalue_bins, paired):
             if not (paired and (var1 <= var2)):
                 var1_values, var2_values = utils.remove_nans(samp_var1[:, var1],
                                                              samp_var2[:, var2])
-                MIC_pvalues[var1][var2], MIC_str[var1][var2] = compute_mine(new_var1,
-                                                                      new_var2,
+                MIC_pvalues[var1][var2], MIC_str[var1][var2] = compute_mine(var1_values,
+                                                                      var2_values,
                                                                       pvalue_bins,
                                                                       mine_bins)
     return MIC_str, MIC_pvalues
