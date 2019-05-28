@@ -45,7 +45,6 @@ def assign_statistics(samp_var1, samp_var2, statistic, pearson_stats,
                      observed MIC_str.
     pvalue_bins    - List. Sorted list of pvalues from greatest to least used
                      by MINE to bin the MIC_str.
-    paired         - Boolean. True if variables are paired.
 
     OUTPUTS
     pvalues        - 2D arrays where entry i,j represents corresponding value
@@ -69,8 +68,8 @@ def assign_statistics(samp_var1, samp_var2, statistic, pearson_stats,
                                            paired)
 
     elif statistic in mine_stats:
-        corrs, pvalues = initial_stats_MINE(n_var1, samp_var1, mine_bins, pvalue_bins,
-                                            paired)
+        corrs, pvalues = initial_stats_MINE(samp_var1, samp_var2, mine_bins,
+                                            pvalue_bins, paired)
 
     else:
         raise ValueError('Invalid statistic chosen: ' + statistic)
@@ -118,7 +117,7 @@ def initial_stats_SLR(samp_var1, samp_var2, corr_func, paired):
     return corrs, pvalues
 
 
-def initial_stats_MINE(n_var, samp_var, mine_bins, pvalue_bins, paired):
+def initial_stats_MINE(samp_var1, samp_var2, mine_bins, pvalue_bins, paired):
     """
     Helper function for assign_statistics.  Computes an initial
     set of values (MIC_str and corresponding pvalue) for the MIC statistic for
@@ -126,10 +125,10 @@ def initial_stats_MINE(n_var, samp_var, mine_bins, pvalue_bins, paired):
     auto-correlations within a single dataframe i.e. paired must be True.
     ----------------------------------------------------------------------------
     INPUTS
-    n_var       - Integer. Number of variables.
-    samp_var    - 2D array. Each value in row i col j is the level of variable j
+    samp_var1   - 2D array. Each value in row i col j is the level of variable j
                   corresponding to sample i in the order that the samples are
                   presented in samp_ids.
+    samp_var2   - 2D array. Same as samp_var1 but for file 2.
     mine_bins   - 2D Array. Obtained from parse_minep. Each row is in format
                   [MIC_str, pvalue, stderr of pvalue]. Pvalue corresponds to
                   probability of observing MIC_str as or more extreme as
@@ -144,32 +143,21 @@ def initial_stats_MINE(n_var, samp_var, mine_bins, pvalue_bins, paired):
     MIC_pvalues - 2D array. Entry in i-th row, j-th column corresponds to pvalue
                   of MIC str between var i and var j.
     """
-    # mine accepts files in OTU table format, so need to transpose
-    df = pd.DataFrame(samp_var).T
+    n_var1, n_var2, n_samp = utils.get_param(samp_var1, samp_var2)
 
-    # drop NA
-    df = df.dropna(how = 'any', axis = 1)
-    MIC_flat = minepy.pstats(df, alpha=0.6, c=15, est="mic_approx")[0]
+    MIC_str = np.zeros([n_var1, n_var2])
+    MIC_pvalues = np.zeros([n_var1, n_var2])
 
-    # see MINE API docstrings for indexing
-    # http://minepy.readthedocs.io/en/latest/python.html
-    MIC_str = np.zeros(shape=[n_var, n_var])
-    for i in range(n_var):
-        for j in range(n_var):
-            if i < j:
-                k = int(abs(n_var*i - i*(i+1)/2 - i - 1 + j))
-                # consistent with other stats, we only populate the lower half
-                # of the matrix
-                MIC_str[j][i] = MIC_flat[k]
-
-    # convert MIC strength into p value
-    MIC_pvalues = np.ones(shape=[n_var, n_var])
-    for i in range(n_var):
-        for j in range(n_var):
-            if i < j :
-                MIC_pvalues[j][i] = str_to_pvalues(pvalue_bins, MIC_str[j][i],
-                                                   mine_bins)
-
+    # subset the data matrices into the cols needed
+    for var1 in range(n_var1):
+        for var2 in range(n_var2):
+            if not (paired and (var1 <= var2)):
+                var1_values, var2_values = utils.remove_nans(samp_var1[:, var1],
+                                                             samp_var2[:, var2])
+                MIC_pvalues[var1][var2], MIC_str[var1][var2] = compute_mine(new_var1,
+                                                                      new_var2,
+                                                                      pvalue_bins,
+                                                                      mine_bins)
     return MIC_str, MIC_pvalues
 
 
@@ -211,7 +199,7 @@ def set_threshold(pvalues, alpha, mc, paired=False):
         threshold = alpha / pvalues.size
     elif mc == 'fwer':
         threshold = 1.0 - (1.0 - alpha) ** (1/(pvalues.size))
-    elif mc == 'fdr':
+    elif mc == 'q':
         # compute FDR cutoff
         # https://brainder.org/2011/09/05/fdr-corrected-fdr-adjusted-p-values/
         # http://www.biostathandbook.com/multiplecomparisons.html
@@ -907,7 +895,7 @@ def update_cutiek_true_corr(initial_corr, samp_var1, samp_var2, pvalues, corrs,
 def evaluate_correlation_k(var1, var2, n_samp, samp_var1, samp_var2, pvalues,
                            threshold, statistic, index, sign, fold, fold_value,
                            n_replicates, CI_method, forward, forward_stats,
-                           reverse_stats, pvalue_bins, mine_str, mine_bins):
+                           reverse_stats, pvalue_bins, mine_bins):
     """
     Helper function for cutiek_true_corr(). Evaluates a given var1, var2
     correlation at the resample_k = i level.
@@ -946,8 +934,6 @@ def evaluate_correlation_k(var1, var2, n_samp, samp_var1, samp_var2, pvalues,
                         'rjkp' that pertain to reverse CUtIe analysis.
     pvalue_bins       - List. Sorted list of pvalues from greatest to least used
                         by MINE to bin the MIC_str.
-    mine_str          - 2D array. Entry in i-th row, j-th column corresponds to
-                        MIC strength between var i and var j.
     mine_bins         - 2D Array. Obtained from parse_minep. Each row is in
                         format [MIC_str, pvalue, stderr of pvalue]. Pvalue
                         corresponds to probability of observing MIC_str as or
@@ -973,21 +959,20 @@ def evaluate_correlation_k(var1, var2, n_samp, samp_var1, samp_var2, pvalues,
         new_rev_corr, new_truths, extrema_p, extrema_r = resamplek_cutie(
             var1, var2, n_samp, samp_var1, samp_var2, pvalues, threshold,
             index + 1, sign, forward, statistic, fold, fold_value, pvalue_bins,
-            mine_str, mine_bins)
+            mine_bins)
 
     # jackknife
     elif statistic in ['jkp', 'rjkp', 'jks', 'rjks', 'jkm', 'rjkm', 'jkk', 'rjkk']:
         new_rev_corr, new_truths, extrema_p, extrema_r = jackknifek_cutie(
             var1, var2, n_samp, samp_var1, samp_var2, pvalues, threshold,
             index + 1, sign, forward, statistic, CI_method, pvalue_bins,
-            mine_str, mine_bins)
+            mine_bins)
 
     # bootstrap
     elif statistic in ['bsp', 'rbsp', 'bss', 'rbss', 'bsm', 'rbsm', 'bsk', 'rbsk']:
         new_rev_corr, new_truths, extrema_p, extrema_r = bootstrap_cutie(
             var1, var2, n_samp, samp_var1, samp_var2, pvalues, threshold, sign,
-            forward, statistic, CI_method, n_replicates, pvalue_bins, mine_str,
-            mine_bins)
+            forward, statistic, CI_method, n_replicates, pvalue_bins, mine_bins)
 
     else:
         raise ValueError('Invalid statistic chosen %s' % statistic)
@@ -1070,7 +1055,7 @@ def compute_kc(new_var1, new_var2):
 # MINE specific handling
 ###
 
-def compute_mine(new_var1, new_var2, pvalue_bins, mine_str, mine_bins):
+def compute_mine(new_var1, new_var2, pvalue_bins, mine_bins):
     """
     Compute MINE correlation and return p and r values. Defaults are used from
     MINE API's page.
@@ -1082,8 +1067,6 @@ def compute_mine(new_var1, new_var2, pvalue_bins, mine_str, mine_bins):
     new_var2          - Array. Same as new_var1 but for file 2.
     pvalue_bins       - 1D Array. Sorted list of pvalues from greatest to least
                         used by MINE to bin the MIC_str.
-    mine_str          - 2D array. Entry in i-th row, j-th column corresponds to
-                        MIC strength between var i and var j.
     mine_bins         - 1D Array. Obtained from parse_minep. Entry corresponds
                         to pvalue in pvalue_bins where pvalue is probability of
                         observing MIC_str as or more extreme as observed MIC_str.
@@ -1094,6 +1077,7 @@ def compute_mine(new_var1, new_var2, pvalue_bins, mine_str, mine_bins):
         p_value = 1
         r_value = 0
     else:
+        new_var1, new_var2 = utils.remove_nans(new_var1, new_var2)
         data = np.stack([new_var1, new_var2], 0)
         r_value = minepy.pstats(data, alpha=0.6, c=10, est="mic_approx")[0]
         p_value = str_to_pvalues(pvalue_bins, r_value, mine_bins)
@@ -1204,7 +1188,7 @@ def update_rev_extrema_rp(sign, r_value, p_value, indices, reverse, extrema_p,
 
 def jackknifek_cutie(var1_index, var2_index, n_samp, samp_var1, samp_var2,
                      pvalues, threshold, resample_k, sign, forward, statistic,
-                     CI_method, pvalue_bins, mine_str, mine_bins):
+                     CI_method, pvalue_bins, mine_bins):
     """
     Perform jackknife resampling on a given pair of variables and test CUtIe
     status via confidence based interval methods.
@@ -1232,8 +1216,6 @@ def jackknifek_cutie(var1_index, var2_index, n_samp, samp_var1, samp_var2,
                         jackknifing only).
     pvalue_bins       - List. Sorted list of pvalues from greatest to least used
                         by MINE to bin the MIC_str.
-    mine_str          - 2D array. Entry in i-th row, j-th column corresponds to
-                        MIC strength between var i and var j.
     mine_bins         - 2D Array. Obtained from parse_minep. Each row is in
                         format [MIC_str, pvalue, stderr of pvalue]. Pvalue
                         corresponds to probability of observing MIC_str as or
@@ -1277,7 +1259,7 @@ def jackknifek_cutie(var1_index, var2_index, n_samp, samp_var1, samp_var2,
             p_value, r_value = compute_kc(new_var1, new_var2)
         elif statistic == 'jkm' or statistic == 'rjkm':
             p_value, r_value = compute_mine(new_var1, new_var2, pvalue_bins,
-                                            mine_str, mine_bins)
+                                            mine_bins)
 
         # update reverse, maxp, and minr
         reverse, extrema_p, extrema_r = update_rev_extrema_rp(
@@ -1303,7 +1285,7 @@ def jackknifek_cutie(var1_index, var2_index, n_samp, samp_var1, samp_var2,
 
 def bootstrap_cutie(var1_index, var2_index, n_samp, samp_var1, samp_var2,
                     pvalues, threshold, sign, forward, statistic, CI_method,
-                    n_replicates, pvalue_bins, mine_str, mine_bins):
+                    n_replicates, pvalue_bins, mine_bins):
 
     """
     Perform bootstrap resampling on a given pair of variables and test CUtIe
@@ -1332,8 +1314,6 @@ def bootstrap_cutie(var1_index, var2_index, n_samp, samp_var1, samp_var2,
     n_replicates      - Integer. Number of bootstrap samples.
     pvalue_bins       - List. Sorted list of pvalues from greatest to least used
                         by MINE to bin the MIC_str.
-    mine_str          - 2D array. Entry in i-th row, j-th column corresponds to
-                        MIC strength between var i and var j.
     mine_bins         - 2D Array. Obtained from parse_minep. Each row is in
                         format [MIC_str, pvalue, stderr of pvalue]. Pvalue
                         corresponds to probability of observing MIC_str as or
@@ -1379,7 +1359,7 @@ def bootstrap_cutie(var1_index, var2_index, n_samp, samp_var1, samp_var2,
             p_value, r_value = compute_kc(new_var1, new_var2)
         elif statistic == 'bsm' or statistic == 'rbsm':
             p_value, r_value = compute_mine(new_var1, new_var2, pvalue_bins,
-                                            mine_str, mine_bins)
+                                            mine_bins)
 
         # update reverse, maxp, and minr
         reverse, extrema_p, extrema_r = update_rev_extrema_rp(
@@ -1402,7 +1382,7 @@ def bootstrap_cutie(var1_index, var2_index, n_samp, samp_var1, samp_var2,
 
 def resamplek_cutie(var1_index, var2_index, n_samp, samp_var1, samp_var2,
                     pvalues, threshold, resample_k, sign, forward, statistic,
-                    fold, fold_value, pvalue_bins, mine_str, mine_bins):
+                    fold, fold_value, pvalue_bins, mine_bins):
     """
     Perform CUtIe resampling on a given pair of variables and test CUtIe
     status via confidence based interval methods.
@@ -1431,8 +1411,6 @@ def resamplek_cutie(var1_index, var2_index, n_samp, samp_var1, samp_var2,
                         classified as a CUtIe.
     pvalue_bins       - List. Sorted list of pvalues from greatest to least used
                         by MINE to bin the MIC_str.
-    mine_str          - 2D array. Entry in i-th row, j-th column corresponds to
-                        MIC strength between var i and var j.
     mine_bins         - 2D Array. Obtained from parse_minep. Each row is in
                         format [MIC_str, pvalue, stderr of pvalue]. Pvalue
                         corresponds to probability of observing MIC_str as or
@@ -1474,7 +1452,7 @@ def resamplek_cutie(var1_index, var2_index, n_samp, samp_var1, samp_var2,
             p_value, r_value = compute_kc(new_var1, new_var2)
         elif statistic == 'mine' or statistic == 'rmine':
             p_value, r_value = compute_mine(new_var1, new_var2, pvalue_bins,
-                                            mine_str, mine_bins)
+                                            mine_bins)
 
         # update reverse, maxp, and minr
         reverse, extrema_p, extrema_r = update_rev_extrema_rp(
