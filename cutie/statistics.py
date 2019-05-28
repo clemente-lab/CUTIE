@@ -199,7 +199,7 @@ def set_threshold(pvalues, alpha, mc, paired=False):
         threshold = alpha / pvalues.size
     elif mc == 'fwer':
         threshold = 1.0 - (1.0 - alpha) ** (1/(pvalues.size))
-    elif mc == 'q':
+    elif mc == 'fdr':
         # compute FDR cutoff
         # https://brainder.org/2011/09/05/fdr-corrected-fdr-adjusted-p-values/
         # http://www.biostathandbook.com/multiplecomparisons.html
