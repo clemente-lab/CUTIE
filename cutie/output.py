@@ -16,6 +16,7 @@ from scipy import stats
 from decimal import Decimal
 
 from cutie import parse
+from cutie import utils
 
 ###
 # Creating matrices/dataframes to hold results
