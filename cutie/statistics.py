@@ -854,8 +854,7 @@ def update_cutiek_true_corr(initial_corr, samp_var1, samp_var2, pvalues, corrs,
             new_rev_corr, new_truths, extrema_p, extrema_r = evaluate_correlation_k(
                 var1, var2, n_samp, samp_var1, samp_var2, pvalues, threshold,
                 statistic, i, sign, fold, fold_value, n_replicates, CI_method,
-                forward, forward_stats, reverse_stats, pvalue_bins, corrs,
-                mine_bins)
+                forward, forward_stats, reverse_stats, pvalue_bins, mine_bins)
 
             # update the insig-indicators for the k-th resample iteration
             truths = np.add(truths, new_truths)
