@@ -43,7 +43,6 @@ setup(name='cutie',
           'statsmodels',
           'scipy',
           'matplotlib',
-          'minepy',
           'seaborn',
           'py',
           'pytest'
