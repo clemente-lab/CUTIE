@@ -1,0 +1,32 @@
+[input]
+samp_var1_fp: /Users/KevinBu/Desktop/clemente_lab/CUTIE/tests/r_nomc_1_pearson_True_46_NP_25_0.25/46_NP_25_0.25.txt
+delimiter1: \t
+samp_var2_fp: /Users/KevinBu/Desktop/clemente_lab/CUTIE/tests/r_nomc_1_pearson_True_46_NP_25_0.25/46_NP_25_0.25.txt
+delimiter2: \t
+f1type: tidy
+f2type: tidy
+skip1: 0
+skip2: 0
+startcol1: -1
+endcol1: -1
+startcol2: -1
+endcol2: -1
+paired: True
+overwrite: True
+
+[output]
+working_dir: /Users/KevinBu/Desktop/clemente_lab/CUTIE/tests/r_nomc_1_pearson_True_46_NP_25_0.25/
+
+[stats]
+param: r
+statistic: pearson
+resample_k: 1
+alpha: 0.50
+mc: nomc
+fold: True
+fold_value: 1
+corr_compare: True
+
+[graph]
+graph_bound: 30
+fix_axis: False

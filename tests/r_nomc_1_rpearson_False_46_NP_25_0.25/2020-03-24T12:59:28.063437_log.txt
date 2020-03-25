@@ -1,0 +1,22 @@
+Begin logging at 2020-03-24T12:59:28.063437
+The original command was -i /Users/KevinBu/Desktop/clemente_lab/CUTIE/tests/r_nomc_1_rpearson_False_46_NP_25_0.25/config_r_nomc_1_rpearson_False_46_NP_25_0.25.txt
+The input_config_fp md5 was 58be678d69b027153dd97124390df986
+The length of variables for file 2 is 2
+The number of samples for file 2 is 25
+The md5 of samp_var2 was c510495d0cb7a047b2e8f11c9b55459d
+The length of variables for file 1 is 2
+The number of samples for file 1 is 25
+The md5 of samp_var1 was c510495d0cb7a047b2e8f11c9b55459d
+There are 25 samples
+The first 3 samples are [1, 2, 3]
+Var1 was ['"Y"', '"X"']
+Var2 was ['"Y"', '"X"']
+The parameter chosen was r
+The threshold value was 0.5
+The length of initial_corr is 1
+The number of false correlations for 1 is 1
+The number of true correlations for 1 is 0
+The number of reversed correlations for TP/FN1 is 0
+The number of reversed correlations for FP/TN1 is 0
+The runtime was 1.7851160000000004
+Ended logging at 2020-03-24T12:59:29.031232

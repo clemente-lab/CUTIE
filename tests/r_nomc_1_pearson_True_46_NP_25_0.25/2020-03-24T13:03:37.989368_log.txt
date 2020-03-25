@@ -1,0 +1,45 @@
+Begin logging at 2020-03-24T13:03:37.989368
+The original command was -i /Users/KevinBu/Desktop/clemente_lab/CUTIE/tests/r_nomc_1_pearson_True_46_NP_25_0.25/config_r_nomc_1_pearson_False_46_NP_25_0.25.txt
+The input_config_fp md5 was ca16a260d4a57277c8de83a2496c61ce
+The length of variables for file 2 is 2
+The number of samples for file 2 is 25
+The md5 of samp_var2 was c510495d0cb7a047b2e8f11c9b55459d
+The length of variables for file 1 is 2
+The number of samples for file 1 is 25
+The md5 of samp_var1 was c510495d0cb7a047b2e8f11c9b55459d
+There are 25 samples
+The first 3 samples are [1, 2, 3]
+Var1 was ['"Y"', '"X"']
+Var2 was ['"Y"', '"X"']
+The parameter chosen was r
+The threshold value was 0.5
+The length of initial_corr is 0
+The amount of unique elements in set ['cutie_1pc'] is 0
+The amount of unique elements in set ['cookd'] is 0
+The amount of unique elements in set ['dffits'] is 0
+The amount of unique elements in set ['dsr'] is 0
+The amount of unique elements in set ['cutie_1pc', 'cookd'] is 0
+The amount of unique elements in set ['cutie_1pc', 'dffits'] is 0
+The amount of unique elements in set ['cutie_1pc', 'dsr'] is 0
+The amount of unique elements in set ['cookd', 'dffits'] is 0
+The amount of unique elements in set ['cookd', 'dsr'] is 0
+The amount of unique elements in set ['dffits', 'dsr'] is 0
+The amount of unique elements in set ['cutie_1pc', 'cookd', 'dffits'] is 0
+The amount of unique elements in set ['cutie_1pc', 'cookd', 'dsr'] is 0
+The amount of unique elements in set ['cutie_1pc', 'dffits', 'dsr'] is 0
+The amount of unique elements in set ['cookd', 'dffits', 'dsr'] is 0
+The amount of unique elements in set ['cutie_1pc', 'cookd', 'dffits', 'dsr'] is 0
+The number of false correlations according to cutie_1pc is 0
+The number of true correlations according to cutie_1pc is 0
+The number of false correlations according to cookd is 0
+The number of true correlations according to cookd is 0
+The number of false correlations according to dffits is 0
+The number of true correlations according to dffits is 0
+The number of false correlations according to dsr is 0
+The number of true correlations according to dsr is 0
+The number of false correlations for 1 is 0
+The number of true correlations for 1 is 0
+The number of reversed correlations for TP/FN1 is 0
+The number of reversed correlations for FP/TN1 is 0
+The runtime was 1.434044
+Ended logging at 2020-03-24T13:03:38.782362

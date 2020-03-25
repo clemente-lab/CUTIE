@@ -1,0 +1,45 @@
+Begin logging at 2020-02-27T09:47:35.449253
+The original command was -i /Users/KevinBu/Desktop/clemente_lab/CUTIE/tests/test_r_config_local.txt
+The input_config_fp md5 was 36021b379473234dafa13cdb3a0b267b
+The length of variables for file 2 is 2
+The number of samples for file 2 is 28
+The md5 of samp_var2 was 0b3b01be6d64565ba589e63680cdea46
+The length of variables for file 1 is 897
+The number of samples for file 1 is 28
+The md5 of samp_var1 was c1a93eeee6660b7228a5e2a32a5a4f7f
+There are 28 samples
+The first 3 samples are ['101019AB.N.1.RL', '110228CJ.N.1.RL', '110314CS.N.1.RL']
+The first 3 var1 are ['k__Archaea;p__Crenarchaeota;c__Thaumarchaeota;o__Cenarchaeales;f__Cenarchaeaceae;g__', 'k__Archaea;p__Crenarchaeota;c__Thaumarchaeota;o__Cenarchaeales;f__Cenarchaeaceae;g__Nitrosopumilus', 'k__Archaea;p__Crenarchaeota;c__Thaumarchaeota;o__Cenarchaeales;f__SAGMA-X;g__']
+Var2 was ['glutamic_acid', 'glycine']
+The parameter chosen was r
+The threshold value was 0.05
+The length of initial_corr is 1078
+The amount of unique elements in set ['cutie_1pc'] is 0
+The amount of unique elements in set ['cookd'] is 0
+The amount of unique elements in set ['dffits'] is 0
+The amount of unique elements in set ['dsr'] is 1
+The amount of unique elements in set ['cutie_1pc', 'cookd'] is 0
+The amount of unique elements in set ['cutie_1pc', 'dffits'] is 0
+The amount of unique elements in set ['cutie_1pc', 'dsr'] is 64
+The amount of unique elements in set ['cookd', 'dffits'] is 0
+The amount of unique elements in set ['cookd', 'dsr'] is 0
+The amount of unique elements in set ['dffits', 'dsr'] is 4
+The amount of unique elements in set ['cutie_1pc', 'cookd', 'dffits'] is 0
+The amount of unique elements in set ['cutie_1pc', 'cookd', 'dsr'] is 0
+The amount of unique elements in set ['cutie_1pc', 'dffits', 'dsr'] is 418
+The amount of unique elements in set ['cookd', 'dffits', 'dsr'] is 3
+The amount of unique elements in set ['cutie_1pc', 'cookd', 'dffits', 'dsr'] is 588
+The number of false correlations according to cutie_1pc is 1070
+The number of true correlations according to cutie_1pc is 8
+The number of false correlations according to cookd is 591
+The number of true correlations according to cookd is 487
+The number of false correlations according to dffits is 1013
+The number of true correlations according to dffits is 65
+The number of false correlations according to dsr is 1078
+The number of true correlations according to dsr is 0
+The number of false correlations for 1 is 669
+The number of true correlations for 1 is 409
+The number of reversed correlations for TP/FN1 is 31
+The number of reversed correlations for FP/TN1 is 483
+The runtime was 535.713034
+Ended logging at 2020-02-27T09:52:18.791406
