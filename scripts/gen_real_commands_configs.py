@@ -20,13 +20,15 @@ CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
               help='string denoting datasets used')
 @click.option('-c', '--corr_compare', type=str,
               help='boolean denoting whether performing cooksd or not')
+@click.option('-cf', '--cutie_fp', type=click.Path(exists=True),
+              help='path of cutie script executable')
 @click.option('-w', '--working_dir', type=click.Path(exists=True),
               help='working dir to save results')
 @click.option('-o', '--output_dir', type=click.Path(exists=True),
               help='output dir to put config files')
 
 def gen_commands_configs(fold_value, statistic, multi_corr, param, datasets,
-                         corr_compare, working_dir, output_dir):
+                         corr_compare, cutie_fp, working_dir, output_dir):
     data_to_params = {
         'hdac': {
             'samp_var1_fp': '/sc/hydra/work/buk02/HDAC_data/GSE15222_series_matrix_x1000.txt',
@@ -176,7 +178,7 @@ def gen_commands_configs(fold_value, statistic, multi_corr, param, datasets,
             f.write('fix_axis: False')
 
         with open(out_dir + 'commands_' + f_id + '.txt','w') as f:
-            f.write('export PYTHONPATH=$PYTHONPATH:/hpc/users/buk02/tools/sandbox/lib/python3.7/site-packages/ && python /sc/hydra/work/buk02/CUTIE/scripts/calculate_cutie.py -i ' + out_dir + 'config_' + f_id + '.txt')
+            f.write('export PYTHONPATH=$PYTHONPATH:/hpc/users/buk02/tools/sandbox/lib/python3.7/site-packages/ && python ' + cutie_fp + ' -i ' + out_dir + 'config_' + f_id + '.txt')
 
 if __name__ == "__main__":
     gen_commands_configs()

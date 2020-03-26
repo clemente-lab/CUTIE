@@ -18,6 +18,8 @@ CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
               help='string denoting type of multiple corrections')
 @click.option('-c', '--corr_compare', type=str,
               help='boolean denoting whether performing cooksd or not')
+@click.option('-cf', '--cutie_fp', type=click.Path(exists=True),
+              help='path of cutie script executable')
 @click.option('-w', '--working_dir', type=click.Path(exists=True),
               help='working dir to save results')
 @click.option('-i', '--input_dir', type=click.Path(exists=True),
@@ -26,7 +28,7 @@ CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
               help='output dir to put config files')
 
 def gen_commands_configs(param, fold_value, statistic, multi_corr, corr_compare,
-                         working_dir, input_dir, output_dir):
+                         cutie_fp, working_dir, input_dir, output_dir):
     fv = fold_value
     files = glob.glob(input_dir + '*.txt')
     for fp in files:
@@ -107,7 +109,7 @@ def gen_commands_configs(param, fold_value, statistic, multi_corr, corr_compare,
             f.write('fix_axis: False')
 
         with open(out_dir + 'commands_' + f_id + '.txt','w') as f:
-            f.write('export PYTHONPATH=$PYTHONPATH:/hpc/users/buk02/tools/sandbox/lib/python3.7/site-packages/ && python /sc/hydra/work/buk02/CUTIE/scripts/calculate_cutie.py -i ' + out_dir + 'config_' + f_id + '.txt')
+            f.write('export PYTHONPATH=$PYTHONPATH:/hpc/users/buk02/tools/sandbox/lib/python3.7/site-packages/ && python ' + cutie_fp + ' -i ' + out_dir + 'config_' + f_id + '.txt')
 
 if __name__ == "__main__":
     gen_commands_configs()
