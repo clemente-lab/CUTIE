@@ -218,7 +218,7 @@ def resample1_cutie_pc(var1_index, var2_index, samp_var1, samp_var2, **kwargs):
         reverse, maxp, minr = update_rev_extrema_rp(0, r_value, p_value,
                                                     [s], reverse, maxp, minr,
                                                     True)
-        if param == 'p':
+        if kwargs['param'] == 'p':
             if kwargs['fold']:
                 if (p_value > kwargs['threshold'] and \
                     p_value > original_p * kwargs['fold_value']) or \
@@ -227,7 +227,7 @@ def resample1_cutie_pc(var1_index, var2_index, samp_var1, samp_var2, **kwargs):
             elif p_value > kwargs['threshold'] or np.isnan(p_value):
                 exceeds[s] += 1
 
-        elif param == 'r':
+        elif kwargs['param'] == 'r':
             if kwargs['fold']:
                 if (np.abs(r_value) < kwargs['threshold'] and \
                     np.abs(r_value) < np.abs(original_r) * kwargs['fold_value']) or \
