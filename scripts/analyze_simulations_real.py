@@ -99,7 +99,8 @@ def analyze_simulations_real(fold_value, statistic, multi_corr, param,
     stats = statistic.split(',')
     cds = corr_compare.split(',')
     ds = ['lungtx', 'lungpt', 'lungc','who','hdac']
-    for p in param:
+    params = param.split(',')
+    for p in params:
         for mc in mcs:
             for fv in fvs:
                 for s in stats:
@@ -155,7 +156,7 @@ def analyze_simulations_real(fold_value, statistic, multi_corr, param,
     results_df.to_csv(output_dir + 'real_df.txt', sep='\t')
 
     # populate indices and ids for the dfs
-    for p in param:
+    for p in params:
         for fv in fvs:
             for mc in mcs:
                 indices = []
