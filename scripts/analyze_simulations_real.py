@@ -172,7 +172,7 @@ def analyze_simulations_real(fold_value, statistic, multi_corr, param,
                 df_array = []
                 for i, (idstring, index) in enumerate(zip(ids, indices)):
                     row_fracs = []
-                    mc, fv, s, cd = idstring.split('_')
+                    mc, fv, s, cd, p = idstring.split('_')
                     for dist in dists:
                         row = results_df[(results_df['parameter'] == p) & (results_df['distribution'] == dist) & (results_df['statistic'] == s) \
                                      & (results_df['mc_used'] == mc) & (results_df['fold_value'] == fv) & (results_df['pointwise'] == cd)]
