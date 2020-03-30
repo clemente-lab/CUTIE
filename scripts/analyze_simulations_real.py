@@ -166,7 +166,7 @@ def analyze_simulations_real(fold_value, statistic, multi_corr, param,
                 for stat in stats:
                     indices.append('_'.join([stat, fv, mc]))
                     indices.append('Pct initial corr')
-                    ids.append('_'.join([mc, fv, stat, 'False']))
+                    ids.append('_'.join([mc, fv, stat, 'False', p]))
 
                 # populate  df
                 df_array = []
