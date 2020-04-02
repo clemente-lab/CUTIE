@@ -38,7 +38,8 @@ CUTIE is written for python 3.7 and requires the following packages
 ### Usage ###
 ---
 
-The config file test_config.ini will need to be modified depending on the location of the input data files and the desired result for the output directory. In any given config file we have the given fields (see `/examples/config_template.ini`)
+The config file test_config.ini will need to be modified depending on the location of the input data files and the desired result for the output directory. In any given config file we have the given fields (see `/examples/config_template.ini`). Note that tidy dataframes have samples as rows, variables as columns; untidy denotes the converse. When you are ready, simply run `calculate_cutie.py -i <path_to_config_file>/<config_file>`.
+
 ```
 [input]
 samp_var1_fp: <path_to_df/df.csv>
@@ -73,6 +74,9 @@ corr_compare: <True or False>
 graph_bound: <integer, default 30>
 fix_axis: <True or False>
 ```
+
+
+
 
 ## Example usage ##
 ---
