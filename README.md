@@ -1,13 +1,8 @@
 # CUTIE #
 
-CUTIE is a python module for evaluating pairwise correlations in a dataset for
-influential points using various methods, including CUTIE, jackknifing, and
-bootstrapping.
-
-Detailed information about the package can be found in the accompanying publication.
+CUTIE is a python module for evaluating pairwise correlations in a dataset for influential points via resampling. Detailed information about the package can be found in the accompanying publication.
 
 Questions and concerns should be sent to kbu314@gmail.com.
-
 
 ## Requirements ##
 ---
