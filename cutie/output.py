@@ -560,7 +560,7 @@ def plot_corr(row, df_folder_fp, var1_names, var2_names, samp_var1, samp_var2,
     if forward:
         pair_df['label'] = pair_df['label'].apply(
             lambda x: 'FP' if x == 0 else ('TP (reverse sign)' if x == 2 else 'TP'))
-    else
+    else:
         pair_df['label'] = pair_df['label'].apply(
             lambda x: 'FN' if x == 1 else ('FN (reverse sign)' if x == 2 else 'TN'))
 
