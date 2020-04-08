@@ -571,7 +571,7 @@ def plot_corr(row, df_folder_fp, var1_names, var2_names, samp_var1, samp_var2,
             ', ' + '%.2E' % Decimal(row['extreme_r'])
 
     fig = plt.figure()
-    sns_plot = sns.lmplot(var1_name, var2_name, data=pair_df, hue='label')
+    sns_plot = sns.scatterplot(x=var1_name, y=var2_name, data=pair_df, hue='label')
 
     if fix_axis:
         sns_plot.set(xlim=(var1_min, var1_max), ylim=(var2_min, var2_max))
