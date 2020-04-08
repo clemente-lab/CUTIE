@@ -8,6 +8,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import seaborn as sns # ; sns.set(color_codes=True)
+sns.set_style("white")
 from cutie import parse
 from cutie import utils
 
@@ -570,20 +571,26 @@ def plot_corr(row, df_folder_fp, var1_names, var2_names, samp_var1, samp_var2,
             'Rsq, ext_r2 = ' + '%.2E' % Decimal(row['r2vals']) + \
             ', ' + '%.2E' % Decimal(row['extreme_r'])
 
-    fig = plt.figure()
+    fig = plt.figure(figsize=(5,5))
+    #sns.set_style("white")
+    sns.set_style('white')
     sns_plot = sns.scatterplot(x=var1_name, y=var2_name, data=pair_df, hue='label')
-
+    #sns.set_style("dark")
+    sns.axes_style("white")
     if fix_axis:
         sns_plot.set(xlim=(var1_min, var1_max), ylim=(var2_min, var2_max))
-    ax = plt.gca()
-    ax.set_title(title, fontsize=8)
-    fig.patch.set_visible(False)
-    ax.patch.set_visible(False)
+    #ax = plt.gca()
+    #ax.grid(False)
+    #ax.set_title(title, fontsize=8)
+    plt.title(title, fontsize=8)
+    #fig.patch.set_visible(False)
+    #ax.patch.set_visible(False)
     fig.set_tight_layout(True)
-    plt.tick_params(axis='both', which='both', top=False, right=False)
+    #plt.tick_params(axis='both', which='both', top=False, right=False)
     sns.despine()
     plt.savefig(df_folder_fp + '/' + str(var1) + '_' + str(var2) + '.png')
     plt.close('all')
+
 
 def plot_corr_sets(graph_bound, df, working_dir, f1type, f2type, var1_names,
                    var2_names, samp_var1, samp_var2, exceeds_points, rev_points,
