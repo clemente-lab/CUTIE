@@ -547,9 +547,22 @@ def plot_corr(row, df_folder_fp, var1_names, var2_names, samp_var1, samp_var2,
     reverse = rev_points[str(resample_k)][str(pair)]
     reverse = np.array([1 if z > 0 else 0 for z in reverse])
 
-    cr = cutie*(cutie+reverse)
-    pair_df = pd.DataFrame({var1_name:x, var2_name:y, 'cutie/rev': cr})
+    # cutie is an indicator that is 1 if TP/FN, 0 if FP/TN contributing point
+    # reverse is 1 if the sign changes with removal of that point
+    # label will be 2 if 'true corr' relationship is preserved but sign changes
+    # label will be 1 if point is causing corr to be TP/FN, 0 otherwise
+    label = cutie*(cutie+reverse)
+    pair_df = pd.DataFrame({var1_name:x, var2_name:y, 'label': label})
+    # ind is 0 if point is non cutieogenic,
     pair_df = pair_df.dropna(how='any')
+
+    # create labels from numeric representations
+    if forward:
+        pair_df['label'] = pair_df['label'].apply(
+            lambda x: 'FP' if x == 0 else ('TP (reverse sign)' if x == 2 else 'TP'))
+    else
+        pair_df['label'] = pair_df['label'].apply(
+            lambda x: 'FN' if x == 1 else ('FN (reverse sign)' if x == 2 else 'TN'))
 
     # create plot and title
     title = 'p, ext_p = ' + '%.2E' % Decimal(row['pvalues']) + \
@@ -558,8 +571,8 @@ def plot_corr(row, df_folder_fp, var1_names, var2_names, samp_var1, samp_var2,
             ', ' + '%.2E' % Decimal(row['extreme_r'])
 
     fig = plt.figure()
-    sns_plot = sns.lmplot(var1_name, var2_name, data=pair_df, hue='cutie/rev',
-                          fit_reg=False)
+    sns_plot = sns.lmplot(var1_name, var2_name, data=pair_df, hue='label')
+
     if fix_axis:
         sns_plot.set(xlim=(var1_min, var1_max), ylim=(var2_min, var2_max))
     ax = plt.gca()
