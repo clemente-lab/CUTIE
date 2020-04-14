@@ -121,7 +121,7 @@ def calculate_cutie(input_config_fp):
     ###
     # Pearson, Spearman, Kendall
     ###
-    # initial output
+    # initial setup
     pvalues, corrs, r2vals = statistics.assign_statistics(samp_var1,
         samp_var2, statistic, pearson_stats, spearman_stats, kendall_stats,
         paired)
@@ -139,6 +139,9 @@ def calculate_cutie(input_config_fp):
     # calculate initial sig candidates
     initial_corr, all_pairs = statistics.get_initial_corr(n_var1, n_var2,
         pvalues, corrs, threshold, param, paired)
+
+    output.write_log('The number of correlations is ' + str(len(all_pairs)),
+        log_fp)
 
     # change initial_corr if doing rCUtIe
     if statistic in reverse_stats:
