@@ -8,7 +8,7 @@ import ast
 import re
 
 __author__ = "The Clemente Lab"
-__copyright__ = "Copyright 2019, The Clemente Lab"
+__copyright__ = "Copyright 2020, The Clemente Lab"
 __credits__ = ["Jose C. Clemente, Kevin Bu"]
 __license__ = "GPL"
 __maintainer__ = "Kevin Bu"
@@ -30,7 +30,7 @@ setup(name='cutie',
         'Programming Language :: Python :: 3.7.3',
         'Topic :: Scientific/Engineering :: Bio-Informatics',
       ],
-      url='http://github.com/clemente-lab/cutie',
+      url='http://github.com/clemente-lab/CUTIE',
       author=__author__,
       author_email=__email__,
       license=__license__,

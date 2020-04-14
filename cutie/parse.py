@@ -3,6 +3,7 @@ import configparser
 import hashlib
 import pandas as pd
 import matplotlib
+import sys
 matplotlib.use('Agg')
 
 def parse_input(ftype, fp, startcol, endcol, delimiter, skip):
@@ -125,7 +126,10 @@ def parse_config(input_config_fp):
         'fix_axis': False
     }
     Config = configparser.ConfigParser(defaults=defaults)
-    Config.read(input_config_fp)
+    try:
+        Config.read(input_config_fp)
+    except TypeError:
+        sys.exit('Error: No config file specified')
 
     # [input]
     samp_var1_fp = Config.get('input', 'samp_var1_fp')
