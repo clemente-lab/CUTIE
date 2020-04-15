@@ -381,7 +381,7 @@ def plot_dfs(graph_bound, working_dir, f1type, f2type, var1_names, var2_names,
         if len(df.sm_subset['correlations']) > 1:
             corr_vals = df.sm_subset['correlations']
             corr_vals_fp = working_dir + 'graphs/sample_corr_' + df.name + \
-                           '_' + df.quadrant + '_' + str(df.k) + '.png'
+                           '_' + df.quadrant + '_' + str(df.k) + '.pdf'
             title = "Sample correlation coefficients among %s correlations" \
                     % (df.quadrant)
             plot_figure(corr_vals, corr_vals_fp, summary_df, title)
@@ -401,6 +401,7 @@ def plot_figure(values, fp, summary_df, title):
     values = values[np.isfinite(values)]
 
     fig = plt.figure()
+    sns.set_style('white')
     try:
         sns.distplot(values, bins=20, kde=False, rug=False)
     except ValueError:
@@ -409,8 +410,8 @@ def plot_figure(values, fp, summary_df, title):
     plt.xlim(-1, 1)
     ax = plt.gca()
     ax.set_title(title, fontsize=10)
-    fig.patch.set_visible(False)
-    ax.patch.set_visible(False)
+    #fig.patch.set_visible(False)
+    #ax.patch.set_visible(False)
     fig.set_tight_layout(True)
     plt.tick_params(axis='both', which='both', top=False, right=False)
     sns.despine()
@@ -705,6 +706,7 @@ def diag_plots(samp_counter, var1_counter, var2_counter, resample_k, working_dir
                 working_dir + 'data_processing/counter_'  + stats + \
                 '_resample' + str(i+1) + '.txt', sep='\t', index=False)
 
+            sns.set_style('white')
             # create figure
             fig = plt.figure()
             if stats == 'samp':
@@ -719,10 +721,10 @@ def diag_plots(samp_counter, var1_counter, var2_counter, resample_k, working_dir
                            fit_reg=False)
 
             ax = plt.gca()
-            fig.patch.set_visible(False)
-            ax.patch.set_visible(False)
+            #fig.patch.set_visible(False)
+            #ax.patch.set_visible(False)
             diag_fp = working_dir + 'graphs/counter_' + stats + \
-                      '_resample' + str(i+1) + '.png'
+                      '_resample' + str(i+1) + '.pdf'
             fig.set_tight_layout(True)
             plt.tick_params(axis='both', which='both', top=False, right=False)
             sns.despine()
