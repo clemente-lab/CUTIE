@@ -589,7 +589,7 @@ def plot_corr(row, df_folder_fp, var1_names, var2_names, samp_var1, samp_var2,
     fig.set_tight_layout(True)
     #plt.tick_params(axis='both', which='both', top=False, right=False)
     sns.despine()
-    plt.savefig(df_folder_fp + '/' + str(var1) + '_' + str(var2) + '.png')
+    plt.savefig(df_folder_fp + '/' + str(var1) + '_' + str(var2) + '.pdf')
     plt.close('all')
 
 
