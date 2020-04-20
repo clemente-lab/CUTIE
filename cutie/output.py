@@ -459,7 +459,7 @@ def plot_pdist(df, working_dir):
             title = 'fold_pvalues; n_infinite = ' + str(n_infinite) + ' ' \
                 + 'pvalues; n_nan = ' + str(n_nan) + additional_title
             dist_fp = working_dir + 'graphs/' + df.quadrant + '_' + str(df.k) \
-                + '_' + dist + '.png'
+                + '_' + dist + '.pdf'
             fig = plt.figure()
             sns.distplot(stat_vals, bins=20, kde=False, rug=False)
             plt.tick_params(axis='both', which='both', top=False, right=False)
