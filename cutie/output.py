@@ -299,8 +299,9 @@ def generate_dfs(statistic, forward_stats, initial_corr, true_corr,
     # if using cook's D, etc.
     if corr_compare:
         for region in region_sets:
+            # self, name, pairs, quadrant, rev_sign, sm_subset, k)
             TP_metric_df = dfSet(
-                region, region_sets[region], true_label, False,
+                region, set(all_pairs).difference(set(region_sets[region])), true_label, False,
                 summary_df.loc[summary_df[region] == 1], '1')
             FP_metric_df = dfSet(
                 region, region_sets[region], false_label, False,
@@ -659,38 +660,60 @@ def plot_corr_sets(graph_bound, df, working_dir, f1type, f2type, var1_names,
 # Diagnostic plot handling
 ###
 
-def diag_plots(samp_counter, var1_counter, var2_counter, resample_k, working_dir,
-               paired):
+def diag_plots(samp_ids, var1_names, var2_names, samp_counter, var1_counter,
+               var2_counter, resample_k, working_dir, paired, statistic, forward_stats):
     """
     Create diagnostic plots i.e. creates histograms of number of times each
     sample or variable appears in CUtIe's
     ----------------------------------------------------------------------------
     INPUTS
-    samp_counter - Dictionary. Key is the index of CUtIe resampling
-                   (k = 1, 2, 3, ... etc.) and entry is an array of length
-                   n_samp corresponding to how many times the i-th sample
-                   appears in CUtIe's when evaluated at resampling = k points)
-    var1_counter - Dictionary.  Key is the index of CUtIe resampling
-                   (k = 1, 2, 3, ... etc.) and entry is an array of length
-                   n_var1 corresponding to how many times the j-th variable
-                   appears in CUtIe's when evaluated at resampling = k points)
-    var2_counter - Same as var1_counter except for var2.
-    resample_k   - Integer. Number of points being resampled by CUtIe.
-    working_dir  - String. Path of working directory specified by user.
-    paired       - Boolean. True if variables are paired (same in both files).
+    samp_ids      - List of strings. Contains sample names in order that they
+                    were read.
+    var1_names    - List of strings. Contains variable names in order that they
+                    were read from file 1.
+    var2_names    - List of strings. Contains variable names in order that they
+                    were read from file 2.
+    samp_counter  - Dictionary. Key is the index of CUtIe resampling
+                    (k = 1, 2, 3, ... etc.) and entry is an array of length
+                    n_samp corresponding to how many times the i-th sample
+                    appears in CUtIe's when evaluated at resampling = k points)
+    var1_counter  - Dictionary.  Key is the index of CUtIe resampling
+                    (k = 1, 2, 3, ... etc.) and entry is an array of length
+                    n_var1 corresponding to how many times the j-th variable
+                    appears in CUtIe's when evaluated at resampling = k points)
+    var2_counter  - Same as var1_counter except for var2.
+    resample_k    - Integer. Number of points being resampled by CUtIe.
+    working_dir   - String. Path of working directory specified by user.
+    paired        - Boolean. True if variables are paired (same in both files).
+    statistic     - String. Describes analysis being performed.
+    forward_stats - List of strings. Contains list of statistics e.g. 'pearson'
+                    'spearman' that pertain to forward (non-reverse) CUTIE
+                    analysis.
     """
+    if statistic in forward_stats:
+        false_label = 'FP'
+    else:
+        false_label = 'FN'
+
     if paired:
-        diag_stats = ['samp', 'var']
+        diag_stats = ['samp_number', 'var_number']
         var_counter = {}
         for i in range(resample_k):
             var_counter[str(i+1)] = var1_counter[str(i+1)] + var2_counter[str(i+1)]
-        stats_mapping = {'samp': samp_counter,
-                         'var': var_counter}
+        stats_mapping = {'samp_number': samp_counter,
+                         'var_number': var_counter}
+        name_mapping = {'samp_number': samp_ids,
+                         'var_number': var1_names}
+
     else:
-        diag_stats = ['samp', 'var1', 'var2']
-        stats_mapping = {'samp': samp_counter,
-                         'var1': var1_counter,
-                         'var2': var2_counter}
+        diag_stats = ['samp_number', 'var1_number', 'var2_number']
+        stats_mapping = {'samp_number': samp_counter,
+                         'var1_number': var1_counter,
+                         'var2_number': var2_counter}
+        name_mapping = {'samp_number': samp_ids,
+                         'var1_number': var1_names,
+                         'var2_number': var2_names}
+
 
     # for each diagnostic quantity
     for stats in diag_stats:
@@ -702,23 +725,21 @@ def diag_plots(samp_counter, var1_counter, var2_counter, resample_k, working_dir
             for j in range(len(counter[str(i+1)])):
                 counts[j] = np.array([j, counter[str(i+1)][j]])
 
-            pd.DataFrame(counts, columns=['index', 'count']).to_csv(
-                working_dir + 'data_processing/counter_'  + stats + \
+            df = pd.DataFrame(counts, columns=['index', 'count'])
+            df['name'] = df['index'].apply(lambda x: name_mapping[stats][int(x)])
+
+            df.to_csv(working_dir + 'data_processing/counter_'  + stats + \
                 '_resample' + str(i+1) + '.txt', sep='\t', index=False)
 
             sns.set_style('white')
             # create figure
             fig = plt.figure()
-            if stats == 'samp':
-                counts_df = pd.DataFrame(
-                    {stats:counts[:, 0], 'n_cuties': counts[:, 1]})
-                sns.lmplot(stats, 'n_cuties', data=counts_df,
-                           fit_reg=False)
-            else:
-                counts_df = pd.DataFrame(
-                    {stats:counts[:, 0], 'n_cuties': counts[:, 1]})
-                sns.lmplot(stats, 'n_cuties', data=counts_df,
-                           fit_reg=False)
+
+            counts_df = pd.DataFrame(
+                {stats: counts[:, 0], false_label: counts[:, i+1]})
+            sns.lmplot(stats, false_label, data=counts_df,
+                       fit_reg=False)
+
 
             ax = plt.gca()
             #fig.patch.set_visible(False)

@@ -268,8 +268,8 @@ def calculate_cutie(input_config_fp):
         samp_var2, all_pairs, region_sets, corr_compare, exceeds_points,
         rev_points, fix_axis)
 
-    output.diag_plots(samp_counter, var1_counter, var2_counter, resample_k,
-        working_dir, paired)
+    output.diag_plots(samp_ids, var1_names, var2_names, samp_counter, var1_counter,
+        var2_counter, resample_k, working_dir, paired, statistic, forward_stats)
 
     # write log file
     output.write_log('The runtime was ' + str(time.process_time() - start_time), log_fp)
