@@ -290,7 +290,7 @@ def cookd(var1_index, var2_index, samp_var1, samp_var2, **kwargs):
     for i, ele in enumerate(new_cooksd):
         # if ele > 1 or np.isnan(ele) or ele == 0.0:
         # if ele > 1*fold_value or np.isnan(ele) or ele == 0.0:
-        if ele > 1 or np.isnan(ele): # or ele == 0.0:
+        if ele > 1:# or np.isnan(ele): # or ele == 0.0:
             exceeds[i] = 1
 
     return reverse, exceeds, new_cooksd, new_cooksp
@@ -396,7 +396,7 @@ def dsr(var1_index, var2_index, samp_var1, samp_var2, **kwargs):
 
     for i in range(n_samp):
         # threshold useed by DSR to signify outlier status
-        if new_dsr[i] < -2 or new_dsr[i] > 2 or np.isnan(new_dsr[i]): # or new_dsr[i] == 0.0:
+        if new_dsr[i] < -2 or new_dsr[i] > 2:# or np.isnan(new_dsr[i]): # or new_dsr[i] == 0.0:
             exceeds[i] = 1
 
     return reverse, exceeds, np.array(new_dsr), np.array(new_dsr)
