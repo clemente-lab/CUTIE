@@ -88,7 +88,7 @@ class OutputTest(TestCase):
         data_processing = os.path.join(self.work_dir, 'data_processing/')
         with open(devnull, 'w') as dn:
             call('mkdir ' + data_processing, stderr=dn, shell=True)
-        matrix1, test_headers1 = output.print_Rmatrix(self.simple_array,
+        matrix1, test_headers1 = output.print_summary_df(self.simple_array,
                                                       self.simple_array,
                                                       self.simple_array,
                                                       self.simple_array, 3, 3,
@@ -98,7 +98,7 @@ class OutputTest(TestCase):
                                                       6, paired=True)
         np.testing.assert_array_equal(self.test_Rmatrix, matrix1)
         np.testing.assert_array_equal(self.headers2, test_headers1)
-        matrix2, test_headers2 = output.print_Rmatrix(self.empty_array1,
+        matrix2, test_headers2 = output.print_summary_df(self.empty_array1,
                                                       self.empty_array1,
                                                       self.empty_array1,
                                                       self.empty_array1, 0, 0,

@@ -1,4 +1,4 @@
-Begin logging at 2020-04-14T15:49:45.113225
+Begin logging at 2020-05-11T13:22:37.225356
 The original command was -i /Users/KevinBu/Desktop/clemente_lab/Repositories/CUTIE/tests/example_data/config.ini
 The input_config_fp md5 was ab402a1ff1cba2a94507085a933a54cf
 The length of variables for file 2 is 2
@@ -43,5 +43,5 @@ The number of false correlations for 1 is 0
 The number of true correlations for 1 is 0
 The number of reversed correlations for TP/FN1 is 0
 The number of reversed correlations for FP/TN1 is 0
-The runtime was 2.70141
-Ended logging at 2020-04-14T15:49:46.674725
+The runtime was 2.03733
+Ended logging at 2020-05-11T13:22:38.319105
