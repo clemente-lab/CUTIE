@@ -705,7 +705,8 @@ def update_cutiek_true_corr(initial_corr, samp_var1, samp_var2, pvalues, corrs,
         rev_points[str(i+1)] = {}
         exceeds_points[str(i+1)] = {}
 
-    for var1, var2 in initial_corr:
+    for pair in initial_corr:
+        var1, var2 = pair
         # obtain sign of correlation
         sign = np.sign(corrs[var1][var2])
         # indicators for whether correlation is true or not
