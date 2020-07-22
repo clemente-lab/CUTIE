@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-from collections import defaultdict
 import itertools
 import numpy as np
 
@@ -187,13 +186,15 @@ def calculate_intersection(names, sets):
     # temporary mapping of name to set
     name_to_set = {names[i]: sets[i] for i in range(len(names))}
 
-    # get regions and initialize default dict of list
+    # get regions and initialize dict of list
     region_combs = []
     for i in range(1, len(names)+1):
         els = [list(x) for x in itertools.combinations(names, i)]
         region_combs.extend(els)
 
-    region_sets = defaultdict(list)
+    region_sets = {}
+    for region in region_combs:
+        region_sets[str(region)] = set()
 
     # create union of sets
     union_set = set()

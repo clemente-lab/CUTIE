@@ -48,30 +48,30 @@ class TestStatistics(unittest.TestCase):
 
         self.true_paired_sampvar1_arrays = {
             'stats.pearsonr': (np.array([
-                [1.        , 0.95279653, 0.93951252],
-                [0.95279653, 1.        , 0.99696214],
+                [1.        , np.nan    , np.nan    ],
+                [0.95279653, 1.        , np.nan    ],
                 [0.93951252, 0.99696214, 1.        ]]), np.array([
-                [0.        , 0.0122235 , 0.01769506],
-                [0.0122235 , 0.        , 0.0002009 ],
+                [0.        , np.nan    , np.nan    ],
+                [0.0122235 , 0.        , np.nan    ],
                 [0.01769506, 0.0002009 , 0.        ]])),
             'stats.spearmanr': (np.array([
-                [1.        , 0.15389675, 0.15789474],
-                [0.15389675, 1.        , 0.97467943],
+                [1.        , np.nan    , np.nan    ],
+                [0.15389675, 1.        , np.nan    ],
                 [0.15789474, 0.97467943, 1.        ]]), np.array([
-                [0.00000000e+00, 8.04828817e-01, 7.99800666e-01],
-                [8.04828817e-01, 1.40426542e-24, 4.81823047e-03],
+                [0.00000000e+00,         np.nan,         np.nan],
+                [8.04828817e-01, 0.00000000e+00,         np.nan],
                 [7.99800666e-01, 4.81823047e-03, 0.00000000e+00]])),
             'stats.kendalltau': (np.array([
-                [1.        , 0.10540926, 0.11111111],
-                [0.10540926, 1.        , 0.9486833 ],
+                [1.        , np.nan    , np.nan    ],
+                [0.10540926, 1.        , np.nan    ],
                 [0.11111111, 0.9486833 , 1.        ]]), np.array([
-                [0.01917673, 0.80054211, 0.79468572],
-                [0.80054211, 0.01666667, 0.0229774 ],
-                [0.79468572, 0.0229774 , 0.01917673]]))}
+                [0.        , np.nan    , np.nan    ],
+                [0.80054211, 0.        , np.nan    ],
+                [0.79468572, 0.0229774 , 0.        ]]))}
 
         self.pearson_stats = ['pearson', 'rpearson']
         self.spearman_stats = ['spearman', 'rspearman']
-        self.kendall_stats = ['kendall', 'rkendall'],
+        self.kendall_stats = ['kendall', 'rkendall']
         self.correlation_types = ['pearson', 'spearman', 'kendall']
 
         self.functions = ['stats.pearsonr', 'stats.spearmanr', 'stats.kendalltau']
@@ -81,45 +81,36 @@ class TestStatistics(unittest.TestCase):
 
         self.assign_statistics_truths = {
             'pearson': {
-                'pvalues': np.array([[0.        , 0.0122235 , 0.01769506],
-                                     [0.0122235 , 0.        , 0.0002009 ],
+                'pvalues': np.array([[0.        , np.nan    , np.nan    ],
+                                     [0.0122235 , 0.        , np.nan    ],
                                      [0.01769506, 0.0002009 , 0.        ]]),
-                'logpvals': np.array([[    -np.inf, -4.40439492, -4.03446983],
-                                      [-4.40439492,     -np.inf, -8.51268655],
-                                      [-4.03446983, -8.51268655,     -np.inf]]),
-                'correlations': np.array([[1.        , 0.95279653, 0.93951252],
-                                          [0.95279653, 1.        , 0.99696214],
+                'correlations': np.array([[1.        , np.nan    , np.nan    ],
+                                          [0.95279653, 1.        , np.nan    ],
                                           [0.93951252, 0.99696214, 1.        ]]),
-                'r2vals': np.array([[1.        , 0.90782123, 0.88268377],
-                                    [0.90782123, 1.        , 0.99393351],
+                'r2vals': np.array([[1.        , np.nan    , np.nan    ],
+                                    [0.90782123, 1.        , np.nan    ],
                                     [0.88268377, 0.99393351, 1.        ]])},
 
             'spearman': {
-                'pvalues': np.array([[0.00000000e+00, 8.04828817e-01, 7.99800666e-01],
-                                     [8.04828817e-01, 1.40426542e-24, 4.81823047e-03],
+                'pvalues': np.array([[0.00000000e+00, np.nan        , np.nan        ],
+                                     [8.04828817e-01, 0.00000000e+00, np.nan        ],
                                      [7.99800666e-01, 4.81823047e-03, 0.00000000e+00]]),
-                'logpvals': np.array([[        -np.inf,  -0.21712567,  -0.22339275],
-                                      [ -0.21712567, -54.9225279 ,  -5.33534854],
-                                      [ -0.22339275,  -5.33534854,         -np.inf]]),
-                'correlations': np.array([[1.        , 0.15389675, 0.15789474],
-                                          [0.15389675, 1.        , 0.97467943],
+                'correlations': np.array([[1.        , np.nan    , np.nan    ],
+                                          [0.15389675, 1.        , np.nan    ],
                                           [0.15789474, 0.97467943, 1.        ]]),
-                'r2vals': np.array([[1.        , 0.02368421, 0.02493075],
-                                    [0.02368421, 1.        , 0.95      ],
+                'r2vals': np.array([[1.        , np.nan    , np.nan    ],
+                                    [0.02368421, 1.        , np.nan    ],
                                     [0.02493075, 0.95      , 1.        ]])},
 
             'kendall': {
-                'pvalues': np.array([[0.01917673, 0.80054211, 0.79468572],
-                                     [0.80054211, 0.01666667, 0.0229774 ],
-                                     [0.79468572, 0.0229774 , 0.01917673]]),
-                'logpvals': np.array([[-3.95405776, -0.22246615, -0.22980857],
-                                      [-0.22246615, -4.0943446, -3.77324409],
-                                      [-0.22980857, -3.77324409, -3.95405776]]),
-                'correlations': np.array([[1.        , 0.10540926, 0.11111111],
-                                          [0.10540926, 1.        , 0.9486833 ],
+                'pvalues': np.array([[0.        , np.nan    , np.nan    ],
+                                     [0.80054211, 0.        , np.nan    ],
+                                     [0.79468572, 0.0229774 , 0.        ]]),
+                'correlations': np.array([[1.        , np.nan    , np.nan    ],
+                                          [0.10540926, 1.        , np.nan    ],
                                           [0.11111111, 0.9486833 , 1.        ]]),
-                'r2vals': np.array([[1.        , 0.01111111, 0.01234568],
-                                    [0.01111111, 1.        , 0.9       ],
+                'r2vals': np.array([[1.        , np.nan    , np.nan    ],
+                                    [0.01111111, 1.        , np.nan    ],
                                     [0.01234568, 0.9       , 1.        ]])}}
 
         self.threshold_results = {
@@ -187,10 +178,10 @@ class TestStatistics(unittest.TestCase):
             }
 
         self.initial_corr = {
-            'p': [(0, 1), (1, 0), (1, 2), (2, 1)],
-            'r': [(0, 1), (1, 0), (1, 2), (2, 1)]
+            'p': [(1, 0), (2, 1)],
+            'r': [(1, 0), (2, 0), (2, 1)]
             }
-        self.all_pairs = [(0, 1), (0, 2), (1, 0), (1, 2), (2, 0), (2, 1)]
+        self.all_pairs = [(1, 0), (2, 0), (2, 1)]
 
         # specific to pearson, paired var1 = 1 var2 = 2 with bonferonni
         self.var1, self.var2 = 1, 2
@@ -240,57 +231,59 @@ class TestStatistics(unittest.TestCase):
             'dsr': statistics.dsr
         }
         self.infln_results = {
-            'p': {
-                'cutie_1pc': set(),
-                'cookd': {(0, 1), (1, 0), (2, 1), (1, 2)},
-                'dffits': {(0, 1), (1, 0), (2, 1), (1, 2)},
-                'dsr': {(1, 2), (1, 0), (2, 1)}},
-            'r': {
-                'cutie_1pc': set(),
-                'cookd': {(0, 1), (1, 0), (2, 1), (1, 2)},
-                'dffits': {(0, 1), (1, 0), (2, 1), (1, 2)},
-                'dsr': {(1, 2), (1, 0), (2, 1)}}
+            'p': {'cutie_1pc': set(),
+                  'cookd': {(1, 0), (2, 1)},
+                  'dffits': {(1, 0), (2, 1)},
+                  'dsr': {(1, 0), (2, 1)}
+                  },
+            'r': {'cutie_1pc': set(),
+                  'cookd': {(2, 0), (1, 0), (2, 1)},
+                  'dffits': {(2, 0), (1, 0), (2, 1)},
+                  'dsr': {(2, 0), (1, 0), (2, 1)}}
             }
 
         self.complete_pointwise_results = {
-            'p':  ({'cutie_1pc': set(),
-                    'cookd': {(0, 1), (1, 0), (2, 1), (1, 2)},
-                    'dffits': {(0, 1), (1, 0), (2, 1), (1, 2)},
-                    'dsr': {(1, 2), (1, 0), (2, 1)}},
-                   [['cutie_1pc'], ['cookd'], ['dffits'], ['dsr'],
-                    ['cutie_1pc', 'cookd'], ['cutie_1pc', 'dffits'],
-                    ['cutie_1pc', 'dsr'], ['cookd', 'dffits'], ['cookd', 'dsr'],
-                    ['dffits', 'dsr'], ['cutie_1pc', 'cookd', 'dffits'],
-                    ['cutie_1pc', 'cookd', 'dsr'], ['cutie_1pc', 'dffits', 'dsr'],
-                    ['cookd', 'dffits', 'dsr'], ['cutie_1pc', 'cookd', 'dffits', 'dsr']],
-                    {"['cutie_1pc']": set(), "['cookd']": set(), "['dffits']": set(),
-                     "['dsr']": set(), "['cutie_1pc', 'cookd']": set(),
-                     "['cutie_1pc', 'dffits']": set(), "['cutie_1pc', 'dsr']": set(),
-                     "['cookd', 'dffits']": {(0, 1)}, "['cookd', 'dsr']": set(),
-                     "['dffits', 'dsr']": set(), "['cutie_1pc', 'cookd', 'dffits']": set(),
-                     "['cutie_1pc', 'cookd', 'dsr']": set(),
-                     "['cutie_1pc', 'dffits', 'dsr']": set(),
-                     "['cookd', 'dffits', 'dsr']": {(1, 2), (1, 0), (2, 1)},
-                     "['cutie_1pc', 'cookd', 'dffits', 'dsr']": set()}),
-            'r':  ({'cutie_1pc': set(),
-                    'cookd': {(0, 1), (1, 0), (2, 1), (1, 2)},
-                    'dffits': {(0, 1), (1, 0), (2, 1), (1, 2)},
-                    'dsr': {(1, 2), (1, 0), (2, 1)}},
-                   [['cutie_1pc'], ['cookd'], ['dffits'], ['dsr'],
-                    ['cutie_1pc', 'cookd'], ['cutie_1pc', 'dffits'],
-                    ['cutie_1pc', 'dsr'], ['cookd', 'dffits'], ['cookd', 'dsr'],
-                    ['dffits', 'dsr'], ['cutie_1pc', 'cookd', 'dffits'],
-                    ['cutie_1pc', 'cookd', 'dsr'], ['cutie_1pc', 'dffits', 'dsr'],
-                    ['cookd', 'dffits', 'dsr'], ['cutie_1pc', 'cookd', 'dffits', 'dsr']],
-                    {"['cutie_1pc']": set(), "['cookd']": set(), "['dffits']": set(),
-                     "['dsr']": set(), "['cutie_1pc', 'cookd']": set(),
-                     "['cutie_1pc', 'dffits']": set(), "['cutie_1pc', 'dsr']": set(),
-                     "['cookd', 'dffits']": {(0, 1)}, "['cookd', 'dsr']": set(),
-                     "['dffits', 'dsr']": set(), "['cutie_1pc', 'cookd', 'dffits']": set(),
-                     "['cutie_1pc', 'cookd', 'dsr']": set(),
-                     "['cutie_1pc', 'dffits', 'dsr']": set(),
-                     "['cookd', 'dffits', 'dsr']": {(1, 2), (1, 0), (2, 1)},
-                     "['cutie_1pc', 'cookd', 'dffits', 'dsr']": set()})
+            'p':  ({'cutie_1pc': set(), 'cookd': {(1, 0), (2, 1)},
+                    'dffits': {(1, 0), (2, 1)}, 'dsr': {(1, 0), (2, 1)}},
+                    [['cutie_1pc'], ['cookd'], ['dffits'], ['dsr'],
+                     ['cutie_1pc', 'cookd'], ['cutie_1pc', 'dffits'],
+                     ['cutie_1pc', 'dsr'], ['cookd', 'dffits'], ['cookd', 'dsr'],
+                     ['dffits', 'dsr'], ['cutie_1pc', 'cookd', 'dffits'],
+                     ['cutie_1pc', 'cookd', 'dsr'], ['cutie_1pc', 'dffits', 'dsr'],
+                     ['cookd', 'dffits', 'dsr'],
+                     ['cutie_1pc', 'cookd', 'dffits', 'dsr']],
+                     {"['cutie_1pc']": set(), "['cookd']": set(),
+                      "['dffits']": set(), "['dsr']": set(),
+                      "['cutie_1pc', 'cookd']": set(),
+                      "['cutie_1pc', 'dffits']": set(),
+                      "['cutie_1pc', 'dsr']": set(),
+                      "['cookd', 'dffits']": set(), "['cookd', 'dsr']": set(),
+                      "['dffits', 'dsr']": set(),
+                      "['cutie_1pc', 'cookd', 'dffits']": set(),
+                      "['cutie_1pc', 'cookd', 'dsr']": set(),
+                      "['cutie_1pc', 'dffits', 'dsr']": set(),
+                      "['cookd', 'dffits', 'dsr']": {(1, 0), (2, 1)},
+                      "['cutie_1pc', 'cookd', 'dffits', 'dsr']": set()}),
+            'r':  ({'cutie_1pc': set(), 'cookd': {(2, 0), (1, 0), (2, 1)},
+                    'dffits': {(2, 0), (1, 0), (2, 1)},
+                    'dsr': {(2, 0), (1, 0), (2, 1)}},
+                    [['cutie_1pc'], ['cookd'], ['dffits'], ['dsr'],
+                     ['cutie_1pc', 'cookd'], ['cutie_1pc', 'dffits'],
+                     ['cutie_1pc', 'dsr'], ['cookd', 'dffits'], ['cookd', 'dsr'],
+                     ['dffits', 'dsr'], ['cutie_1pc', 'cookd', 'dffits'],
+                     ['cutie_1pc', 'cookd', 'dsr'], ['cutie_1pc', 'dffits', 'dsr'],
+                     ['cookd', 'dffits', 'dsr'], ['cutie_1pc', 'cookd', 'dffits', 'dsr']],
+                     {"['cutie_1pc']": set(), "['cookd']": set(),
+                      "['dffits']": set(), "['dsr']": set(),
+                      "['cutie_1pc', 'cookd']": set(),
+                      "['cutie_1pc', 'dffits']": set(),
+                      "['cutie_1pc', 'dsr']": set(), "['cookd', 'dffits']": set(),
+                      "['cookd', 'dsr']": set(), "['dffits', 'dsr']": set(),
+                      "['cutie_1pc', 'cookd', 'dffits']": set(),
+                      "['cutie_1pc', 'cookd', 'dsr']": set(),
+                      "['cutie_1pc', 'dffits', 'dsr']": set(),
+                      "['cookd', 'dffits', 'dsr']": {(2, 0), (1, 0), (2, 1)},
+                      "['cutie_1pc', 'cookd', 'dffits', 'dsr']": set()})
             }
 
 
@@ -314,20 +307,20 @@ class TestStatistics(unittest.TestCase):
 
         self.resamplek_results = {
             'p': {
-                '1': (np.array([0., 0., 0., 0., 0.]),
-                      np.array([0., 0., 0., 0., 1.]),
-                      np.array([0.00319451, 0.00284677, 0.0030147 , 0.        , 0.05327074]),
-                      np.array([0.99680549, 0.99715323, 0.9969853 , 1.        , 0.94672926])),
-                '2': (np.array([0.00000e+00, 0.00000e+00, 0.00000e+00, 0.00000e+00, 0.00000e+00]),
-                      np.array([3.00000e+00, 3.00000e+00, 3.00000e+00, 0.00000e+00, 3.00000e+00]),
-                      np.array([3.33333e-01, 1.21038e-01, 2.12296e-01, 1.64309e-08, 3.33333e-01]),
-                      np.array([8.66025e-01, 9.81981e-01, 9.44911e-01, 1.00000e+00, 8.66025e-01]))},
-            'r': {
-                '1': (np.array([0., 0., 0., 0., 0.]),
+                '1': (np.array([2., 2., 2., 2., 2.]),
                       np.array([0., 0., 0., 0., 0.]),
                       np.array([0.00319451, 0.00284677, 0.0030147 , 0.        , 0.05327074]),
                       np.array([0.99680549, 0.99715323, 0.9969853 , 1.        , 0.94672926])),
-                '2': (np.array([0.00000e+00, 0.00000e+00, 0.00000e+00, 0.00000e+00, 0.00000e+00]),
+                '2': (np.array([8.00000e+00, 8.00000e+00, 8.00000e+00, 8.00000e+00, 8.00000e+00]),
+                      np.array([0.00000e+00, 0.00000e+00, 0.00000e+00, 0.00000e+00, 0.00000e+00]),
+                      np.array([3.33333e-01, 1.21038e-01, 2.12296e-01, 1.64309e-08, 3.33333e-01]),
+                      np.array([8.66025e-01, 9.81981e-01, 9.44911e-01, 1.00000e+00, 8.66025e-01]))},
+            'r': {
+                '1': (np.array([2., 2., 2., 2., 2.]),
+                      np.array([0., 0., 0., 0., 0.]),
+                      np.array([0.00319451, 0.00284677, 0.0030147 , 0.        , 0.05327074]),
+                      np.array([0.99680549, 0.99715323, 0.9969853 , 1.        , 0.94672926])),
+                '2': (np.array([8.00000e+00, 8.00000e+00, 8.00000e+00, 8.00000e+00, 8.00000e+00]),
                       np.array([0.00000e+00, 0.00000e+00, 0.00000e+00, 0.00000e+00, 0.00000e+00]),
                       np.array([3.33333e-01, 1.21038e-01, 2.12296e-01, 1.64309e-08, 3.33333e-01]),
                       np.array([8.66025e-01, 9.81981e-01, 9.44911e-01, 1.00000e+00, 8.66025e-01]))}
@@ -338,18 +331,18 @@ class TestStatistics(unittest.TestCase):
 
         self.evaluate_correlation_k_results = {
             'p': {
-                '0': (np.array([0., 0., 0., 0., 0.]),
-                      np.array([0., 0., 0., 0., 1.]),
+                '0': (np.array([2., 2., 2., 2., 2.]),
+                      np.array([0., 0., 0., 0., 0.]),
                       0.05327073759374248, 0.9467292624062575),
-                '1': (np.array([0., 0., 0., 0., 0.]),
-                      np.array([3., 3., 3., 0., 3.]),
+                '1': (np.array([8., 8., 8., 8., 8.]),
+                      np.array([0., 0., 0., 0., 0.]),
                       0.3333333333333333, 0.8660254037844387)},
             'r': {
-                '0': (np.array([0., 0., 0., 0., 0.]),
-                      np.array([0., 0., 0., 0., 1.]),
+                '0': (np.array([2., 2., 2., 2., 2.]),
+                      np.array([0., 0., 0., 0., 0.]),
                       0.05327073759374248, 0.9467292624062575),
-                '1': (np.array([0., 0., 0., 0., 0.]),
-                      np.array([3., 3., 3., 0., 3.]),
+                '1': (np.array([8., 8., 8., 8., 8.]),
+                      np.array([0., 0., 0., 0., 0.]),
                       0.3333333333333333, 0.8660254037844387)}}
 
 
@@ -357,16 +350,16 @@ class TestStatistics(unittest.TestCase):
             'p': {
                 '1': (defaultdict(list),
                   defaultdict(list),
-                  {'1': [(0, 1), (1, 0)]},
-                    {'1': np.array([[1.        , 0.32580014, 1.        ],
-                                 [0.32580014, 1.        , 0.05327074],
-                                 [1.        , 0.05327074, 1.        ]])},
-                    {'1': np.array([[ 0.        , -0.67419986,  0.        ],
-                                 [-0.67419986,  0.        ,  0.94672926],
-                                 [ 0.        ,  0.94672926,  0.        ]])},
-                  {'1': np.array([0., 0., 0., 0., 4.])},
-                  {'1': np.array([1., 2., 1.])},
-                  {'1': np.array([1., 2., 1.])},
+                  {'1': [(1, 0)]},
+                    {'1': np.array([[1.        , 1.        , 1.        ],
+                                    [0.32580014, 1.        , 1.        ],
+                                    [1.        , 0.05327074, 1.        ]])},
+                    {'1': np.array([[ 0.        ,  0.        ,  0.        ],
+                                    [-0.67419986,  0.        ,  0.        ],
+                                    [ 0.        ,  0.94672926,  0.        ]])},
+                  {'1': np.array([0., 0., 0., 0., 2.])},
+                  {'1': np.array([0., 1., 1.])},
+                  {'1': np.array([1., 1., 0.])},
                   {'1': {'(0, 1)': np.array([0., 0., 0., 0., 1.]),
                          '(1, 0)': np.array([0., 0., 0., 0., 1.]),
                          '(1, 2)': np.array([0., 0., 0., 0., 1.]),
@@ -379,48 +372,50 @@ class TestStatistics(unittest.TestCase):
                 '1': (defaultdict(list),
                   defaultdict(list),
                   {'1': []},
-                    {'1': np.array([[1.        , 0.32580014, 1.        ],
-                                 [0.32580014, 1.        , 0.05327074],
-                                 [1.        , 0.05327074, 1.        ]])},
-                    {'1': np.array([[ 0.        , -0.67419986,  0.        ],
-                                 [-0.67419986,  0.        ,  0.94672926],
-                                 [ 0.        ,  0.94672926,  0.        ]])},
+                    {'1': np.array([[1.        , 1.        , 1.        ],
+                                    [0.32580014, 1.        , 1.        ],
+                                    [0.24566349, 0.05327074, 1.        ]])},
+                    {'1': np.array([[ 0.        ,  0.        ,  0.        ],
+                                    [-0.67419986,  0.        ,  0.        ],
+                                    [-0.75433651,  0.94672926,  0.        ]])},
                   {'1': np.array([0., 0., 0., 0., 0.])},
                   {'1': np.array([0., 0., 0.])},
                   {'1': np.array([0., 0., 0.])},
                   {'1': {'(0, 1)': np.array([0., 0., 0., 0., 0.]),
                          '(1, 0)': np.array([0., 0., 0., 0., 0.]),
                          '(1, 2)': np.array([0., 0., 0., 0., 0.]),
-                         '(2, 1)': np.array([0., 0., 0., 0., 0.])}},
+                         '(2, 1)': np.array([0., 0., 0., 0., 0.]),
+                         '(2, 0)': np.array([0., 0., 0., 0., 0.])}},
                   {'1': {'(0, 1)': np.array([0., 0., 0., 0., 2.]),
                          '(1, 0)': np.array([0., 0., 0., 0., 2.]),
                          '(1, 2)': np.array([0., 0., 0., 0., 0.]),
-                         '(2, 1)': np.array([0., 0., 0., 0., 0.])}})}
+                         '(2, 1)': np.array([0., 0., 0., 0., 0.]),
+                         '(2, 0)': np.array([0., 0., 0., 0., 2.])}})}
             }
 
 
     def test_compute_pc(self):
-        assert_almost_equal((1,0), statistics.compute_pc(self.undef_corr[0],
+        assert_almost_equal((np.nan, np.nan), statistics.compute_pc(self.undef_corr[0],
                                                          self.undef_corr[1]))
-        assert_almost_equal((0,1), statistics.compute_pc(self.perfect_corr[0],
+        assert_almost_equal((0, 1), statistics.compute_pc(self.perfect_corr[0],
                                                          self.perfect_corr[1]))
-        assert_almost_equal((0.333,0.866), statistics.compute_pc(
+        assert_almost_equal((0.333, 0.866), statistics.compute_pc(
             self.empirical_corr[0], self.empirical_corr[1]), decimal=3)
 
     def test_compute_sc(self):
-        assert_almost_equal((1,0), statistics.compute_sc(self.undef_corr[0],
+        assert_almost_equal((np.nan, np.nan), statistics.compute_sc(self.undef_corr[0],
                                                          self.undef_corr[1]))
-        assert_almost_equal((0,1), statistics.compute_sc(self.perfect_corr[0],
+        assert_almost_equal((0, 1), statistics.compute_sc(self.perfect_corr[0],
                                                          self.perfect_corr[1]))
         assert_almost_equal((0.666,0.5), statistics.compute_sc(
             self.empirical_corr[0], self.empirical_corr[1]), decimal=3)
 
     def test_compute_kc(self):
-        assert_almost_equal((1,0), statistics.compute_kc(self.undef_corr[0],
+        assert_almost_equal((np.nan, np.nan), statistics.compute_kc(self.undef_corr[0],
                                                          self.undef_corr[1]))
-        assert_almost_equal((0.333,1), statistics.compute_kc(
+        assert_almost_equal((0.333, 1), statistics.compute_kc(
             self.perfect_corr[0], self.perfect_corr[1]), decimal=3)
-        assert_almost_equal((1,0.333), statistics.compute_kc(
+        assert_almost_equal((1, 0.333), statistics.compute_kc(
             self.empirical_corr[0], self.empirical_corr[1]), decimal=3)
 
 
@@ -431,8 +426,8 @@ class TestStatistics(unittest.TestCase):
                     self.mapf[stat], paired=True), decimal=7)
 
     def test_assign_statistics(self):
-        keys = ['pvalues','logpvals','correlations','r2vals']
-        # tests kpc, ksc, kkc and mine
+        keys = ['pvalues','correlations','r2vals']
+        # tests pearson, spearman and kendall
         for stat in self.correlation_types:
             stats_vals = statistics.assign_statistics(self.samp_var1,
                 self.samp_var1, stat, self.pearson_stats, self.spearman_stats,
@@ -447,7 +442,7 @@ class TestStatistics(unittest.TestCase):
         self.assertRaises(ValueError, statistics.assign_statistics,
             self.samp_var1, self.samp_var2, 'kpc',
             self.pearson_stats, self.spearman_stats, self.kendall_stats,
-            self.mine_stats, self.mine_bins, self.pvalue_bins)
+            paired=True)
 
     def test_set_threshold(self):
         # test the different allowed multiple corrections adjustments
@@ -464,7 +459,7 @@ class TestStatistics(unittest.TestCase):
 
     def test_get_initial_corr(self):
         # modified from prev branch to incorporate different statistic parameter
-        for p in ['r', 'p']:
+        for p in ['p', 'r']:
             assert (self.initial_corr[p], self.all_pairs) == statistics.get_initial_corr(
                 self.n_var1, self.n_var2, self.pvalues, self.correlations,
                 self.threshold[p], p, self.paired)
@@ -475,7 +470,7 @@ class TestStatistics(unittest.TestCase):
     def test_calculate_FP_sets(self):
         # True for self.fold
         # modified from prev branch to incorporate different statistic parameter
-        for p in ['r', 'p']:
+        for p in ['p', 'r']:
             assert self.infln_results[p] == statistics.calculate_FP_sets(self.initial_corr[p],
             self.samp_var1, self.samp_var2, self.infln_metrics, self.infln_mapping,
             self.threshold[p], True, self.fold_value[p], p)

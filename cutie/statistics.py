@@ -88,6 +88,9 @@ def initial_stats(samp_var1, samp_var2, corr_func, paired):
     # subset the data matrices into the cols needed
     for var1 in range(n_var1):
         for var2 in range(n_var2):
+            # if data is not paired (i.e. df1 != df2), fill in entire matrix
+            # if paired is false, the expresion will always be not False = True
+            # if paired is True, then the expression will only be True if var1 > var2
             if not (paired and (var1 <= var2)):
                 var1_values, var2_values = utils.remove_nans(samp_var1[:, var1],
                                                              samp_var2[:, var2])
@@ -97,6 +100,14 @@ def initial_stats(samp_var1, samp_var2, corr_func, paired):
                                                                        var2_values)
                 except ValueError:
                     corrs[var1][var2], pvalues[var1][var2] = np.nan, np.nan
+
+            # if data is paired, fill in the diagonal with 1/0
+            elif paired and var1 == var2:
+                corrs[var1][var2], pvalues[var1][var2] = 1, 0
+
+            # if data is unpaired, convert upper part of matrix to NA
+            else:
+                corrs[var1][var2], pvalues[var1][var2] = np.nan, np.nan
 
     return corrs, pvalues
 
