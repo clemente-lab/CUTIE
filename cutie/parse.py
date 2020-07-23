@@ -93,7 +93,7 @@ def process_df(samp_var_df, samp_ids):
 ###
 def parse_config(input_config_fp):
     """
-    Config parser to unpack arguments for CUtIe.
+    Config parser to unpack arguments for CUTIE.
     ----------------------------------------------------------------------------
     INPUTS
     config_fp   - File object. Contains specific config settings for a given
@@ -172,7 +172,7 @@ def parse_config(input_config_fp):
 def md5_checksum(fp):
     """
     Computes the md5 of a given file (for log purposes).
-    https://www.joelverhagen.com/blog/2011/02/md5-hash-of-file-in-python/
+    https://www.joelverhagen.com/blog/2011/02/md5-hash-of-file-in-python/ (No UT)
     ----------------------------------------------------------------------------
     INPUTS
     fp - String. Directory and name of file to be evaluated.

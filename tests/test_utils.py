@@ -9,6 +9,15 @@ from pathlib import Path
 
 class TestStatistics(unittest.TestCase):
 
+    # setUp name is specific to package
+    def setUp(self):
+        # undefined correlation
+        self.taxa = 'k__Archaea;p__Crenarchaeota;c__Thaumarchaeota;o__Cenarchaeales;f__Cenarchaeaceae;g__Nitrosopumilus'
+        self.taxa_short = 'Cenarchaeaceae Nitrosopumilus'
+        self.unchar_taxa = 'k__;p__;c__;o__;f__;g__'
+        self.unchar_taxa_short = 'Uncharacterized'
+
+
     def test_calculate_intersection(self):
         set_names = ['Set1', 'Set2', 'Set3']
         sets = [
@@ -272,6 +281,10 @@ class TestStatistics(unittest.TestCase):
         assert np.all(extrema_r == 0)
         assert np.all(var1 == 4)
         assert np.all(var2 == 3)
+
+    def test_read_taxa(self):
+        assert self.taxa_short == utils.read_taxa(self.taxa)
+        assert self.unchar_taxa_short == utils.read_taxa(self.unchar_taxa))
 
 if __name__ == '__main__':
     unittest.main()

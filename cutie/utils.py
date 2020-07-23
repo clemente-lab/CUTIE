@@ -16,7 +16,7 @@ def indicator(n_var1, n_var2, initial_corr, true_corr):
     n_var2       - Integer. Number of variables in file 2.
     initial_corr - Set of tuples. Each tuple is a variable pair that is in the
                    set of correlations deemed initially significant or
-                   insignificant (in CUtIe or reverse CUtIe, respectively)
+                   insignificant (in CUTIE or reverse CUTIE, respectively)
                    prior to resampling
     true_corr     - Set of tuples for a given k referring to variable pairs
                    deemed true correlations following resampling of k points
@@ -38,7 +38,7 @@ def indicator(n_var1, n_var2, initial_corr, true_corr):
 
 def init_var_indicators(var1_index, var2_index, samp_var1, samp_var2, forward):
     """
-    Initialize indicator matrices and variable matrices
+    Initialize indicator matrices and variable matrices.
     ----------------------------------------------------------------------------
     INPUTS
     var1_index - Integer. Index of variable from file 1 for pairwise correlation.
@@ -47,7 +47,7 @@ def init_var_indicators(var1_index, var2_index, samp_var1, samp_var2, forward):
                  corresponding to sample i in the order that the samples are
                  presented in samp_ids.
     samp_var2  - 2D array. Same as samp_var1 but for file 2.
-    forward    - Boolean. True if CUtIe is run in the forward direction, False if
+    forward    - Boolean. True if CUTIE is run in the forward direction, False if
                  reverse.
 
     OUTPUT (in addition to above)
@@ -58,8 +58,8 @@ def init_var_indicators(var1_index, var2_index, samp_var1, samp_var2, forward):
                  pairwise correlations
     extrema_p - 1D array. Length n_samp, contains lowest or highest p value
                 observed thusfar for a particular sample, depending if reverse
-                or forward CUtIe was run, respectively across all i in {1,...,k}
-                iterations of CUtIe_k.
+                or forward CUTIE was run, respectively across all i in {1,...,k}
+                iterations of CUTIE_k.
     extrema_r - 1D array. Same as extrema_p but for R / correlation strength
                 values.
     var1      - 1D array. Values for specified variable (from var_index1) from
@@ -93,12 +93,12 @@ def return_indicators(n_var1, n_var2, initial_corr, true_corr, resample_k):
     n_var2       - Integer. Number of variables in file 2.
     initial_corr - Set of tuples. Each tuple is a variable pair that is in the
                    set of correlations deemed initially significant or
-                   insignificant (in CUtIe or reverse CUtIe, respectively)
+                   insignificant (in CUTIE or reverse CUTIE, respectively)
                    prior to resampling
     true_corr    - Dictionary indexed by k value containing lists of tuples
                    referring to variable pairs deemed true correlations following
                    resampling of k points according to CUtie.
-    resample_k   - Integer. Number of points being resampled by CUtIe.
+    resample_k   - Integer. Number of points being resampled by CUTIE.
 
     OUTPUTS
     indicators   - Dictionary. Key is the number of points removed and entry i j

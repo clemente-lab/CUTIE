@@ -19,24 +19,24 @@ from cutie import utils
 def report_results(initial_corr, true_corr,
                    correct_to_rev, incorrect_to_rev, resample_k, log_fp):
     """
-    Writes to log files the number of TP/FP or TN/FN.
+    Writes to log files the number of TP/FP or TN/FN. (No UT)
     ----------------------------------------------------------------------------
     INPUTS
     working_dir       - String. Path of working directory specified by user.
     initial_corr      - Set of integer tuples. Contains variable pairs initially
-                        classified as significant (forward CUtIe) or
-                        insignificant (reverse CUtIe). Note variable pairs (i,j)
+                        classified as significant (forward CUTIE) or
+                        insignificant (reverse CUTIE). Note variable pairs (i,j)
                         and (j,i) are double counted.
     true_corr         - Set of integer tuples. Contains variable pairs
                         classified as true correlations (TP or FN, depending on
-                        forward or reverse CUtIe respectively).
+                        forward or reverse CUTIE respectively).
     correct_to_rev    - Dictionary. Key is string of number of points being
                         resampled, and entry is a 2D array of indicators where
                         the entry in the i-th row and j-th column is 1 if that
                         particular correlation in the set of true_corr (either
                         TP or FN) reverses sign upon removal of a point.
     incorrect_to_rev  - Same as true_comb_to_rev but for TN/FP.
-    resample_k        - Integer. Number of points being resampled by CUtIe.
+    resample_k        - Integer. Number of points being resampled by CUTIE.
     log_fp            - String. File path of log file.
     """
     # for each resampling value of k
@@ -57,11 +57,10 @@ def report_results(initial_corr, true_corr,
             write_log('The number of reversed correlations for FP/TN' + str(i+1)
                       + ' is ' + str(len(incorrect_to_rev[str(i+1)])), log_fp)
 
-def print_summary_df(n_var1, n_var2,
-                     col_names, col_vars, working_dir, resample_index, n_corr,
-                     paired=False):
+def print_summary_df(n_var1, n_var2, col_names, col_vars, working_dir,
+                     resample_index, n_corr, paired=False):
     """
-    Creates summary datafrane containing CUtIe's analysis results.
+    Creates summary datafrane containing CUTIE's analysis results.
     Each row is a correlation and columns contain relevant statistics e.g.
     pvalue, correlation strength etc.
     ----------------------------------------------------------------------------
@@ -124,10 +123,10 @@ def graph_subsets(working_dir, var1_names, var2_names, f1type, f2type, summary_d
     Creates folders and plots corresponding to particular sets of variable
     pairs. Pairwise correlation scatterplots are plotted as well as fold p value
     changes. Folders are named <quadrant>_<k>_<n>_<revsign> where quadrant
-    refers to TP/FP or TN/FN (if forward or reverse CUtIe was run, respectively)
+    refers to TP/FP or TN/FN (if forward or reverse CUTIE was run, respectively)
     k is the number of points in that resampling and revsign is present or
-    absent depending if the folder specifically contains reverse sign CUtIes
-    or not.
+    absent depending if the folder specifically contains reverse sign CUTIEs
+    or not. (No UT)
     ----------------------------------------------------------------------------
     INPUTS
     working_dir       - String. Path of working directory specified by user.
@@ -139,16 +138,16 @@ def graph_subsets(working_dir, var1_names, var2_names, f1type, f2type, summary_d
     summary_df        - Dataframe. Output from print_summary_df.
     statistic         - String. Describes analysis being performed.
     forward_stats     - List of strings. Contains list of statistics e.g. 'kpc'
-                        'jkp' that pertain to forward (non-reverse) CUtIe
+                        'jkp' that pertain to forward (non-reverse) CUTIE
                         analysis
-    resample_k        - Integer. Number of points being resampled by CUtIe.
+    resample_k        - Integer. Number of points being resampled by CUTIE.
     initial_corr      - Set of integer tuples. Contains variable pairs initially
-                        classified as significant (forward CUtIe) or
-                        insignificant (reverse CUtIe). Note variable pairs (i,j)
+                        classified as significant (forward CUTIE) or
+                        insignificant (reverse CUTIE). Note variable pairs (i,j)
                         and (j,i) are double counted.
     true_corr         - Set of integer tuples. Contains variable pairs
                         classified as true correlations (TP or FN, depending on
-                        forward or reverse CUtIe respectively).
+                        forward or reverse CUTIE respectively).
     true_corr_to_rev  - Dictionary. Key is string of number of points being
                         resampled, and entry is a 2D array of indicators where
                         the entry in the i-th row and j-th column is 1 if that
@@ -200,29 +199,28 @@ def generate_dfs(statistic, forward_stats, initial_corr, true_corr,
                  region_sets, corr_compare, all_pairs):
     """
     Create class object and instances of dataframes corresponding to sets,
-    e.g. FP, TP etc.
+    e.g. FP, TP etc. (needs UT)
     ----------------------------------------------------------------------------
     INPUTS
     statistic         - String. Describes analysis being performed.
     forward_stats     - List of strings. Contains list of statistics e.g. 'pearson'
                         'spearman' that pertain to forward (non-reverse) CUTIE
                         analysis.
-    summary_df        - Pandas dataframe. Summary_df from print_summary_df.
-    resample_k        - Integer. Number of points being resampled by CUtIe.
     initial_corr      - Set of integer tuples. Contains variable pairs initially
-                        classified as significant (forward CUtIe) or
-                        insignificant (reverse CUtIe). Note variable pairs (i,j)
+                        classified as significant (forward CUTIE) or
+                        insignificant (reverse CUTIE). Note variable pairs (i,j)
                         and (j,i) are double counted.
     true_corr         - Set of integer tuples. Contains variable pairs
                         classified as true correlations (TP or FN, depending on
-                        forward or reverse CUtIe respectively).
+                        forward or reverse CUTIE respectively).
     true_corr_to_rev  - Dictionary. Key is string of number of points being
                         resampled, and entry is a 2D array of indicators where
                         the entry in the i-th row and j-th column is 1 if that
                         particular correlation that was correctly classified
                         (TP or TN) reverses sign upon removal of a point.
     false_corr_to_rev - Dictionary. Same as true_corr_to_rev but for FP/FN.
-    summary_df        - Pandas dataframe. Contains summary_df from print_summary_df.
+    summary_df        - Pandas dataframe. Summary_df from print_summary_df.
+    resample_k        - Integer. Number of points being resampled by CUTIE.
     region_sets       - Dictionary. Maps key (region on Venn Diagram) to
                         elements in that set (e.g. variable pairs)
     corr_compare      - Boolean. True if using Cook's D, DFFITS analysis etc.
@@ -315,7 +313,7 @@ def plot_dfs(graph_bound, working_dir, f1type, f2type, var1_names, var2_names,
              samp_var1, samp_var2, dfs, initial_insig_corr, initial_sig_corr,
              summary_df, exceeds_points, rev_points, fix_axis, forward):
     """
-    Plot correlations and distribution of pvalues for each dataframe set.
+    Plot correlations and distribution of pvalues for each dataframe set. (No UT)
     ----------------------------------------------------------------------------
     INPUTS
     working_dir       - String. Path of working directory specified by user.
@@ -331,7 +329,7 @@ def plot_dfs(graph_bound, working_dir, f1type, f2type, var1_names, var2_names,
                         and (j,i) are double counted.
     true_corr         - Set of integer tuples. Contains variable pairs
                         classified as true correlations (TP or FN, depending on
-                        forward or reverse CUtIe respectively).
+                        forward or reverse CUTIE respectively).
     true_comb_to_rev  - Dictionary. Key is string of number of points being
                         resampled, and entry is a 2D array of indicators where
                         the entry in the i-th row and j-th column is 1 if that
@@ -390,7 +388,7 @@ def plot_dfs(graph_bound, working_dir, f1type, f2type, var1_names, var2_names,
 
 def plot_figure(values, fp, summary_df, title):
     """
-    Seaborn/matplotlib plotting function
+    Seaborn/matplotlib plotting function. (No UT)
     ----------------------------------------------------------------------------
     INPUTS
     values     - np.array. Values being plotted.
@@ -422,7 +420,7 @@ def plot_figure(values, fp, summary_df, title):
 def plot_pdist(df, working_dir):
     """
     Helper function for graph_subsets(). Produces plots of p-values and
-    fold-pvalue changes for each set of correlations as defined by df.
+    fold-pvalue changes for each set of correlations as defined by df. (No UT)
     ----------------------------------------------------------------------------
     INPUTS
     df          - Dataframe-sets object as constructed in graph_subsets().
@@ -478,7 +476,7 @@ def plot_corr(row, df_folder_fp, var1_names, var2_names, samp_var1, samp_var2,
               var1_min, var2_max, var2_min, forward):
     """
     Helper function for plot_corr_sets(). Plots pairwise correlations within each
-    set of correlations as defined by df.
+    set of correlations as defined by df. (No UT)
     ----------------------------------------------------------------------------
     INPUTS
     row               - Pandas dataframe row.
@@ -599,7 +597,7 @@ def plot_corr_sets(graph_bound, df, working_dir, f1type, f2type, var1_names,
                    fix_axis, var1_max, var1_min, var2_max, var2_min, forward):
     """
     Helper function for graph_subsets(). Plots pairwise correlations within each
-    set of correlations as defined by df.
+    set of correlations as defined by df. (No UT)
     ----------------------------------------------------------------------------
     INPUTS
     graph_bound       - Integer. Upper limit of how many graphs to plot in each
@@ -664,7 +662,7 @@ def diag_plots(samp_ids, var1_names, var2_names, samp_counter, var1_counter,
                var2_counter, resample_k, working_dir, paired, statistic, forward_stats):
     """
     Create diagnostic plots i.e. creates histograms of number of times each
-    sample or variable appears in CUtIe's
+    sample or variable appears in CUTIE's (No UT)
     ----------------------------------------------------------------------------
     INPUTS
     samp_ids      - List of strings. Contains sample names in order that they
@@ -673,16 +671,16 @@ def diag_plots(samp_ids, var1_names, var2_names, samp_counter, var1_counter,
                     were read from file 1.
     var2_names    - List of strings. Contains variable names in order that they
                     were read from file 2.
-    samp_counter  - Dictionary. Key is the index of CUtIe resampling
+    samp_counter  - Dictionary. Key is the index of CUTIE resampling
                     (k = 1, 2, 3, ... etc.) and entry is an array of length
                     n_samp corresponding to how many times the i-th sample
-                    appears in CUtIe's when evaluated at resampling = k points)
-    var1_counter  - Dictionary.  Key is the index of CUtIe resampling
+                    appears in CUTIE's when evaluated at resampling = k points)
+    var1_counter  - Dictionary.  Key is the index of CUTIE resampling
                     (k = 1, 2, 3, ... etc.) and entry is an array of length
                     n_var1 corresponding to how many times the j-th variable
-                    appears in CUtIe's when evaluated at resampling = k points)
+                    appears in CUTIE's when evaluated at resampling = k points)
     var2_counter  - Same as var1_counter except for var2.
-    resample_k    - Integer. Number of points being resampled by CUtIe.
+    resample_k    - Integer. Number of points being resampled by CUTIE.
     working_dir   - String. Path of working directory specified by user.
     paired        - Boolean. True if variables are paired (same in both files).
     statistic     - String. Describes analysis being performed.
@@ -721,7 +719,7 @@ def diag_plots(samp_ids, var1_names, var2_names, samp_counter, var1_counter,
             counter = stats_mapping[stats]
             counts = np.zeros(shape=[len(counter[str(i+1)]), 2])
             # create 2D array where col 1 = sample/var index and col 2 =
-            # number of times that sample/var appears in CUtIes
+            # number of times that sample/var appears in CUTIEs
             for j in range(len(counter[str(i+1)])):
                 counts[j] = np.array([j, counter[str(i+1)][j]])
 
@@ -757,7 +755,7 @@ def diag_plots(samp_ids, var1_names, var2_names, samp_counter, var1_counter,
 ###
 def init_log(log_dir, input_config_fp):
     """
-    Initializes log file.
+    Initializes log file. (No UT)
     ----------------------------------------------------------------------------
     INPUTS
     log_dir         - String. Directory where to write log file.
@@ -779,7 +777,7 @@ def init_log(log_dir, input_config_fp):
 
 def write_log(message, log_fp):
     """
-    Writes message to log file
+    Writes message to log file. (No UT)
     ----------------------------------------------------------------------------
     INPUTS
     log_fp  - String. File path of log file output.

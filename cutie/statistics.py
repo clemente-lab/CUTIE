@@ -16,7 +16,7 @@ def assign_statistics(samp_var1, samp_var2, statistic, pearson_stats,
                       spearman_stats, kendall_stats, paired):
     """
     Creates dictionary mapping statistics to 2D matrix containing relevant
-    statistics (e.g. pvalue, correlation) for correlation between var i and j. (UT)
+    statistics (e.g. pvalue, correlation) for correlation between var i and j.
     ----------------------------------------------------------------------------
     INPUTS
     samp_var1      - 2D array. Each value in row i col j is the level of
@@ -63,7 +63,7 @@ def initial_stats(samp_var1, samp_var2, corr_func, paired):
     set of statistics per the specified functions. Returns a dict where the key
     is a statistical function and the element is an initial matrix with
     dimensions n_rel_stats x n_var1 x n_var2, corresponding to the relevant
-    statistic between each var1 and var2. (UT)
+    statistic between each var1 and var2.
     ----------------------------------------------------------------------------
     INPUTS
     samp_var1  - 2D array. Each value in row i col j is the level of variable j
@@ -114,7 +114,7 @@ def initial_stats(samp_var1, samp_var2, corr_func, paired):
 
 def set_threshold(pvalues, param, alpha, multi_corr, paired=False):
     """
-    Computes p-value threshold for alpha according to FDR, Bonferroni, or FWER. (UT)
+    Computes p-value threshold for alpha according to FDR, Bonferroni, or FWER.
     ----------------------------------------------------------------------------
     INPUTS
     pvalues    - 2D array. Entry row i, col j represents p value of correlation
@@ -445,7 +445,7 @@ def calculate_FP_sets(initial_corr, samp_var1, samp_var2, infln_metrics,
                       infln_mapping, threshold, fold, fold_value, param):
     """
     Determine which correlations (variable pairs) belong in which
-    infln_metric_FP sets. (UT*)
+    infln_metric_FP sets.
     ----------------------------------------------------------------------------
     INPUTS
     initial_corr  - Set of integer tuples. Contains variable pairs initially
@@ -508,7 +508,7 @@ def pointwise_comparison(infln_metrics, infln_mapping, samp_var1, samp_var2,
     """
     Perform pointwise analysis of each correlation, comparing between CUTIE,
     Cook's D, DFFITS (and optionally DSR). Logs number of correlations belonging
-    to each set (Venn Diagram) of outlier metrics as well as a JSON table. (UT*)
+    to each set (Venn Diagram) of outlier metrics as well as a JSON table.
     ----------------------------------------------------------------------------
     INPUTS
     infln_metrics - List. Contains strings of infln_metrics (such as 'cookd').
@@ -553,7 +553,7 @@ def pointwise_comparison(infln_metrics, infln_mapping, samp_var1, samp_var2,
 def get_initial_corr(n_var1, n_var2, pvalues, corrs, threshold, param, paired):
     """
     Determine list of initially candidate correlations for screening (either sig
-    or nonsig, if performing CUTIE or reverse-CUTIE respectively). (UT*)
+    or nonsig, if performing CUTIE or reverse-CUTIE respectively).
     ----------------------------------------------------------------------------
     INPUTS
     n_var1       - Integer. Number of variables in file 1.
@@ -599,7 +599,7 @@ def update_cutiek_true_corr(initial_corr, samp_var1, samp_var2, pvalues, corrs,
                             threshold, statistic, forward_stats, reverse_stats,
                             resample_k, fold, fold_value, param):
     """
-    Determine true correlations via resampling of k points. (UT)
+    Determine true correlations via resampling of k points.
     ----------------------------------------------------------------------------
     INPUTS
     initial_corr      - Set of integer tuples. Contains variable pairs initially
@@ -787,7 +787,7 @@ def evaluate_correlation_k(var1, var2, n_samp, samp_var1, samp_var2, pvalues,
                            fold_value, forward, param):
     """
     Helper function for cutiek_true_corr(). Evaluates a given var1, var2
-    correlation at the resample_k = i level. (UT)
+    correlation at the resample_k = i level.
     ----------------------------------------------------------------------------
     INPUTS
     var1              - Integer. Index of variable in file 1.
@@ -850,7 +850,7 @@ def evaluate_correlation_k(var1, var2, n_samp, samp_var1, samp_var2, pvalues,
 
 def compute_pc(new_var1, new_var2):
     """
-    Compute Pearson correlation and return p and r values. (UT)
+    Compute Pearson correlation and return p and r values.
     INPUTS
     ----------------------------------------------------------------------------
     new_var1 - Array. Length sample size containing observations for given
@@ -868,7 +868,7 @@ def compute_pc(new_var1, new_var2):
 
 def compute_sc(new_var1, new_var2):
     """
-    Compute Spearman correlation and return p and r values. (UT)
+    Compute Spearman correlation and return p and r values.
     ----------------------------------------------------------------------------
     INPUTS
     new_var1 - Array. Length sample size containing observations for given
@@ -886,7 +886,7 @@ def compute_sc(new_var1, new_var2):
 
 def compute_kc(new_var1, new_var2):
     """
-    Compute Kendall correlation and return p and r values. (UT)
+    Compute Kendall correlation and return p and r values.
     ----------------------------------------------------------------------------
     INPUTS
     new_var1 - Array. Length sample size containing observations for given
@@ -905,7 +905,7 @@ def compute_kc(new_var1, new_var2):
 def update_rev_extrema_rp(sign, r_value, p_value, indices, reverse, extrema_p,
                           extrema_r, forward=True):
     """
-    Check sign, r and p value and update reverse, maxp, and minr. (UT)
+    Check sign, r and p value and update reverse, maxp, and minr.
     ----------------------------------------------------------------------------
     INPUTS
     sign      - Integer. -1 or 1, depending on original sign of correlation to
@@ -953,7 +953,7 @@ def resamplek_cutie(var1_index, var2_index, n_samp, samp_var1, samp_var2,
                     pvalues, corrs, threshold, resample_k, sign, forward, statistic,
                     fold, fold_value, param):
     """
-    Perform CUTIE resampling on a given pair of variables and test CUTIE status. (UT)
+    Perform CUTIE resampling on a given pair of variables and test CUTIE status.
     ----------------------------------------------------------------------------
     INPUTS
     var1_index        - Integer. Index of variable in file 1.
