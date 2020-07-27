@@ -11,7 +11,7 @@ index	count	name
 9.0	0.0	sucrose
 10.0	0.0	glycerol_alpha_phosphate
 11.0	0.0	fructose
-12.0	1.0	cysteine
+12.0	0.0	cysteine
 13.0	0.0	beta_alanine
 14.0	0.0	glycerol
 15.0	0.0	ribose
@@ -20,3 +20,15 @@ index	count	name
 18.0	0.0	proline
 19.0	0.0	malic_acid
 20.0	0.0	nicotinamide
+21.0	0.0	4_hydroxybenzoate
+22.0	1.0	citric_acid
+23.0	0.0	mannose
+24.0	0.0	glycolic_acid
+25.0	0.0	thymine
+26.0	0.0	benzoic_acid
+27.0	0.0	valine
+28.0	0.0	cellobiose
+29.0	0.0	lactic_acid
+30.0	1.0	cholesterol
+31.0	0.0	threonine
+32.0	0.0	ethanolamine

@@ -19,7 +19,7 @@ from cutie import utils
 def report_results(initial_corr, true_corr,
                    correct_to_rev, incorrect_to_rev, resample_k, log_fp):
     """
-    Writes to log files the number of TP/FP or TN/FN. (No UT)
+    Writes to log files the number of TP/FP or TN/FN.
     ----------------------------------------------------------------------------
     INPUTS
     working_dir       - String. Path of working directory specified by user.
@@ -126,7 +126,7 @@ def graph_subsets(working_dir, var1_names, var2_names, f1type, f2type, summary_d
     refers to TP/FP or TN/FN (if forward or reverse CUTIE was run, respectively)
     k is the number of points in that resampling and revsign is present or
     absent depending if the folder specifically contains reverse sign CUTIEs
-    or not. (No UT)
+    or not.
     ----------------------------------------------------------------------------
     INPUTS
     working_dir       - String. Path of working directory specified by user.
@@ -313,7 +313,7 @@ def plot_dfs(graph_bound, working_dir, f1type, f2type, var1_names, var2_names,
              samp_var1, samp_var2, dfs, initial_insig_corr, initial_sig_corr,
              summary_df, exceeds_points, rev_points, fix_axis, forward):
     """
-    Plot correlations and distribution of pvalues for each dataframe set. (No UT)
+    Plot correlations and distribution of pvalues for each dataframe set.
     ----------------------------------------------------------------------------
     INPUTS
     working_dir       - String. Path of working directory specified by user.
@@ -388,7 +388,7 @@ def plot_dfs(graph_bound, working_dir, f1type, f2type, var1_names, var2_names,
 
 def plot_figure(values, fp, summary_df, title):
     """
-    Seaborn/matplotlib plotting function. (No UT)
+    Seaborn/matplotlib plotting function.
     ----------------------------------------------------------------------------
     INPUTS
     values     - np.array. Values being plotted.
@@ -420,7 +420,7 @@ def plot_figure(values, fp, summary_df, title):
 def plot_pdist(df, working_dir):
     """
     Helper function for graph_subsets(). Produces plots of p-values and
-    fold-pvalue changes for each set of correlations as defined by df. (No UT)
+    fold-pvalue changes for each set of correlations as defined by df.
     ----------------------------------------------------------------------------
     INPUTS
     df          - Dataframe-sets object as constructed in graph_subsets().
@@ -476,7 +476,7 @@ def plot_corr(row, df_folder_fp, var1_names, var2_names, samp_var1, samp_var2,
               var1_min, var2_max, var2_min, forward):
     """
     Helper function for plot_corr_sets(). Plots pairwise correlations within each
-    set of correlations as defined by df. (No UT)
+    set of correlations as defined by df.
     ----------------------------------------------------------------------------
     INPUTS
     row               - Pandas dataframe row.
@@ -597,7 +597,7 @@ def plot_corr_sets(graph_bound, df, working_dir, f1type, f2type, var1_names,
                    fix_axis, var1_max, var1_min, var2_max, var2_min, forward):
     """
     Helper function for graph_subsets(). Plots pairwise correlations within each
-    set of correlations as defined by df. (No UT)
+    set of correlations as defined by df.
     ----------------------------------------------------------------------------
     INPUTS
     graph_bound       - Integer. Upper limit of how many graphs to plot in each
@@ -662,7 +662,7 @@ def diag_plots(samp_ids, var1_names, var2_names, samp_counter, var1_counter,
                var2_counter, resample_k, working_dir, paired, statistic, forward_stats):
     """
     Create diagnostic plots i.e. creates histograms of number of times each
-    sample or variable appears in CUTIE's (No UT)
+    sample or variable appears in CUTIE's
     ----------------------------------------------------------------------------
     INPUTS
     samp_ids      - List of strings. Contains sample names in order that they
@@ -755,7 +755,7 @@ def diag_plots(samp_ids, var1_names, var2_names, samp_counter, var1_counter,
 ###
 def init_log(log_dir, input_config_fp):
     """
-    Initializes log file. (No UT)
+    Initializes log file.
     ----------------------------------------------------------------------------
     INPUTS
     log_dir         - String. Directory where to write log file.
@@ -777,7 +777,7 @@ def init_log(log_dir, input_config_fp):
 
 def write_log(message, log_fp):
     """
-    Writes message to log file. (No UT)
+    Writes message to log file.
     ----------------------------------------------------------------------------
     INPUTS
     log_fp  - String. File path of log file output.
