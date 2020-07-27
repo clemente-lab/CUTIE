@@ -203,13 +203,11 @@ def calculate_cutie(input_config_fp):
 
     if corr_compare:
         metric_set_to_indicator = {}
-        keys = []
         for region in region_sets:
-            temp_dict = {}
-            region_truths = set(initial_corr).difference(region_sets[region])
-            temp_dict['1'] = region_truths
+            region_truths = {}
+            region_truths['1'] = set(initial_corr).difference(region_sets[region])
             metric_set_to_indicator[region] = utils.return_indicators(
-                n_var1, n_var2, initial_corr, temp_dict, 1)['1']
+                n_var1, n_var2, initial_corr, region_truths, 1)['1']
 
 
     ###
