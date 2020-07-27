@@ -118,7 +118,7 @@ def parse_config(input_config_fp):
         'statistic': 'pearson',
         'k': 1,
         'alpha': 0.05,
-        'mc': 'fdr',
+        'mc': 'nomc',
         'fold': False,
         'fold_value': 1,
         'corr_compare': False,
@@ -145,10 +145,10 @@ def parse_config(input_config_fp):
     startcol2 = Config.getint('input', 'startcol2')
     endcol2 = Config.getint('input', 'endcol2')
     paired = Config.getboolean('input', 'paired')
-    overwrite = Config.getboolean('input', 'overwrite')
 
     # [output]
     working_dir = Config.get('output', 'working_dir')
+    overwrite = Config.getboolean('input', 'overwrite')
 
     # [stats]
     param = Config.get('stats', 'param')
@@ -172,7 +172,7 @@ def parse_config(input_config_fp):
 def md5_checksum(fp):
     """
     Computes the md5 of a given file (for log purposes).
-    https://www.joelverhagen.com/blog/2011/02/md5-hash-of-file-in-python/ (No UT)
+    https://www.joelverhagen.com/blog/2011/02/md5-hash-of-file-in-python/
     ----------------------------------------------------------------------------
     INPUTS
     fp - String. Directory and name of file to be evaluated.
