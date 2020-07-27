@@ -222,7 +222,7 @@ def calculate_cutie(input_config_fp):
         # for Spearman and MIC, R2 value stored is same as rho or MIC
         # respectively
         p_ratio = np.divide(corr_extrema_p[resample_key], pvalues)
-        r2_ratio = np.divide(corr_extrema_r[resample_key], r2vals)
+        r2_ratio = np.divide(np.square(corr_extrema_r[resample_key]), r2vals)
         variables = [pvalues, corrs, r2vals,
             true_indicators[resample_key], true_rev_indicators[resample_key],
             false_rev_indicators[resample_key], corr_extrema_p[resample_key],
