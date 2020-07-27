@@ -1,20 +1,14 @@
 #!/usr/bin/env python
-from __future__ import division
-
-import matplotlib
-matplotlib.use('Agg')
-
 import os
-import random
 import datetime
+from decimal import Decimal
 import numpy as np
 import pandas as pd
-
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import seaborn as sns # ; sns.set(color_codes=True)
-from scipy import stats
-from decimal import Decimal
-
+sns.set_style("white")
 from cutie import parse
 from cutie import utils
 
@@ -22,82 +16,29 @@ from cutie import utils
 # Creating matrices/dataframes to hold results
 ###
 
-def print_true_false_corr(initial_corr, true_corr, working_dir, statistic,
-                          resample_k, method):
+def report_results(initial_corr, true_corr,
+                   correct_to_rev, incorrect_to_rev, resample_k, log_fp):
     """
-    Prints simplified 2-column table of variable pairs classified as true and
-    false correlations for each k in {1...resample_k}
+    Writes to log files the number of TP/FP or TN/FN. (No UT)
     ----------------------------------------------------------------------------
     INPUTS
-    initial_corr - Set of integer tuples. Contains variable pairs initially
-                   classified as significant (forward CUtIe) or insignificant
-                   (reverse CUtIe). Note variable pairs (i,j) and (j,i) are
-                   double counted.
-    true_corr    - Dictionary mapping resample index to set of integer tuples.
-                   Contains variable pairs classified as true correlations
-                   (TP or FN, depending on forward or reverse CUtIe respectively).
-    working_dir  - String. File path of working directory specified by user.
-    statistic    - String. Analysis being performed.
-    resample_k   - Integer. Number of points being resampled by CUtIe.
-    method       - String. 'log', 'cbrt' or 'none' depending on method used for
-                   evaluating confidence interval (bootstrapping and jackknifing
-                   only)
-    """
-    # function for printing matrix of ses
-    def print_sig(corr_set, output_fp):
-        matrix = np.zeros(shape=[len(corr_set), 2])
-        row = 0
-        for point in corr_set:
-            matrix[row] = point
-            row += 1
-        pd.DataFrame(matrix, columns = ['var1', 'var2']).to_csv(output_fp,
-            sep = '\t', index = False)
-
-    # iterates through each resampling index
-    for k in range(resample_k):
-        false_corr = set(initial_corr).difference(set(true_corr[str(k+1)]))
-        output_fp = working_dir + 'data_processing/' + statistic + method + \
-            str(k+1) + '_falsesig.txt'
-        print_sig(false_corr, output_fp)
-        output_fp = working_dir + 'data_processing/' + statistic + method + \
-            str(k+1) + '_truesig.txt'
-        print_sig(true_corr[str(k+1)], output_fp)
-
-def report_results(n_var1, n_var2, working_dir, label, initial_corr, true_corr,
-                   true_comb_to_rev, false_comb_to_rev, resample_k, log_fp):
-    """
-    Writes to log files the number of TP/FP or TN/FN.
-    ----------------------------------------------------------------------------
-    INPUTS
-    n_var1            - Integer. Number of variables in file 1.
-    n_var2            - Integer. Number of variables in file 2.
     working_dir       - String. Path of working directory specified by user.
-    label             - String. Name of project assigned by user.
     initial_corr      - Set of integer tuples. Contains variable pairs initially
-                        classified as significant (forward CUtIe) or
-                        insignificant (reverse CUtIe). Note variable pairs (i,j)
+                        classified as significant (forward CUTIE) or
+                        insignificant (reverse CUTIE). Note variable pairs (i,j)
                         and (j,i) are double counted.
     true_corr         - Set of integer tuples. Contains variable pairs
                         classified as true correlations (TP or FN, depending on
-                        forward or reverse CUtIe respectively).
-    true_comb_to_rev  - Dictionary. Key is string of number of points being
+                        forward or reverse CUTIE respectively).
+    correct_to_rev    - Dictionary. Key is string of number of points being
                         resampled, and entry is a 2D array of indicators where
                         the entry in the i-th row and j-th column is 1 if that
                         particular correlation in the set of true_corr (either
                         TP or FN) reverses sign upon removal of a point.
-    false_comb_to_rev - Same as true_comb_to_rev but for TN/FP.
-    resample_k        - Integer. Number of points being resampled by CUtIe.
+    incorrect_to_rev  - Same as true_comb_to_rev but for TN/FP.
+    resample_k        - Integer. Number of points being resampled by CUTIE.
     log_fp            - String. File path of log file.
     """
-
-    # helper function for converting and printing dict
-    def dict_to_print_matrix(comb_to_rev, fp, i):
-        n_pairs = len(comb_to_rev[str(i+1)])
-        pairs = np.zeros([n_pairs, 2])
-        for p in range(n_pairs):
-            pairs[p] = comb_to_rev[str(i+1)][p]
-        pd.DataFrame(pairs).to_csv(fp, sep = '\t', index = False)
-
     # for each resampling value of k
     for i in range(int(resample_k)):
         # write to logs
@@ -105,97 +46,25 @@ def report_results(n_var1, n_var2, working_dir, label, initial_corr, true_corr,
                   + str(len(initial_corr)-len(true_corr[str(i+1)])), log_fp)
         write_log('The number of true correlations for ' + str(i+1) + ' is '
                   + str(len(true_corr[str(i+1)])), log_fp)
+
         # check if reverse sign TP/FN is empty
-        if true_comb_to_rev != {}:
+        if correct_to_rev != {}:
             write_log('The number of reversed correlations for TP/FN' + str(i+1)
-                      + ' is ' + str(len(true_comb_to_rev[str(i+1)])), log_fp)
-            fp = working_dir + 'data_processing/' + 'rev_pairs_TPFN_' + label \
-                 + '_resample' + str(i+1) + '.txt'
-            dict_to_print_matrix(true_comb_to_rev, fp, i)
+                      + ' is ' + str(len(correct_to_rev[str(i+1)])), log_fp)
 
         # check if reverse sign FP/TN set is empty
-        if false_comb_to_rev != {}:
+        if incorrect_to_rev != {}:
             write_log('The number of reversed correlations for FP/TN' + str(i+1)
-                      + ' is ' + str(len(false_comb_to_rev[str(i+1)])), log_fp)
-            fp = working_dir + 'data_processing/' + 'rev_pairs_FPTN_' + label \
-                 + '_resample' + str(i+1) + '.txt'
-            dict_to_print_matrix(false_comb_to_rev, fp, i)
+                      + ' is ' + str(len(incorrect_to_rev[str(i+1)])), log_fp)
 
-def generate_pair_matrix(base_regions, regions_set, n_var1, n_var2, working_dir,
-                         paired):
+def print_summary_df(n_var1, n_var2, col_names, col_vars, working_dir,
+                     resample_index, n_corr, paired=False):
     """
-    Generate matrix for R where each row is a correlation and each column
-    is an indicator value -1 for FP as identified by that metric.
-    ----------------------------------------------------------------------------
-    INPUTS
-    base_regions  - List of strings. Each string describes one group among which
-                    the intersections are being computed (such as 'cookd').
-    regions_set   - Dictionary. Maps key (region on Venn Diagram) to elements in
-                    that set (e.g. variable pairs)
-    n_var1        - Integer. Number of variables in file 1.
-    n_var2        - Integer. Number of variables in file 2.
-    working_dir   - String. Path of working directory as specified by user.
-                    Should end in '/'
-    paired        - Boolean. True if input files are the same.
-    """
-
-    headers = ['var1', 'var2']
-    for metric in base_regions:
-        headers.append(metric)
-    if paired:
-        pair_matrix = np.zeros([n_var1 * (n_var2 - 1)//2, len(headers)])
-    else:
-        pair_matrix = np.zeros([n_var1 * n_var2, len(headers)])
-
-    # initialize the indices of the correlations of the row matrix,
-    # each row is a correlation
-    for var1 in range(n_var1):
-        for var2 in range(n_var2):
-            # if paired is true and var1 <= var2,
-            # then the statement is overall false
-            # this excludes var pairs like (3, 5)
-            if paired:
-                if var1 > var2:
-                    row_number = int(n_var1*var2 - var2*(var2+1)/2 - var2 - 1 + var1)
-                else:
-                    continue
-            else:
-                row_number = n_var1 * var2 + var1
-
-            pair_matrix[row_number][0] = var1
-            pair_matrix[row_number][1] = var2
-
-    for region in base_regions:
-        # region_set is a list of tuples
-        region_set = regions_set[region]
-        region_index = base_regions.index(region)
-        for pair in region_set:
-            var1, var2 = pair
-            if paired:
-                row_number = int(n_var1*var2 - var2*(var2+1)/2 - var2 - 1 + var1)
-            else:
-                row_number = n_var1 * var2 + var1
-            pair_matrix[row_number][region_index + 2] = -1
-
-    pd.DataFrame(pair_matrix, columns = headers).to_csv(working_dir + \
-        'data_processing/all_pairs.txt', sep = '\t', index = False)
-
-def print_Rmatrix(avg_var1, avg_var2, var_var1, var_var2, n_var1, n_var2,
-                  col_names, col_vars, working_dir, resample_index, label,
-                  n_corr, paired=False):
-    """
-    Creates dataframe easily loaded into R containing CUtIe's analysis results.
+    Creates summary datafrane containing CUTIE's analysis results.
     Each row is a correlation and columns contain relevant statistics e.g.
     pvalue, correlation strength etc.
     ----------------------------------------------------------------------------
     INPUTS
-    avg_var1       - 1D array where k-th entry is mean value for variable k.
-                     Variables are ordered as in original data file (i.e. order
-                     is presered through parsing) for file 1.
-    avg_var2       - 1D array. Same as avg_var1 but for file 2.
-    var_var1       - 1D array where k-th entry is unbiased variance for variable
-                     k for file 1.
-    var_var2       - Same as var_var1 but for file 2.
     n_var1         - Integer. Number of variables in file 1.
     n_var2         - Integer. Number of variables in file 2.
     col_names      - List of strings. Contains names of columns (e.g. pvalues).
@@ -205,64 +74,59 @@ def print_Rmatrix(avg_var1, avg_var2, var_var1, var_var2, n_var1, n_var2,
                      value of that particular statistic for the correlation
                      between variable i and j (i in file 1, j in file 2).
     resample_index - String (cast from int). Number of points being resampled by
-                     CUtIe.
-    label          - String. Name of project assigned by user.
-    n_corr         - Number of correlations performed by CUtIe. If variables are
+                     CUTIE.
+    n_corr         - Number of correlations performed by CUTIE. If variables are
                      paired, n_corr = (n choose 2) * 2 as correlations are
                      double counted (only corr(i,i) are ignored)
     paired         - Boolean. True if variables are paired (i.e. file 1 and file
                      2 are the same), False otherwise.
     OUTPUTS
-    Rmatrix        - Array. 2D array/dataframe-like object easily loaded into R
-                     summarizing above variables per correlation.
-    headers        - List of strings. Refers to column names of Rmatrix.
+    summary_df     - Array. Dataframe object summarizing the above statistics
+                     and features per correlation (variable pair).
     """
     # create header row
-    headers = ['var1_index', 'var2_index', 'avg_var1', 'avg_var2', 'var_var1',
-               'var_var2']
+    headers = ['var1_index', 'var2_index']
 
     for var in col_names:
         headers.append(var)
 
     # create matrix locally in python
-    R_matrix = np.zeros([n_corr, len(headers)])
+    summary_matrix = np.zeros([n_corr, len(headers)])
     row = 0
     for var1 in range(n_var1):
         for var2 in range(n_var2):
             if not (paired and (var1 <= var2)):
-                entries = [var1, var2,
-                           avg_var1[var1],
-                           avg_var2[var2],
-                           var_var1[var1],
-                           var_var2[var2]]
+                entries = [var1, var2]
                 for col_var in col_vars:
                     entries.append(col_var[var1][var2])
-                R_matrix[row] = np.array([entries])
+                summary_matrix[row] = np.array([entries])
                 row += 1
 
-    pd.DataFrame(R_matrix, columns = headers).to_csv(working_dir + \
-        'data_processing/R_matrix_' + label + '_resample_' + \
-        str(resample_index) + '.txt', sep = '\t', index = False)
+    # convert to dataframe
+    summary_df = pd.DataFrame(summary_matrix, columns=headers)
 
-    return R_matrix, headers
+    summary_df.to_csv(working_dir + 'data_processing/summary_df_resample_' + \
+        str(resample_index) + '.txt', sep='\t', index=False)
+
+    return summary_df
 
 ###
 # Graphing
 ###
 
-def graph_subsets(working_dir, var1_names, var2_names, f1type, f2type, R_matrix,
-                  headers, statistic, forward_stats, resample_k, initial_corr,
-                  true_corr, false_comb_to_rev, true_comb_to_rev, graph_bound,
-                  samp_var1, samp_var2, all_pairs, sim, region_sets,
-                  corr_compare, exceeds_points, rev_points, fix_axis):
+def graph_subsets(working_dir, var1_names, var2_names, f1type, f2type, summary_df,
+                  statistic, forward_stats, resample_k, initial_corr, true_corr,
+                  true_corr_to_rev, false_corr_to_rev, graph_bound, samp_var1,
+                  samp_var2, all_pairs, region_sets, corr_compare, exceeds_points,
+                  rev_points, fix_axis):
     """
     Creates folders and plots corresponding to particular sets of variable
     pairs. Pairwise correlation scatterplots are plotted as well as fold p value
     changes. Folders are named <quadrant>_<k>_<n>_<revsign> where quadrant
-    refers to TP/FP or TN/FN (if forward or reverse CUtIe was run, respectively)
+    refers to TP/FP or TN/FN (if forward or reverse CUTIE was run, respectively)
     k is the number of points in that resampling and revsign is present or
-    absent depending if the folder specifically contains reverse sign CUtIes
-    or not.
+    absent depending if the folder specifically contains reverse sign CUTIEs
+    or not. (No UT)
     ----------------------------------------------------------------------------
     INPUTS
     working_dir       - String. Path of working directory specified by user.
@@ -271,26 +135,25 @@ def graph_subsets(working_dir, var1_names, var2_names, f1type, f2type, R_matrix,
     f1type            - String. Must be 'map' or 'otu' which specifies parsing
                         functionality to perform on file 1
     f2type            - String. Same as f1type but for file 2.
-    Rmatrix           - 2D array. output from print_Rmatrix.
-    headers           - List of strings. Refers to column names of Rmatrix.
+    summary_df        - Dataframe. Output from print_summary_df.
     statistic         - String. Describes analysis being performed.
     forward_stats     - List of strings. Contains list of statistics e.g. 'kpc'
-                        'jkp' that pertain to forward (non-reverse) CUtIe
+                        'jkp' that pertain to forward (non-reverse) CUTIE
                         analysis
-    resample_k        - Integer. Number of points being resampled by CUtIe.
+    resample_k        - Integer. Number of points being resampled by CUTIE.
     initial_corr      - Set of integer tuples. Contains variable pairs initially
-                        classified as significant (forward CUtIe) or
-                        insignificant (reverse CUtIe). Note variable pairs (i,j)
+                        classified as significant (forward CUTIE) or
+                        insignificant (reverse CUTIE). Note variable pairs (i,j)
                         and (j,i) are double counted.
     true_corr         - Set of integer tuples. Contains variable pairs
                         classified as true correlations (TP or FN, depending on
-                        forward or reverse CUtIe respectively).
-    true_comb_to_rev  - Dictionary. Key is string of number of points being
+                        forward or reverse CUTIE respectively).
+    true_corr_to_rev  - Dictionary. Key is string of number of points being
                         resampled, and entry is a 2D array of indicators where
                         the entry in the i-th row and j-th column is 1 if that
                         particular correlation in the set of true_corr (either
                         TP or FN) reverses sign upon removal of a point.
-    false_comb_to_rev - Dictionary. Same as true_comb_to_rev but for TN/FP.
+    false_corr_to_rev - Dictionary. Same as true_corr_to_rev but for TN/FP.
     graph_bound       - Integer. Upper limit of how many graphs to plot in each
                         set.
     samp_var1         - 2D array. Each value in row i col j is the level of
@@ -299,8 +162,6 @@ def graph_subsets(working_dir, var1_names, var2_names, f1type, f2type, R_matrix,
     samp_var2         - 2D array. Same as samp_var1 but for file 2.
     all_pairs         - List of tuples. All variable pairs (i,j and j,i are
                         double counted) are included.
-    sim               - Boolean. True if simulated data is used (with known
-                        underlying covariances).
     region_sets       - Dictionary. Maps key (region on Venn Diagram) to
                         elements in that set (e.g. variable pairs)
     corr_compare      - Boolean. True if using Cook's D, DFFITS analysis etc.
@@ -317,49 +178,49 @@ def graph_subsets(working_dir, var1_names, var2_names, f1type, f2type, R_matrix,
     fix_axis          - Boolean. True if axes are fixed (max and min for vars).
     """
 
-    # load R_matrix into pandas df
-    df_R = pd.DataFrame(R_matrix, columns=headers)
-
     # generate dataframes in set set for plotting
     dfs, initial_insig_corr, initial_sig_corr = generate_dfs(
-        statistic, forward_stats, initial_corr, true_corr, true_comb_to_rev,
-        false_comb_to_rev, df_R, resample_k, region_sets, corr_compare,
+        statistic, forward_stats, initial_corr, true_corr, true_corr_to_rev,
+        false_corr_to_rev, summary_df, resample_k, region_sets, corr_compare,
         all_pairs)
 
+    if statistic in forward_stats:
+        forward = True
+    else:
+        forward = False
+
     # plotting below taking in dfs
-    plot_dfs(graph_bound, working_dir, f1type, f2type, var1_names,
-             var2_names, samp_var1, samp_var2, sim, dfs, initial_insig_corr,
-             initial_sig_corr, df_R, exceeds_points, rev_points, fix_axis)
+    plot_dfs(graph_bound, working_dir, f1type, f2type, var1_names, var2_names,
+             samp_var1, samp_var2, dfs, initial_insig_corr, initial_sig_corr,
+             summary_df, exceeds_points, rev_points, fix_axis, forward)
 
 def generate_dfs(statistic, forward_stats, initial_corr, true_corr,
-                 true_comb_to_rev, false_comb_to_rev, df_R, resample_k,
+                 true_corr_to_rev, false_corr_to_rev, summary_df, resample_k,
                  region_sets, corr_compare, all_pairs):
     """
     Create class object and instances of dataframes corresponding to sets,
-    e.g. FP, TP etc.
+    e.g. FP, TP etc. (needs UT)
     ----------------------------------------------------------------------------
     INPUTS
     statistic         - String. Describes analysis being performed.
-    forward_stats     - List of strings. Contains list of statistics e.g. 'kpc'
-                        'jkp' that pertain to forward (non-reverse) CUtIe
+    forward_stats     - List of strings. Contains list of statistics e.g. 'pearson'
+                        'spearman' that pertain to forward (non-reverse) CUTIE
                         analysis.
-    df_R              - Pandas dataframe. Contains R_matrix read into df form.
-    resample_k        - Integer. Number of points being resampled by CUtIe.
     initial_corr      - Set of integer tuples. Contains variable pairs initially
-                        classified as significant (forward CUtIe) or
-                        insignificant (reverse CUtIe). Note variable pairs (i,j)
+                        classified as significant (forward CUTIE) or
+                        insignificant (reverse CUTIE). Note variable pairs (i,j)
                         and (j,i) are double counted.
     true_corr         - Set of integer tuples. Contains variable pairs
                         classified as true correlations (TP or FN, depending on
-                        forward or reverse CUtIe respectively).
-    true_comb_to_rev  - Dictionary. Key is string of number of points being
+                        forward or reverse CUTIE respectively).
+    true_corr_to_rev  - Dictionary. Key is string of number of points being
                         resampled, and entry is a 2D array of indicators where
                         the entry in the i-th row and j-th column is 1 if that
-                        particular correlation in the set of true_corr (either
-                        TP or FN) reverses sign upon removal of a point.
-    false_comb_to_rev - Dictionary. Same as true_comb_to_rev but for TN/FP.
-    sim               - Boolean. True if simulated data is used (with known
-                        underlying covariances).
+                        particular correlation that was correctly classified
+                        (TP or TN) reverses sign upon removal of a point.
+    false_corr_to_rev - Dictionary. Same as true_corr_to_rev but for FP/FN.
+    summary_df        - Pandas dataframe. Summary_df from print_summary_df.
+    resample_k        - Integer. Number of points being resampled by CUTIE.
     region_sets       - Dictionary. Maps key (region on Venn Diagram) to
                         elements in that set (e.g. variable pairs)
     corr_compare      - Boolean. True if using Cook's D, DFFITS analysis etc.
@@ -369,15 +230,13 @@ def generate_dfs(statistic, forward_stats, initial_corr, true_corr,
     # determine labels depending on forward or reverse cutie
     if statistic in forward_stats:
         true_label, false_label = 'TP', 'FP'
-        forward_label = True
     else:
         true_label, false_label = 'FN', 'TN'
-        forward_label = False
 
     # create class for each set of plots
-    class df_set:
+    class dfSet:
         # Initializer / Instance Attributes
-        def __init__(self, name, pairs, quadrant, rev_sign, rm_subset, k):
+        def __init__(self, name, pairs, quadrant, rev_sign, sm_subset, k):
             # name is a unique identifier for that set of graphs
             self.name = name
             # pairs is a list of tuples of var pairs in that set
@@ -387,8 +246,8 @@ def generate_dfs(statistic, forward_stats, initial_corr, true_corr,
             # rev sign is a boolean determining whether the DF is tracking
             # reversed sign correlations or not
             self.rev_sign = rev_sign
-            # rm_subset is subset of R matrix relevant to that set
-            self.rm_subset = rm_subset
+            # sm_subset is subset of summary matrix relevant to that set
+            self.sm_subset = sm_subset
             # k is number of resampled points
             self.k = k
 
@@ -400,11 +259,11 @@ def generate_dfs(statistic, forward_stats, initial_corr, true_corr,
     false_corr = {}
 
     # create N (negatives; TN + FN) and P (positives; TP + FP))
-    initial_insig_corr = df_set('initial_insig',
-                                set(all_pairs).difference(initial_corr), 'N',
-                                False, df_R.loc[df_R['indicators'] == 0], 0)
-    initial_sig_corr = df_set('initial_sig', initial_corr, 'P', False,
-                              df_R.loc[df_R['indicators'] != 0], 0)
+    initial_insig_corr = dfSet('initial_insig',
+                               set(all_pairs).difference(initial_corr), 'N',
+                               False, summary_df.loc[summary_df['indicators'] == 0], 0)
+    initial_sig_corr = dfSet('initial_sig', initial_corr, 'P', False,
+                             summary_df.loc[summary_df['indicators'] != 0], 0)
 
     # create df_set instances
     for i in range(resample_k):
@@ -413,23 +272,23 @@ def generate_dfs(statistic, forward_stats, initial_corr, true_corr,
         false_corr[resample_key] = \
             set(initial_corr).difference(true_corr[resample_key])
         # create relevant df_sets
-        # false_corr is TN or FP
-        false_corr_obj = df_set(
+        # false_corr are FPs or TNs
+        false_corr_obj = dfSet(
             'false_corr', false_corr[resample_key], false_label,
-            False, df_R.loc[df_R['indicators'] == -1],
+            False, summary_df.loc[summary_df['indicators'] == -1],
             resample_key)
-        false_corr_rev_obj = df_set(
-            'false_corr_rev', false_comb_to_rev[resample_key], false_label,
-            True, df_R.loc[df_R[false_label + '_rev_indicators'] == 1],
+        false_corr_rev_obj = dfSet(
+            'false_corr_rev', false_corr_to_rev[resample_key], false_label,
+            True, summary_df.loc[summary_df[false_label + '_rev_indicators'] == 1],
             resample_key)
         # true_corr is either TP or FN
-        true_corr_obj = df_set(
+        true_corr_obj = dfSet(
             'true_corr', true_corr[resample_key], true_label,
-            False, df_R.loc[df_R['indicators'] == 1],
+            False, summary_df.loc[summary_df['indicators'] == 1],
             resample_key)
-        true_corr_rev_obj = df_set(
-            'true_corr_rev', true_comb_to_rev[resample_key], true_label,
-            True, df_R.loc[df_R[true_label + '_rev_indicators'] == 1],
+        true_corr_rev_obj = dfSet(
+            'true_corr_rev', true_corr_to_rev[resample_key], true_label,
+            True, summary_df.loc[summary_df[true_label + '_rev_indicators'] == 1],
             resample_key)
         # extend dfs list
         dfs.extend([false_corr_obj, false_corr_rev_obj,
@@ -438,22 +297,23 @@ def generate_dfs(statistic, forward_stats, initial_corr, true_corr,
     # if using cook's D, etc.
     if corr_compare:
         for region in region_sets:
-            metric_df_TP = df_set(
-                region, region_sets[region], true_label, False,
-                df_R.loc[df_R[region] == 1], '1')
-            metric_df_FP = df_set(
+            # self, name, pairs, quadrant, rev_sign, sm_subset, k)
+            TP_metric_df = dfSet(
+                region, set(all_pairs).difference(set(region_sets[region])), true_label, False,
+                summary_df.loc[summary_df[region] == 1], '1')
+            FP_metric_df = dfSet(
                 region, region_sets[region], false_label, False,
-                df_R.loc[df_R[region] == -1], '1')
-            dfs.extend([metric_df_TP, metric_df_FP])
+                summary_df.loc[summary_df[region] == -1], '1')
+            dfs.extend([TP_metric_df, FP_metric_df])
 
     return dfs, initial_insig_corr, initial_sig_corr
 
 
-def plot_dfs(graph_bound, working_dir, f1type, f2type, var1_names,
-             var2_names, samp_var1, samp_var2, sim, dfs, initial_insig_corr,
-             initial_sig_corr, df_R, exceeds_points, rev_points, fix_axis):
+def plot_dfs(graph_bound, working_dir, f1type, f2type, var1_names, var2_names,
+             samp_var1, samp_var2, dfs, initial_insig_corr, initial_sig_corr,
+             summary_df, exceeds_points, rev_points, fix_axis, forward):
     """
-    Plot correlations and distribution of pvalues for each dataframe set.
+    Plot correlations and distribution of pvalues for each dataframe set. (No UT)
     ----------------------------------------------------------------------------
     INPUTS
     working_dir       - String. Path of working directory specified by user.
@@ -469,7 +329,7 @@ def plot_dfs(graph_bound, working_dir, f1type, f2type, var1_names,
                         and (j,i) are double counted.
     true_corr         - Set of integer tuples. Contains variable pairs
                         classified as true correlations (TP or FN, depending on
-                        forward or reverse CUtIe respectively).
+                        forward or reverse CUTIE respectively).
     true_comb_to_rev  - Dictionary. Key is string of number of points being
                         resampled, and entry is a 2D array of indicators where
                         the entry in the i-th row and j-th column is 1 if that
@@ -482,11 +342,9 @@ def plot_dfs(graph_bound, working_dir, f1type, f2type, var1_names,
                         variable j corresponding to sample i in the order that
                         the samples are presented in samp_ids
     samp_var2         - 2D array. Same as samp_var1 but for file 2.
-    sim               - Boolean. True if simulated data is used (with known
-                        underlying covariances).
     dfs               - List of df_set objects. Each object corresponds to one
                         set of correlations being plotted.
-    df_R              - Pandas dataframe. Contains R_matrix read into df form.
+    summary_df        - Pandas dataframe. Contains summary_df from print_summary_df.
     exceeds_points    - Dict of dict. Outer key is resampling index (k = 1),
                         entry is dict where key is variable pair ('(3,4)') and
                         entry is np array of length n where entry is number of
@@ -498,6 +356,8 @@ def plot_dfs(graph_bound, working_dir, f1type, f2type, var1_names,
                         resampling values (from 0 to k) in which that point
                         induces a sign change.
     fix_axis          - Boolean. True if axes are fixed (max and min for vars).
+    forward           - Boolean. True if CUTIE is run in the forward direction, False if
+                        reverse.
     """
 
     # obtain global max and min for fixed axes
@@ -508,68 +368,59 @@ def plot_dfs(graph_bound, working_dir, f1type, f2type, var1_names,
     for df in dfs:
         # plot random / representative correlations
         plot_corr_sets(graph_bound, df, working_dir, f1type, f2type, var1_names,
-                       var2_names, samp_var1, samp_var2, sim, exceeds_points,
+                       var2_names, samp_var1, samp_var2, exceeds_points,
                        rev_points, fix_axis, var1_max, var1_min, var2_max,
-                       var2_min)
+                       var2_min, forward)
 
         # this section plots pvalue and fold pvalue change distributions
         plot_pdist(df, working_dir)
 
     for df in [initial_insig_corr, initial_sig_corr] + dfs:
-        # plot simulation corrs (when true corr population parameter is known)
-        if sim:
-            if len(df.rm_subset['truth']) > 1:
-                truths = df.rm_subset['truth']
-                truth_fp = working_dir + 'graphs/true_corr_' + df.name + '_' + \
-                           df.quadrant + '_' + str(df.k) + '.png'
-                title = "True correlation coefficients among %s correlations" \
-                        % (df.quadrant)
-                plot_figure(truths, truth_fp, df_R, title)
-
         # plot actual sample values
-        if len(df.rm_subset['correlations']) > 1:
-            corr_vals = df.rm_subset['correlations']
+        if len(df.sm_subset['correlations']) > 1:
+            corr_vals = df.sm_subset['correlations']
             corr_vals_fp = working_dir + 'graphs/sample_corr_' + df.name + \
-                           '_' + df.quadrant + '_' + str(df.k) + '.png'
+                           '_' + df.quadrant + '_' + str(df.k) + '.pdf'
             title = "Sample correlation coefficients among %s correlations" \
                     % (df.quadrant)
-            plot_figure(corr_vals, corr_vals_fp, df_R, title)
+            plot_figure(corr_vals, corr_vals_fp, summary_df, title)
 
 
-def plot_figure(values, fp, df_R, title):
+def plot_figure(values, fp, summary_df, title):
     """
-    Seaborn/matplotlib plotting function
+    Seaborn/matplotlib plotting function. (No UT)
     ----------------------------------------------------------------------------
     INPUTS
-    values - np.array. Values being plotted.
-    fp     - String. File path in which to save plot.
-    df_R   - pd DataFrame. Sets length of y-axis size.
-    title  - String. Name of graph.
+    values     - np.array. Values being plotted.
+    fp         - String. File path in which to save plot.
+    summary_df - Pandas dataframe. Contains summary_df from print_summary_df.
+                 Sets length of y-axis size.
+    title      - String. Name of graph.
     """
     values = values[np.isfinite(values)]
 
     fig = plt.figure()
+    sns.set_style('white')
     try:
         sns.distplot(values, bins=20, kde=False, rug=False)
     except ValueError:
         sns.distplot(values, bins=None, kde=False, rug=False)
-    plt.ylim(0, int(len(df_R)/10))
+    plt.ylim(0, int(len(summary_df)/10))
     plt.xlim(-1, 1)
     ax = plt.gca()
     ax.set_title(title, fontsize=10)
-    fig.patch.set_visible(False)
-    ax.patch.set_visible(False)
+    #fig.patch.set_visible(False)
+    #ax.patch.set_visible(False)
     fig.set_tight_layout(True)
     plt.tick_params(axis='both', which='both', top=False, right=False)
     sns.despine()
     plt.savefig(fp)
     plt.close('all')
-    return
 
 def plot_pdist(df, working_dir):
     """
     Helper function for graph_subsets(). Produces plots of p-values and
-    fold-pvalue changes for each set of correlations as defined by df.
+    fold-pvalue changes for each set of correlations as defined by df. (No UT)
     ----------------------------------------------------------------------------
     INPUTS
     df          - Dataframe-sets object as constructed in graph_subsets().
@@ -577,12 +428,8 @@ def plot_pdist(df, working_dir):
     """
     # pvalues can be nan
     # fold pvalues can be -Inf/Inf
-    pvalues = df.rm_subset['pvalues']
-    fold_pvalues = df.rm_subset['p_ratio']
-
-    # hold values for future plotting
-    stacked1 = np.stack([pvalues, fold_pvalues, df.rm_subset['avg_var1']], 0)
-    stacked2 = np.stack([pvalues, fold_pvalues, df.rm_subset['avg_var2']], 0)
+    pvalues = df.sm_subset['pvalues']
+    fold_pvalues = df.sm_subset['p_ratio']
 
     # compute number of infinity and nan entries
     n_infinite = len(fold_pvalues[~np.isfinite(fold_pvalues)])
@@ -595,7 +442,7 @@ def plot_pdist(df, working_dir):
     pvalue_df = pd.DataFrame({
         'pvalues': pvalues,
         'fold_pvalues': fold_pvalues,
-        'log_pvalues': df.rm_subset['logpvals'],
+        'log_pvalues': np.log(pvalues),
         'log_fold_pvalues': np.log(fold_pvalues)})
 
     dists = ['pvalues', 'fold_pvalues', 'log_pvalues', 'log_fold_pvalues']
@@ -611,9 +458,9 @@ def plot_pdist(df, working_dir):
             title = 'fold_pvalues; n_infinite = ' + str(n_infinite) + ' ' \
                 + 'pvalues; n_nan = ' + str(n_nan) + additional_title
             dist_fp = working_dir + 'graphs/' + df.quadrant + '_' + str(df.k) \
-                + '_' + dist + '.png'
+                + '_' + dist + '.pdf'
             fig = plt.figure()
-            sns_plot = sns.distplot(stat_vals, bins=20, kde=False, rug=False)
+            sns.distplot(stat_vals, bins=20, kde=False, rug=False)
             plt.tick_params(axis='both', which='both', top=False, right=False)
             sns.despine()
             ax = plt.gca()
@@ -624,82 +471,17 @@ def plot_pdist(df, working_dir):
             plt.savefig(dist_fp)
             plt.close('all')
 
-    plot_logp_and_logpfold(df, working_dir, stacked1, 'var1')
-    plot_logp_and_logpfold(df, working_dir, stacked2, 'var2')
-
-def plot_logp_and_logpfold(df, working_dir, stacked, var_num):
-    """
-    Plots logp and logp fold graphs for each variable.
-    ----------------------------------------------------------------------------
-    INPUTS
-    df          - Dataframe-sets object as constructed in graph_subsets().
-    Stacked     - np.array. Contains p values, fold p values, and average value
-                  of var1 or var2.
-    working_dir - String. File path to save files.
-    var_num     - String. Labels graph as var1 or var2.
-    """
-    # Remove correlations with infinite or nan values for their p value or
-    # fold p value change
-    stacked = stacked[:, np.all(~np.isnan(stacked), axis=0)]
-    stacked = stacked[:, np.all(np.isfinite(stacked), axis=0)]
-
-    # obtain log pvalues and log fold change in pvalues and normalized values
-    logpvalues = np.log(stacked[0])
-    logfoldpvalues = np.log(stacked[1])
-    x = (stacked[2])
-    # avg value of var ranges widely, so normalizing between 0 and 1 makes
-    # plotting easier
-    # avg_var = np.cbrt(x * 10 / np.linalg.norm(x))
-    avg_var = np.cbrt(x/np.linalg.norm(x))
-
-    new_stacked = np.stack([logpvalues, logfoldpvalues, avg_var], 0)
-
-    df_vals = pd.DataFrame({
-        'logp': new_stacked[0],
-        'logpfold': new_stacked[1],
-        'avg_var': new_stacked[2]
-        })
-
-    cmap = sns.cubehelix_palette(as_cmap=True)
-    sns.set_style("white")
-    title = df.name + '_p_vs_p_fold_' + var_num
-    dist_fp = working_dir + 'graphs/' + df.name + '_' + str(df.k) \
-              + '_logp_vs_logpfold_' + var_num + '.png'
-    fig = plt.figure()
-    sns.set_style("white")
-    sns.scatterplot(x='logp', y='logpfold', data=df_vals, size='avg_var',
-                    sizes=(20, 200), hue='avg_var', palette=cmap, legend=False)
-    ax = plt.gca()
-    ax.set_title(title, fontsize=10)
-    plt.tick_params(axis='both', which='both', top=False, right=False)
-    sns.despine()
-    fig.patch.set_visible(False)
-    ax.patch.set_visible(False)
-
-    # Optionally add a colorbar
-    if len(avg_var) != 0:
-        cax, _ = matplotlib.colorbar.make_axes(ax)
-        normalize = matplotlib.colors.Normalize(vmin=min(avg_var),
-                                                vmax=max(avg_var))
-        cbar = matplotlib.colorbar.ColorbarBase(cax, cmap=cmap, norm=normalize)
-
-    plt.savefig(dist_fp)
-    plt.close('all')
-
-def plot_corr(row, df_folder_fp, f1type, f2type, var1_names, var2_names,
-              samp_var1, samp_var2, sim, resample_k, exceeds_points, rev_points,
-              fix_axis, var1_max, var1_min, var2_max, var2_min):
+def plot_corr(row, df_folder_fp, var1_names, var2_names, samp_var1, samp_var2,
+              resample_k, exceeds_points, rev_points, fix_axis, var1_max,
+              var1_min, var2_max, var2_min, forward):
     """
     Helper function for plot_corr_sets(). Plots pairwise correlations within each
-    set of correlations as defined by df.
+    set of correlations as defined by df. (No UT)
     ----------------------------------------------------------------------------
     INPUTS
     row               - Pandas dataframe row.
     df_folder_fp      - File object. Points to directory where particular set of
                         plots will be stored.
-    f1type            - String. Must be 'map' or 'otu' which specifies parsing
-                        functionality to perform on file 1
-    f2type            - String. Same as f1type but for file 2.
     var1_names        - List of strings. List of variables in file 1.
     var2_names        - List of strings. List of variables in file 2.
     samp_var1         - 2D array. Each value in row i col j is the level of
@@ -722,6 +504,8 @@ def plot_corr(row, df_folder_fp, f1type, f2type, var1_names, var2_names,
     var1_min          - Float. Smallest value in var1 to use as upper bound.
     var2_max          - Float. Largest value in var2 to use as upper bound.
     var2_min          - Float. Smallest value in var2 to use as upper bound.
+    forward           - Boolean. True if CUTIE is run in the forward direction, False if
+                        reverse.
     """
     var1, var2 = int(row['var1_index']), int(row['var2_index'])
 
@@ -738,6 +522,7 @@ def plot_corr(row, df_folder_fp, f1type, f2type, var1_names, var2_names,
     if var2_name[0:3] == 'k__':
         var2_name = utils.read_taxa(var2_name)
 
+
     # shorten var name
     if len(var1_name) > 25:
         var1_name = var1_name[0:25]
@@ -748,48 +533,71 @@ def plot_corr(row, df_folder_fp, f1type, f2type, var1_names, var2_names,
     # consolidate variables into pd dataframe
     # example:
     # let cutie = np.array([0,0,0,1,1])
-    # let reverse = np.array([0,0,1,0,1])
-    # want [0, 0, 0, 1, 2]
+    # this indicates that samples 4 and 5 were contributing to either FP or FN status
+    # if forward is true, then we want to investigate TP with sign changes
+    # so we take cutie = 1 - cutie, obtaining [1, 1, 1, 0 ,0]
+    # let reverse = np.array([1,0,1,0,1])
+    # want [2, 1, 2, 0, 0]
     # take c*(c+r)
+    # it matters if it is forward or backward; need correct corr
     pair = var1, var2
     cutie = exceeds_points[str(resample_k)][str(pair)]
     cutie = np.array([1 if z > 0 else 0 for z in cutie])
+    if forward:
+        cutie = 1 - cutie
     reverse = rev_points[str(resample_k)][str(pair)]
     reverse = np.array([1 if z > 0 else 0 for z in reverse])
 
-    cr = cutie*(cutie+reverse)
-    pair_df = pd.DataFrame({var1_name:x, var2_name:y, 'cutie/rev': cr})
+    # cutie is an indicator that is 1 if TP/FN, 0 if FP/TN contributing point
+    # reverse is 1 if the sign changes with removal of that point
+    # label will be 2 if 'true corr' relationship is preserved but sign changes
+    # label will be 1 if point is causing corr to be TP/FN, 0 otherwise
+    label = cutie*(cutie+reverse)
+    pair_df = pd.DataFrame({var1_name:x, var2_name:y, 'label': label})
+    # ind is 0 if point is non cutieogenic,
     pair_df = pair_df.dropna(how='any')
+
+    # create labels from numeric representations
+    if forward:
+        pair_df['label'] = pair_df['label'].apply(
+            lambda x: 'FP' if x == 0 else ('TP (reverse sign)' if x == 2 else 'TP'))
+    else:
+        pair_df['label'] = pair_df['label'].apply(
+            lambda x: 'FN' if x == 1 else ('FN (reverse sign)' if x == 2 else 'TN'))
 
     # create plot and title
     title = 'p, ext_p = ' + '%.2E' % Decimal(row['pvalues']) + \
             ', ' + '%.2E' % Decimal(row['extreme_p']) + ' ' + \
             'Rsq, ext_r2 = ' + '%.2E' % Decimal(row['r2vals']) + \
             ', ' + '%.2E' % Decimal(row['extreme_r'])
-    if sim:
-        title = title + '_' + 'truth = ' + '%.2E' % Decimal(row['truth'])
 
-    fig = plt.figure()
-    sns_plot = sns.lmplot(var1_name, var2_name, data=pair_df, hue='cutie/rev',
-                          fit_reg=False)
+    fig = plt.figure(figsize=(5,5))
+    #sns.set_style("white")
+    sns.set_style('white')
+    sns_plot = sns.scatterplot(x=var1_name, y=var2_name, data=pair_df, hue='label')
+    #sns.set_style("dark")
+    sns.axes_style("white")
     if fix_axis:
         sns_plot.set(xlim=(var1_min, var1_max), ylim=(var2_min, var2_max))
-    ax = plt.gca()
-    ax.set_title(title, fontsize=8)
-    fig.patch.set_visible(False)
-    ax.patch.set_visible(False)
+    #ax = plt.gca()
+    #ax.grid(False)
+    #ax.set_title(title, fontsize=8)
+    plt.title(title, fontsize=8)
+    #fig.patch.set_visible(False)
+    #ax.patch.set_visible(False)
     fig.set_tight_layout(True)
-    plt.tick_params(axis='both', which='both', top=False, right=False)
+    #plt.tick_params(axis='both', which='both', top=False, right=False)
     sns.despine()
-    plt.savefig(df_folder_fp + '/' + str(var1) + '_' + str(var2) + '.png')
+    plt.savefig(df_folder_fp + '/' + str(var1) + '_' + str(var2) + '.pdf')
     plt.close('all')
 
+
 def plot_corr_sets(graph_bound, df, working_dir, f1type, f2type, var1_names,
-                   var2_names, samp_var1, samp_var2, sim, exceeds_points,
-                   rev_points, fix_axis, var1_max, var1_min, var2_max, var2_min):
+                   var2_names, samp_var1, samp_var2, exceeds_points, rev_points,
+                   fix_axis, var1_max, var1_min, var2_max, var2_min, forward):
     """
     Helper function for graph_subsets(). Plots pairwise correlations within each
-    set of correlations as defined by df.
+    set of correlations as defined by df. (No UT)
     ----------------------------------------------------------------------------
     INPUTS
     graph_bound       - Integer. Upper limit of how many graphs to plot in each
@@ -820,15 +628,17 @@ def plot_corr_sets(graph_bound, df, working_dir, f1type, f2type, var1_names,
     var1_min          - Float. Smallest value in var1 to use as upper bound.
     var2_max          - Float. Largest value in var2 to use as upper bound.
     var2_min          - Float. Smallest value in var2 to use as upper bound.
+    forward           - Boolean. True if CUTIE is run in the forward direction, False if
+                        reverse.
     """
     # decide var pairs to plot
     np.random.seed(0)
-    if graph_bound <= len(df.rm_subset):
+    if graph_bound <= len(df.sm_subset):
         # samples without replacement
-        df_forplot = df.rm_subset.sample(n=graph_bound, replace=False,
+        df_forplot = df.sm_subset.sample(n=graph_bound, replace=False,
                                          weights=None, random_state=42, axis=0)
     else:
-        df_forplot = df.rm_subset
+        df_forplot = df.sm_subset
     # name and create folder
     df_folder_fp = working_dir + 'graphs/' + df.name + '_' + df.quadrant + '_' \
         + str(df.k) + '_' + str(len(df.pairs))
@@ -839,44 +649,69 @@ def plot_corr_sets(graph_bound, df, working_dir, f1type, f2type, var1_names,
 
     # plot representative plots
     for index, row in df_forplot.iterrows():
-        plot_corr(row, df_folder_fp, f1type, f2type, var1_names,
-                  var2_names, samp_var1, samp_var2, sim, df.k, exceeds_points,
-                  rev_points, fix_axis, var1_max, var1_min, var2_max, var2_min)
+        plot_corr(row, df_folder_fp, var1_names,
+                  var2_names, samp_var1, samp_var2, df.k, exceeds_points,
+                  rev_points, fix_axis, var1_max, var1_min, var2_max, var2_min,
+                  forward)
 
 ###
 # Diagnostic plot handling
 ###
 
-def diag_plots(samp_counter, var1_counter, var2_counter, resample_k,
-               working_dir, paired, samp_var1, samp_var2, n_samp):
+def diag_plots(samp_ids, var1_names, var2_names, samp_counter, var1_counter,
+               var2_counter, resample_k, working_dir, paired, statistic, forward_stats):
     """
     Create diagnostic plots i.e. creates histograms of number of times each
-    sample or variable appears in CUtIe's
+    sample or variable appears in CUTIE's (No UT)
     ----------------------------------------------------------------------------
     INPUTS
-    samp_counter - Dictionary. Key is the index of CUtIe resampling
-                   (k = 1, 2, 3, ... etc.) and entry is an array of length
-                   n_samp corresponding to how many times the i-th sample
-                   appears in CUtIe's when evaluated at resampling = k points)
-    var1_counter - Dictionary.  Key is the index of CUtIe resampling
-                   (k = 1, 2, 3, ... etc.) and entry is an array of length
-                   n_var1 corresponding to how many times the j-th variable
-                   appears in CUtIe's when evaluated at resampling = k points)
-    var2_counter - Same as var1_counter except for var2.
-    resample_k   - Integer. Number of points being resampled by CUtIe.
-    working_dir  - String. Path of working directory specified by user.
-    paired       - Boolean. True if variables are paired (i.e. file 1 and file
-                   2 are the same), False otherwise.
-    samp_var1    - 2D array. Each value in row i col j is the level of
-                   variable j corresponding to sample i in the order that the
-                   samples are presented in samp_ids
-    samp_var2    - 2D array. Same as samp_var1 but for file 2.
-    n_samp       - Integer. Number of samples.
+    samp_ids      - List of strings. Contains sample names in order that they
+                    were read.
+    var1_names    - List of strings. Contains variable names in order that they
+                    were read from file 1.
+    var2_names    - List of strings. Contains variable names in order that they
+                    were read from file 2.
+    samp_counter  - Dictionary. Key is the index of CUTIE resampling
+                    (k = 1, 2, 3, ... etc.) and entry is an array of length
+                    n_samp corresponding to how many times the i-th sample
+                    appears in CUTIE's when evaluated at resampling = k points)
+    var1_counter  - Dictionary.  Key is the index of CUTIE resampling
+                    (k = 1, 2, 3, ... etc.) and entry is an array of length
+                    n_var1 corresponding to how many times the j-th variable
+                    appears in CUTIE's when evaluated at resampling = k points)
+    var2_counter  - Same as var1_counter except for var2.
+    resample_k    - Integer. Number of points being resampled by CUTIE.
+    working_dir   - String. Path of working directory specified by user.
+    paired        - Boolean. True if variables are paired (same in both files).
+    statistic     - String. Describes analysis being performed.
+    forward_stats - List of strings. Contains list of statistics e.g. 'pearson'
+                    'spearman' that pertain to forward (non-reverse) CUTIE
+                    analysis.
     """
-    diag_stats = ['samp', 'var1', 'var2']
-    stats_mapping = {'samp': samp_counter,
-                     'var1': var1_counter,
-                     'var2': var2_counter}
+    if statistic in forward_stats:
+        false_label = 'FP'
+    else:
+        false_label = 'FN'
+
+    if paired:
+        diag_stats = ['samp_number', 'var_number']
+        var_counter = {}
+        for i in range(resample_k):
+            var_counter[str(i+1)] = var1_counter[str(i+1)] + var2_counter[str(i+1)]
+        stats_mapping = {'samp_number': samp_counter,
+                         'var_number': var_counter}
+        name_mapping = {'samp_number': samp_ids,
+                         'var_number': var1_names}
+
+    else:
+        diag_stats = ['samp_number', 'var1_number', 'var2_number']
+        stats_mapping = {'samp_number': samp_counter,
+                         'var1_number': var1_counter,
+                         'var2_number': var2_counter}
+        name_mapping = {'samp_number': samp_ids,
+                         'var1_number': var1_names,
+                         'var2_number': var2_names}
+
 
     # for each diagnostic quantity
     for stats in diag_stats:
@@ -884,32 +719,31 @@ def diag_plots(samp_counter, var1_counter, var2_counter, resample_k,
             counter = stats_mapping[stats]
             counts = np.zeros(shape=[len(counter[str(i+1)]), 2])
             # create 2D array where col 1 = sample/var index and col 2 =
-            # number of times that sample/var appears in CUtIes
+            # number of times that sample/var appears in CUTIEs
             for j in range(len(counter[str(i+1)])):
                 counts[j] = np.array([j, counter[str(i+1)][j]])
 
-            pd.DataFrame(counts, columns = ['index', 'count']).to_csv(
-                working_dir + 'data_processing/' + 'counter_'  + stats + \
-                '_resample' + str(i+1) + '.txt', sep = '\t', index = False)
+            df = pd.DataFrame(counts, columns=['index', 'count'])
+            df['name'] = df['index'].apply(lambda x: name_mapping[stats][int(x)])
 
+            df.to_csv(working_dir + 'data_processing/counter_'  + stats + \
+                '_resample' + str(i+1) + '.txt', sep='\t', index=False)
+
+            sns.set_style('white')
             # create figure
             fig = plt.figure()
-            if stats == 'samp':
-                counts_df = pd.DataFrame(
-                    {stats:counts[:, 0], 'n_cuties': counts[:, 1]})
-                sns_plot = sns.lmplot(stats, 'n_cuties', data=counts_df,
-                                      fit_reg=False)
-            else:
-                counts_df = pd.DataFrame(
-                    {stats:counts[:, 0], 'n_cuties': counts[:, 1]})
-                sns_plot = sns.lmplot(stats, 'n_cuties', data=counts_df,
-                                      fit_reg=False)
+
+            counts_df = pd.DataFrame(
+                {stats: counts[:, 0], false_label: counts[:, i+1]})
+            sns.lmplot(stats, false_label, data=counts_df,
+                       fit_reg=False)
+
 
             ax = plt.gca()
-            fig.patch.set_visible(False)
-            ax.patch.set_visible(False)
-            diag_fp = working_dir + 'graphs/' + 'counter_' + stats + \
-                      '_resample' + str(i+1) + '.png'
+            #fig.patch.set_visible(False)
+            #ax.patch.set_visible(False)
+            diag_fp = working_dir + 'graphs/counter_' + stats + \
+                      '_resample' + str(i+1) + '.pdf'
             fig.set_tight_layout(True)
             plt.tick_params(axis='both', which='both', top=False, right=False)
             sns.despine()
@@ -919,14 +753,13 @@ def diag_plots(samp_counter, var1_counter, var2_counter, resample_k,
 ###
 # Log file handling
 ###
-def init_log(log_dir, defaults_fp, config_fp):
+def init_log(log_dir, input_config_fp):
     """
-    Initializes log file.
+    Initializes log file. (No UT)
     ----------------------------------------------------------------------------
     INPUTS
-    log_dir     - String. Directory where to write log file.
-    defaults_fp - String. File path of default configuration file.
-    config_fp   - String. File path of configuration on specific runs.
+    log_dir         - String. Directory where to write log file.
+    input_config_fp - String. File path of configuration on specific runs.
 
     OUTPUTS
     log_fp      - String. File path of log file output.
@@ -937,18 +770,14 @@ def init_log(log_dir, defaults_fp, config_fp):
     # initialize log, write md5 of config files
     with open(log_fp, 'w') as f:
         f.write('Begin logging at ' + str(now.isoformat()))
-        f.write('\nThe original command was -df ' + defaults_fp
-                + ' -cp ' + config_fp)
-        f.write('\nThe defaults_fp config file was '
-                + parse.md5_checksum(defaults_fp))
-        f.write('\nThe config_fp config file was '
-                + parse.md5_checksum(config_fp))
+        f.write('\nThe original command was -i ' + input_config_fp)
+        f.write('\nThe input_config_fp md5 was ' + parse.md5_checksum(input_config_fp))
 
     return log_fp
 
 def write_log(message, log_fp):
     """
-    Writes message to log file
+    Writes message to log file. (No UT)
     ----------------------------------------------------------------------------
     INPUTS
     log_fp  - String. File path of log file output.

@@ -1,6 +1,4 @@
 #!/usr/bin/env python
-from __future__ import division
-
 from cutie import parse
 from cutie import output
 from cutie import utils
@@ -10,7 +8,6 @@ from cutie import __version__
 import matplotlib
 matplotlib.use('Agg')
 
-import minepy
 import time
 import click
 import os
@@ -32,15 +29,12 @@ CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 @click.command(context_settings=CONTEXT_SETTINGS)
 @click.version_option(version=__version__)
 
-@click.option('-df', '--defaults_fp', required=False,
+@click.option('-i', '--input_config_fp', required=False,
               type=click.Path(exists=True),
-              help='Input  default config file path')
-@click.option('-cf', '--config_fp', required=False,
-              type=click.Path(exists=True),
-              help='Input  config file path')
+              help='Input config file path')
 
 
-def calculate_cutie(defaults_fp, config_fp):
+def calculate_cutie(input_config_fp):
     """
     Computes pairwise correlations between each variable pair and
     for the significant correlations, recomputes correlation for each pair
@@ -49,12 +43,10 @@ def calculate_cutie(defaults_fp, config_fp):
     significant when each individual observation is dropped
     """
     # unpack config variables
-    (label, samp_var1_fp, delimiter1, samp_var2_fp, delimiter2, f1type, f2type,
-    minep_fp, pskip, mine_delimiter, working_dir, skip1, skip2,
-    startcol1, endcol1, startcol2, endcol2, statistic, corr_compare, resample_k,
-    paired, overwrite, alpha, mc, fold, fold_value, n_replicates, log_transform1,
-    log_transform2, CI_method, sim, corr_path, graph_bound,
-    log_dir, fix_axis) = parse.parse_config(defaults_fp, config_fp)
+    (samp_var1_fp, delimiter1, samp_var2_fp, delimiter2, f1type, f2type,
+     working_dir, skip1, skip2, startcol1, endcol1, startcol2, endcol2, param,
+     statistic, corr_compare, resample_k, paired, overwrite, alpha, multi_corr,
+     fold, fold_value, graph_bound, fix_axis) = parse.parse_config(input_config_fp)
 
     # create subfolder to hold data analysis files
     if os.path.exists(working_dir) is not True:
@@ -71,28 +63,23 @@ def calculate_cutie(defaults_fp, config_fp):
 
     # initialize and write log file
     start_time = time.process_time()
-    log_fp = output.init_log(log_dir, defaults_fp, config_fp)
+    log_fp = output.init_log(working_dir, input_config_fp)
 
     ###
     # Parsing and Pre-processing
     ###
 
     # define possible stats
-    forward_stats = ['kpc', 'jkp', 'bsp', 'ksc', 'jks', 'bss',
-                     'kkc', 'jkk', 'bsk', 'mine', 'jkm', 'bsm']
-    reverse_stats = ['rpc', 'rjkp', 'rbsp', 'rsc', 'rjks', 'rbss',
-                     'rkc', 'rjkk', 'rbsk', 'rmine', 'rjkm', 'rbsm']
+    forward_stats = ['pearson',  'spearman', 'kendall']
+    reverse_stats = ['rpearson', 'rspearman', 'rkendall']
     all_stats = forward_stats + reverse_stats
-    pearson_stats = ['kpc', 'jkp' , 'bsp', 'rpc', 'rjkp', 'rbsp']
-    spearman_stats = ['ksc', 'jks','bss', 'rsc', 'rjks', 'rbss']
-    kendall_stats = ['kkc', 'jkk', 'bsk', 'rkc', 'rjkk', 'rbsk']
-    mine_stats = ['mine', 'jkm', 'bsm', 'rmine', 'rjkm', 'rbsm']
+    pearson_stats = ['pearson', 'rpearson']
+    spearman_stats = ['spearman', 'rspearman']
+    kendall_stats = ['kendall', 'rkendall']
     if statistic not in all_stats:
         raise ValueError('Invalid statistic: %s chosen' % statistic)
     if corr_compare and resample_k != 1:
         raise ValueError('Resample_k must be 1 for pointwise stats')
-    if CI_method not in ['log','cbrt','none']:
-        raise ValueError('Invalid CI method chosen: ' + CI_method)
 
     # file handling and parsing decisions
     # file 1 is the 'dominant' file type and should always contain the OTU file
@@ -116,53 +103,45 @@ def calculate_cutie(defaults_fp, config_fp):
     n_samp = len(samp_ids)
 
     # subset dataframe, obtain avg and variance
-    samp_var1, avg_var1, var_var1 = parse.process_df(samp_var1_df, samp_ids)
-    samp_var2, avg_var2, var_var2 = parse.process_df(samp_var2_df, samp_ids)
+    samp_var1 = parse.process_df(samp_var1_df, samp_ids)
+    samp_var2 = parse.process_df(samp_var2_df, samp_ids)
 
     # printing of samp and var names for reference
     output.write_log('There are ' + str(len(samp_ids)) + ' samples', log_fp)
-    output.write_log('The first 5 samples are ' + str(samp_ids[0:5]), log_fp)
-    output.write_log('The first 5 var1 are ' + str(var1_names[0:5]), log_fp)
-    output.write_log('The first 5 var2 are ' + str(var2_names[0:5]), log_fp)
-
-    # log transform of data (if log_transform1 or log_transform2 are true)
-    if log_transform1:
-        samp_var1 = statistics.log_transform(samp_var1)
-        output.write_log('Variable 1 was log-transformed')
-    if log_transform2:
-        samp_var2 = statistics.log_transform(samp_var2)
-        output.write_log('Variable 2 was log-transformed')
-
-    ###
-    # Pearson, Spearman, Kendall, and MIC
-    ###
-    # pull mine-specific data
-    if statistic in mine_stats:
-        # obtain p_value bins
-        with open(minep_fp, 'r') as f:
-            mine_bins, pvalue_bins = parse.parse_minep(f, mine_delimiter, pskip)
+    output.write_log('The first 3 samples are ' + str(samp_ids[0:3]), log_fp)
+    if len(var1_names) >= 3:
+        output.write_log('The first 3 var1 are ' + str(var1_names[0:3]), log_fp)
     else:
-        # placeholder variables
-        mine_bins = np.nan
-        pvalue_bins = np.nan
+        output.write_log('Var1 was ' + str(var1_names), log_fp)
+    if len(var2_names) >= 3:
+        output.write_log('The first 3 var2 are ' + str(var2_names[0:3]), log_fp)
+    else:
+        output.write_log('Var2 was ' + str(var2_names), log_fp)
 
-    # initial output
-    pvalues, logpvals, corrs, r2vals = statistics.assign_statistics(samp_var1,
+    ###
+    # Pearson, Spearman, Kendall
+    ###
+    # initial setup
+    pvalues, corrs, r2vals = statistics.assign_statistics(samp_var1,
         samp_var2, statistic, pearson_stats, spearman_stats, kendall_stats,
-        mine_stats, mine_bins, pvalue_bins, paired)
+        paired)
+
+    # determine parameter (either r or p)
+    output.write_log('The parameter chosen was ' + param, log_fp)
 
     # determine significance threshold and number of correlations
-    output.write_log('The type of mc correction used was ' + mc, log_fp)
-    threshold, n_corr, defaulted, minp = statistics.set_threshold(pvalues,
-        alpha, mc, paired)
-    if defaulted:
-        output.write_log('Warning: no p-values below threshold, defaulted \
-            with min(p) = ' + str(minp), log_fp)
+    if param == 'p':
+        output.write_log('The type of mc correction used was ' + multi_corr, log_fp)
+    threshold, n_corr, minp = statistics.set_threshold(pvalues, param, alpha,
+                                                       multi_corr, paired)
     output.write_log('The threshold value was ' + str(threshold), log_fp)
 
     # calculate initial sig candidates
     initial_corr, all_pairs = statistics.get_initial_corr(n_var1, n_var2,
-        pvalues, threshold, paired)
+        pvalues, corrs, threshold, param, paired)
+
+    output.write_log('The number of correlations is ' + str(len(all_pairs)),
+        log_fp)
 
     # change initial_corr if doing rCUtIe
     if statistic in reverse_stats:
@@ -170,15 +149,6 @@ def calculate_cutie(defaults_fp, config_fp):
 
     output.write_log('The length of initial_corr is ' + str(len(initial_corr)),
         log_fp)
-
-    # return sets of interest; some of these will be empty dicts depending
-    # on the statistic
-    (true_corr, true_comb_to_rev, false_comb_to_rev, corr_extrema_p,
-    corr_extrema_r, samp_counter, var1_counter,
-    var2_counter, exceeds_points, rev_points) = statistics.update_cutiek_true_corr(
-        initial_corr, samp_var1, samp_var2, pvalues, corrs, threshold, paired,
-        statistic, forward_stats, reverse_stats, resample_k, fold,
-        fold_value, n_replicates, CI_method, pvalue_bins, mine_bins)
 
     # if interested in evaluating dffits, dsr, etc.
     region_sets = []
@@ -191,16 +161,13 @@ def calculate_cutie(defaults_fp, config_fp):
             'dsr': statistics.dsr
         }
         (FP_infln_sets, region_combs, region_sets) = statistics.pointwise_comparison(
-            infln_metrics, infln_mapping, samp_var1, samp_var2, pvalues, corrs,
-            n_corr, initial_corr, threshold, statistic, fold_value, paired, fold)
+            infln_metrics, infln_mapping, samp_var1, samp_var2, initial_corr,
+            threshold, fold_value, fold, param)
 
         for region in region_combs:
             output.write_log('The amount of unique elements in set ' +
                              str(region) + ' is ' +
                              str(len(region_sets[str(region)])), log_fp)
-
-        output.generate_pair_matrix(infln_metrics, FP_infln_sets, n_var1, n_var2,
-                                    working_dir, paired)
 
         # report results
         for metric in infln_metrics:
@@ -211,15 +178,17 @@ def calculate_cutie(defaults_fp, config_fp):
                              metric + ' is ' + str(len(initial_corr) - len(metric_FP)),
                              log_fp)
 
-    ###
-    # Determine indicator matrix of significance
-    ###
+    # return sets of interest; some of these will be empty dicts depending
+    # on the statistic
+    (true_corr, true_corr_to_rev, false_corr_to_rev, corr_extrema_p,
+    corr_extrema_r, samp_counter, var1_counter,
+    var2_counter, exceeds_points, rev_points) = statistics.update_cutiek_true_corr(
+        initial_corr, samp_var1, samp_var2, pvalues, corrs, threshold,
+        statistic, forward_stats, reverse_stats, resample_k, fold, fold_value, param)
 
-    # true_corr has opposite meaning if reverse stats is being performed
-    if statistic in reverse_stats:
-        for i in range(resample_k):
-            true_corr[str(i+1)] = set(initial_corr).difference(set(true_corr[str(i+1)]))
-
+    ###
+    # Determine indicator matrices
+    ###
 
     # element i,j is -1 if flagged by CUtIe as FP, 1 if TP,
     # and 0 if insig originally
@@ -227,10 +196,10 @@ def calculate_cutie(defaults_fp, config_fp):
                                         true_corr, resample_k)
 
     true_rev_indicators = utils.return_indicators(n_var1, n_var2,
-        initial_corr, true_comb_to_rev, resample_k)
+        initial_corr, true_corr_to_rev, resample_k)
 
     false_rev_indicators = utils.return_indicators(n_var1, n_var2,
-        initial_corr, false_comb_to_rev, resample_k)
+        initial_corr, false_corr_to_rev, resample_k)
 
     if corr_compare:
         metric_set_to_indicator = {}
@@ -253,30 +222,19 @@ def calculate_cutie(defaults_fp, config_fp):
         # for Spearman and MIC, R2 value stored is same as rho or MIC
         # respectively
         p_ratio = np.divide(corr_extrema_p[resample_key], pvalues)
-        r2_ratio = np.divide(corr_extrema_r[resample_key], r2vals)
-        variables = [pvalues, logpvals, corrs, r2vals,
+        r2_ratio = np.divide(np.square(corr_extrema_r[resample_key]), r2vals)
+        variables = [pvalues, corrs, r2vals,
             true_indicators[resample_key], true_rev_indicators[resample_key],
             false_rev_indicators[resample_key], corr_extrema_p[resample_key],
             corr_extrema_r[resample_key], p_ratio, r2_ratio]
         if statistic in forward_stats:
-            variable_names = ['pvalues', 'logpvals', 'correlations', 'r2vals',
+            variable_names = ['pvalues', 'correlations', 'r2vals',
                 'indicators','TP_rev_indicators', 'FP_rev_indicators',
                 'extreme_p', 'extreme_r', 'p_ratio', 'r2_ratio']
         elif statistic in reverse_stats:
-            variable_names = ['pvalues', 'logpvals', 'correlations', 'r2vals',
+            variable_names = ['pvalues', 'correlations', 'r2vals',
                 'indicators', 'FN_rev_indicators', 'TN_rev_indicators',
                 'extreme_p', 'extreme_r', 'p_ratio', 'r2_ratio']
-
-        # for simulations only
-        if sim:
-            corr_values = np.loadtxt(corr_path, usecols=range(n_var1),
-                comments="#", skiprows = 1, delimiter="\t", unpack=False)
-            variable_names.append('truth')
-            # extra bracket to enable 2D indexing
-            if n_var1 == 1:
-                variables.append([corr_values])
-            else:
-                variables.append(corr_values)
 
         # for pointwise
         if corr_compare:
@@ -284,23 +242,17 @@ def calculate_cutie(defaults_fp, config_fp):
             for region in region_sets:
                 variables.append(metric_set_to_indicator[region])
 
-        # Output results, write R matrix
+        # Output results, write summary df
         if statistic in forward_stats:
-            R_matrix, headers = output.print_Rmatrix(avg_var1, avg_var2,
-                var_var1, var_var2, n_var1, n_var2, variable_names, variables,
-                working_dir, resample_key, label, n_corr, paired)
+            summary_df = output.print_summary_df(n_var1, n_var2, variable_names,
+                variables, working_dir, resample_key, n_corr, paired)
 
         elif statistic in reverse_stats:
-            R_matrix, headers = output.print_Rmatrix(avg_var1, avg_var2,
-                var_var1, var_var2, n_var1, n_var2, variable_names, variables,
-                working_dir, resample_key, label + 'rev', n_corr, paired)
+            summary_df = output.print_summary_df(n_var1, n_var2, variable_names,
+                variables, working_dir, resample_key, n_corr, paired)
 
-        output.report_results(n_var1, n_var2, working_dir, label,
-                              initial_corr, true_corr, true_comb_to_rev,
-                              false_comb_to_rev, resample_key, log_fp)
-
-        output.print_true_false_corr(initial_corr, true_corr, working_dir,
-            statistic, resample_k, CI_method)
+        output.report_results(initial_corr, true_corr, true_corr_to_rev,
+                              false_corr_to_rev, resample_key, log_fp)
 
     ###
     # Graphing
@@ -311,13 +263,13 @@ def calculate_cutie(defaults_fp, config_fp):
         os.makedirs(working_dir + 'graphs')
 
     output.graph_subsets(working_dir, var1_names, var2_names, f1type, f2type,
-        R_matrix, headers, statistic, forward_stats, resample_k, initial_corr,
-        true_corr, false_comb_to_rev, true_comb_to_rev, graph_bound, samp_var1,
-        samp_var2, all_pairs, sim, region_sets, corr_compare, exceeds_points,
+        summary_df, statistic, forward_stats, resample_k, initial_corr,
+        true_corr, true_corr_to_rev, false_corr_to_rev, graph_bound, samp_var1,
+        samp_var2, all_pairs, region_sets, corr_compare, exceeds_points,
         rev_points, fix_axis)
 
-    output.diag_plots(samp_counter, var1_counter, var2_counter, resample_k,
-        working_dir, paired, samp_var1, samp_var2, n_samp)
+    output.diag_plots(samp_ids, var1_names, var2_names, samp_counter, var1_counter,
+        var2_counter, resample_k, working_dir, paired, statistic, forward_stats)
 
     # write log file
     output.write_log('The runtime was ' + str(time.process_time() - start_time), log_fp)

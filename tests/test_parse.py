@@ -11,10 +11,8 @@ class TestStatistics(unittest.TestCase):
     # setUp name is specific to package
     def setUp(self):
 
-        self.minep_fp = os.path.dirname(os.path.realpath(__file__)) + \
-            '/n=50,alpha=0.6.csv'
-        self.f2type = 'map'
-        self.f1type = 'otu'
+        self.f2type = 'tidy'
+        self.f1type = 'untidy'
         self.skip1 = 1
         self.skip2 = 0
         self.startcol1 = 5
@@ -24,14 +22,41 @@ class TestStatistics(unittest.TestCase):
         self.delimiter1 = '\t'
         self.delimiter2 = '\t'
         self.samp_var1_fp = os.path.dirname(os.path.realpath(__file__)) + \
-            '/otu_table_MultiO_merged___L6.txt'
+            '/example_data/otu_table_MultiO_merged___L6.txt'
         self.samp_var2_fp = os.path.dirname(os.path.realpath(__file__)) + \
-        '/Mapping.Pneumotype.Multiomics.RL.NYU.w_metabolites.w_inflamm.txt'
-        with open(self.minep_fp, 'r') as f:
-            self.mine_bins, self.pvalue_bins = parse.parse_minep(f, ',', 13)
+        '/example_data/Mapping.Pneumotype.Multiomics.RL.NYU.w_metabolites.w_inflamm.txt'
+
+        self.config_fp = os.path.dirname(os.path.realpath(__file__)) + '/example_data/config.ini'
+
+        self.parse_results = [
+            '/Users/KevinBu/Desktop/clemente_lab/Repositories/CUTIE/tests/example_data/otu_table_MultiO_merged___L6.txt',
+            '\\t',
+            '/Users/KevinBu/Desktop/clemente_lab/Repositories/CUTIE/tests/example_data/Mapping.Pneumotype.Multiomics.RL.NYU.w_metabolites.w_inflamm.txt',
+            '\\t',
+            'untidy',
+            'tidy',
+            '/Users/KevinBu/Desktop/clemente_lab/Repositories/CUTIE/tests/example_data/lungpt_1pc_cd_kkc1fdr0.05/',
+            1,
+            0,
+            5,
+            25,
+            17,
+            38,
+            'p',
+            'kendall',
+            True,
+            1,
+            False,
+            True,
+            0.05,
+            'fdr',
+            False,
+            1.0,
+            30,
+            False]
 
         self.process_df_results = {
-            '1': (np.array([[0.        , 0.        , 0.        , 0.        , 0.        ],
+            '1': np.array([[0.        , 0.        , 0.        , 0.        , 0.        ],
                        [0.        , 0.        , 0.        , 0.        , 0.        ],
                        [0.        , 0.        , 0.        , 0.        , 0.        ],
                        [0.        , 0.        , 0.00296736, 0.        , 0.        ],
@@ -59,10 +84,6 @@ class TestStatistics(unittest.TestCase):
                        [0.        , 0.        , 0.        , 0.        , 0.        ],
                        [0.        , 0.        , 0.        , 0.        , 0.        ],
                        [0.        , 0.        , 0.        , 0.        , 0.        ]]),
-                np.array([8.44399286e-05, 2.73249893e-04, 1.11901179e-04, 5.06800000e-06,
-                        0.00000000e+00]),
-                np.array([1.92512742e-07, 1.69576445e-06, 3.02932898e-07, 6.93484848e-10,
-                        0.00000000e+00])),
             '2': (np.array([[  60088.1214 ,  811001.3592 ],
                            [ 120075.1344 , 1931721.553  ],
                            [  19712.98   ,  156929.4015 ],
@@ -90,9 +111,8 @@ class TestStatistics(unittest.TestCase):
                            [ 160898.0428 ,  153451.6236 ],
                            [ 289463.802  , 5687572.542  ],
                            [ 193512.0719 , 2382798.92   ],
-                           [ 142062.84   , 2065672.617  ]]),
-                    np.array([ 123317.65906536, 1512179.33432036]),
-                    np.array([8.50279265e+09, 4.01598194e+12]))}
+                           [ 142062.84   , 2065672.617  ]]))
+            }
 
     def test_parse_input(self):
         # the output of results is as follows
@@ -155,26 +175,19 @@ class TestStatistics(unittest.TestCase):
             self.samp_var1_fp, self.startcol1, self.endcol1, self.delimiter1, self.skip1)
 
         results = parse.process_df(df, samp_ids)
-        for r in range(len(results)):
-            assert_almost_equal(self.process_df_results['1'][r], results[r])
+        assert_almost_equal(self.process_df_results['1'], results)
 
         samp_ids, var_names, df, n_var, n_samp = parse.parse_input(self.f2type,
             self.samp_var2_fp, self.startcol2, self.endcol2, self.delimiter2, self.skip2)
 
         results = parse.process_df(df, samp_ids)
-        for r in range(len(results)):
-            assert_almost_equal(self.process_df_results['2'][r], results[r],decimal=-5)
+        assert_almost_equal(self.process_df_results['2'], results,decimal=-5)
 
-    def test_parse_minep(self):
-        # test for equality of first 5 entries of mine p file path
-        mine_results = (np.array([0.8058,  0.78131, 0.76758, 0.75606, 0.7494 ]),
-            np.array([2.56e-07, 5.12e-07, 7.68e-07, 1.024e-06, 1.281e-06]))
+    def test_parse_config(self):
+        # testing contents of file parsing
+        for i, item in enumerate(self.parse_results):
+            assert item == parse.parse_config(self.config_fp)[i]
 
-        with open(self.minep_fp, 'r') as f:
-            results = parse.parse_minep(f, delimiter=',', pskip=13)
-
-        for r in range(len(results)):
-            assert_almost_equal(results[r][0:5], mine_results[r])
 
 
 if __name__ == '__main__':
