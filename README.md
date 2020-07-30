@@ -4,10 +4,6 @@ CUTIE is a python module for evaluating pairwise correlations in a dataset for i
 
 Questions and concerns should be sent to kbu314@gmail.com.
 
-## Requirements ##
----
-CUTIE is currently only supported on Linux/Unix-based systems.
-
 ## Dependencies ##
 ---
 CUTIE is written for python 3.7 and requires the following packages
@@ -33,7 +29,7 @@ CUTIE is written for python 3.7 and requires the following packages
 ### Usage ###
 ---
 
-The config file test_config.ini will need to be modified depending on the location of the input data files and the desired result for the output directory. In any given config file we have the given fields (see `/examples/config_template.ini`). Note that tidy dataframes have samples as rows, variables as columns; untidy denotes the converse. When you are ready, simply run `calculate_cutie.py -i <path_to_config_file>/<config_file>`.
+The config file test_config.ini will need to be modified depending on the location of the input data files and the desired result for the output directory. In any given config file we have the given fields (see `/demos/config_template.ini`). Note that tidy dataframes have samples as rows, variables as columns; untidy denotes the converse. When you are ready, simply run `calculate_cutie.py -i <path_to_config_file>/<config_file>`. See the Wiki for more information and detailed examples.
 
 ```
 [input]
@@ -70,14 +66,6 @@ graph_bound: <integer, default 30>
 fix_axis: <True or False>
 ```
 
-
-
-
-## Example usage ##
----
-1. Modify the config file `<install_path>/CUTIE/examples/test_p_config_local.txt` so that fields `samp_var1_fp` matches `<install_path>/CUTIE/examples/CUTIE/tests/otu_table_MultiO_merged___L6.txt
- `samp_var2_fp` matches `<install_path>/CUTIE/tests/Mapping.Pneumotype.Multiomics.RL.NYU.w_metabolites.w_inflamm.txt>` and `working_dir` matches `<install_path>/CUTIE/tests/lungpt_1pc_p_point_unit_test0.05/`.
-2. Run `calculate_cutie.py -i <install_path>/CUTIE/tests/test_p_config_local.txt`
 
 
 
