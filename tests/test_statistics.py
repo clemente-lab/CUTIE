@@ -527,7 +527,6 @@ class TestStatistics(unittest.TestCase):
                         self.threshold[p], k, self.sign, self.forward, 'pearson', self.fold,
                         self.fold_value[p], p),decimal=5)
 
-
     def test_evaluation_correlation_k(self):
         # 0, 1 as opposed to 1, 2 because you add 1 inside evaluate_correlation_k()
         for p in ['p','r']:
