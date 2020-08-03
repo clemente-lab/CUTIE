@@ -4,6 +4,8 @@ import hashlib
 import pandas as pd
 import matplotlib
 import sys
+import os
+
 matplotlib.use('Agg')
 
 def parse_input(ftype, fp, startcol, endcol, delimiter, skip):
@@ -132,9 +134,9 @@ def parse_config(input_config_fp):
         sys.exit('Error: No config file specified')
 
     # [input]
-    samp_var1_fp = Config.get('input', 'samp_var1_fp')
+    samp_var1_fp = os.path.expanduser(Config.get('input', 'samp_var1_fp'))
     delimiter1 = Config.get('input', 'delimiter1')
-    samp_var2_fp = Config.get('input', 'samp_var2_fp')
+    samp_var2_fp = os.path.expanduser(Config.get('input', 'samp_var2_fp'))
     delimiter2 = Config.get('input', 'delimiter2')
     f1type = Config.get('input', 'f1type')
     f2type = Config.get('input', 'f2type')
@@ -147,7 +149,7 @@ def parse_config(input_config_fp):
     paired = Config.getboolean('input', 'paired')
 
     # [output]
-    working_dir = Config.get('output', 'working_dir')
+    working_dir = os.path.expanduser(Config.get('output', 'working_dir'))
     overwrite = Config.getboolean('input', 'overwrite')
 
     # [stats]
