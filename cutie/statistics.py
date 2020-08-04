@@ -425,6 +425,7 @@ def return_influence(var1_values, var2_values):
     influence1   - sm.OLS object. Not relevant to Pearson/Spearman but needed as a
                    placeholder argument (for Cook's D, etc.)
     """
+
     # add constant for constant term in regression
     x = sm.add_constant(var1_values)
     y = sm.add_constant(var2_values)

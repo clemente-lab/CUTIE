@@ -188,40 +188,40 @@ class TestStatistics(unittest.TestCase):
         self.sign = np.sign(self.correlations[self.var1][self.var2])
         self.pointwise_results = {
             'p': {
-                'cutie_1pc': (np.array([0., 0., 0., 0., 0.]),
-                    np.array([0., 0., 0., 0., 1.]),
-                    np.array([0.99680549, 0.99715323, 0.9969853 , 1.        , 0.94672926]),
-                    np.array([0.00319451, 0.00284677, 0.0030147 , 0.        , 0.05327074])),
+                'cutie_1pc': (np.array([1., 1., 1., 1., 1.]),
+                              np.array([0., 0., 0., 0., 0.]),
+                              np.array([-0.58387421, -0.65710223, -0.6882472 , -0.54772256, -0.51298918]),
+                              np.array([0.41612579, 0.34289777, 0.3117528 , 0.45227744, 0.48701082])),
                 'cookd': (np.array([0., 0., 0., 0., 0.]),
-                    np.array([0., 0., 0., 0., 1.]),
-                    np.array([0.09404442, 0.02992931, 0.05956787, 0.45      , 4.2525    ]),
-                    np.array([0.91282234, 0.97080017, 0.94325794, 0.67466001, 0.1331533 ])),
+                          np.array([0., 0., 0., 0., 1.]),
+                          np.array([5.27697119e-02, 1.44618414e-01, 4.84502508e-01, 7.29729730e-03,       8.51351351e+00]),
+                          np.array([0.94945921, 0.87104214, 0.65714228, 0.99274683, 0.05797719])),
                 'dffits': (np.array([0., 0., 0., 0., 0.]),
-                    np.array([0., 0., 0., 1., 1.]),
-                    np.array([-3.79941633e-01, -2.07830404e-01, -2.98360772e-01, 1.56747721e+14, -2.49615088]),
-                    np.array([1.26491106, 1.26491106, 1.26491106, 1.26491106, 1.26491106])),
+                           np.array([0., 0., 1., 0., 1.]),
+                           np.array([-0.27560574, -0.55227095,  2.28912231, -0.09944903,  3.72104204]),
+                           np.array([1.26491106, 1.26491106, 1.26491106, 1.26491106, 1.26491106])),
                 'dsr': (np.array([0., 0., 0., 0., 0.]),
-                    np.array([0., 0., 0., 1., 0.]),
-                    np.array([-5.49963131e-01, -4.05925012e-01, -4.91552039e-01,  2.86180876e+14, -4.44749590e-01]),
-                    np.array([-5.49963131e-01, -4.05925012e-01, -4.91552039e-01,  2.86180876e+14, -4.44749590e-01]))},
+                        np.array([0., 0., 1., 0., 0.]),
+                        np.array([-0.39893758, -1.07867081,  3.77134948, -0.18156826,  0.66299354]),
+                        np.array([-0.39893758, -1.07867081,  3.77134948, -0.18156826,  0.66299354]))},
             'r': {
-                'cutie_1pc': (np.array([0., 0., 0., 0., 0.]),
-                    np.array([0., 0., 0., 0., 1.]),
-                    np.array([0.99680549, 0.99715323, 0.9969853 , 1.        , 0.94672926]),
-                    np.array([0.00319451, 0.00284677, 0.0030147 , 0.        , 0.05327074])),
+                'cutie_1pc': (np.array([1., 1., 1., 1., 1.]),
+                              np.array([0., 0., 0., 0., 0.]),
+                              np.array([-0.58387421, -0.65710223, -0.6882472 , -0.54772256, -0.51298918]),
+                              np.array([0.41612579, 0.34289777, 0.3117528 , 0.45227744, 0.48701082])),
                 'cookd': (np.array([0., 0., 0., 0., 0.]),
-                    np.array([0., 0., 0., 0., 1.]),
-                    np.array([0.09404442, 0.02992931, 0.05956787, 0.45      , 4.2525    ]),
-                    np.array([0.91282234, 0.97080017, 0.94325794, 0.67466001, 0.1331533 ])),
+                          np.array([0., 0., 0., 0., 1.]),
+                          np.array([5.27697119e-02, 1.44618414e-01, 4.84502508e-01, 7.29729730e-03,       8.51351351e+00]),
+                          np.array([0.94945921, 0.87104214, 0.65714228, 0.99274683, 0.05797719])),
                 'dffits': (np.array([0., 0., 0., 0., 0.]),
-                    np.array([0., 0., 0., 1., 1.]),
-                    np.array([-3.79941633e-01, -2.07830404e-01, -2.98360772e-01, 1.56747721e+14, -2.49615088]),
-                    np.array([1.26491106, 1.26491106, 1.26491106, 1.26491106, 1.26491106])),
+                           np.array([0., 0., 1., 0., 1.]),
+                           np.array([-0.27560574, -0.55227095,  2.28912231, -0.09944903,  3.72104204]),
+                           np.array([1.26491106, 1.26491106, 1.26491106, 1.26491106, 1.26491106])),
                 'dsr': (np.array([0., 0., 0., 0., 0.]),
-                    np.array([0., 0., 0., 1., 0.]),
-                    np.array([-5.49963131e-01, -4.05925012e-01, -4.91552039e-01,  2.86180876e+14, -4.44749590e-01]),
-                    np.array([-5.49963131e-01, -4.05925012e-01, -4.91552039e-01,  2.86180876e+14, -4.44749590e-01]))}
-            }
+                        np.array([0., 0., 1., 0., 0.]),
+                        np.array([-0.39893758, -1.07867081,  3.77134948, -0.18156826,  0.66299354]),
+                        np.array([-0.39893758, -1.07867081,  3.77134948, -0.18156826,  0.66299354]))}
+                }
 
         self.infln_metrics = ['cutie_1pc', 'cookd', 'dffits', 'dsr']
         self.infln_mapping = {
@@ -393,6 +393,66 @@ class TestStatistics(unittest.TestCase):
                          '(2, 0)': np.array([0., 0., 0., 0., 2.])}})}
             }
 
+        # setup pointwise results with intermediate files
+        self.test_dir = os.path.abspath(os.path.dirname(__file__))
+        self.work_dir = os.path.join(self.test_dir, 'test_data/')
+
+        self.pointwise_results = {}
+        for p in ['p', 'r']:
+            self.pointwise_results[p] = {}
+            for f in self.infln_mapping:
+                x_old = self.samp_var1[:, self.var1]
+                y_old = self.samp_var2[:, self.var2]
+
+                # remove nan for influence calculation
+                var1_values, var2_values = utils.remove_nans(x_old, y_old)
+                influence = statistics.return_influence(var1_values, var2_values)
+
+                #assert_almost_equal(self.pointwise_results[p][f],
+                arr_0, arr_1, arr_2, arr_3 = self.infln_mapping[f](var1_index=self.var1,
+                    var2_index=self.var2, samp_var1=self.samp_var1,
+                    samp_var2=self.samp_var2, influence=influence,
+                    threshold=self.threshold[p], fold=self.fold,
+                    fold_value=self.fold_value[p], param=p)
+
+                fp = self.work_dir + '_'.join(['normal', p, f, '.npz'])
+                np.savez(fp, arr_0, arr_1, arr_2, arr_3)
+                results = []
+                for key, value in np.load(fp).iteritems():
+                    results.append(value)
+                    np.savetxt(self.work_dir + '_'.join['normal', p, f, key + '.txt', value)
+                self.pointwise_results[p][f] = results
+
+        # setup pointwise results with intermediate files for negnan
+        tuples = [(0,0),(0,1)]
+
+        self.nan_neg_pointwise_results = {}
+        for t in tuples:
+            t1, t2, = t
+            self.nan_neg_pointwise_results[str(t)] = {}
+            for p in ['p', 'r']:
+                self.nan_neg_pointwise_results[str(t)][p] = {}
+                for f in self.infln_mapping:
+                    var1_values = self.nanneg_samp_var1[:, t1]
+                    var2_values = self.nanneg_samp_var2[:, t2]
+
+                    # remove nan for influence calculation
+                    # var1_values, var2_values = utils.remove_nans(x_old, y_old)
+                    influence = statistics.return_influence(var1_values, var2_values)
+
+                    arr_0, arr_1, arr_2, arr_3 = self.infln_mapping[f](var1_index=t1,
+                        var2_index=t2, samp_var1=self.nanneg_samp_var1,
+                        samp_var2=self.nanneg_samp_var2, influence=influence,
+                        threshold=self.threshold[p], fold=self.fold,
+                        fold_value=self.fold_value[p], param=p)
+
+                    fp = self.work_dir + '_'.join(['nanneg', str(t), p, f, '.npz'])
+                    np.savez(fp, arr_0, arr_1, arr_2, arr_3)
+                    results = []
+                    for key, value in np.load(fp).iteritems():
+                        results.append(value)
+                        np.savetxt(self.work_dir + '_'.join['nanneg', str(t), p, f, key + '.txt', value)
+                    self.nan_neg_pointwise_results[str(t)][p][f] = results
 
     def test_compute_pc(self):
         assert_almost_equal((np.nan, np.nan), statistics.compute_pc(self.undef_corr[0],
@@ -477,6 +537,7 @@ class TestStatistics(unittest.TestCase):
 
 
     def test_pointwise_metrics(self):
+        # test normal data
         # test cutie, cookd, dffits, dsr for just var1 = 1 var2 = 2
         x_old = self.samp_var1[:, self.var1]
         y_old = self.samp_var2[:, self.var2]
@@ -486,12 +547,31 @@ class TestStatistics(unittest.TestCase):
         influence = statistics.return_influence(var1_values, var2_values)
         for p in ['p', 'r']:
             for f in self.infln_mapping:
-                # -14 because numbers get large
                 assert_almost_equal(self.pointwise_results[p][f],
-                    self.infln_mapping[f](self.var1, self.var2, self.samp_var1,
-                        self.samp_var1, influence=influence,
-                        threshold=self.threshold[p], fold=self.fold,
-                        fold_value=self.fold_value[p], param=p), decimal=-17)
+                    self.infln_mapping[f](var1_index=self.var1, var2_index=self.var2,
+                    samp_var1=self.samp_var1, samp_var2=self.samp_var2,
+                    influence=influence,
+                    threshold=self.threshold[p], fold=self.fold,
+                    fold_value=self.fold_value[p], param=p))
+
+        # test nanneg data
+        # test cutie, cookd, dffits, dsr for just var1 = 1 var2 = 2
+        x_old = self.nanneg_samp_var1[:, 0]
+        y_old = self.nanneg_samp_var1[:, 0]
+
+        # remove nan for influence calculation
+        var1_values, var2_values = utils.remove_nans(x_old, y_old)
+        influence = statistics.return_influence(var1_values, var2_values)
+        for p in ['p', 'r']:
+            for f in self.infln_mapping:
+                assert_almost_equal(self.nan_neg_pointwise_results[p][f],
+                    self.infln_mapping[f](var1_index=self.var1, var2_index=self.var2,
+                    samp_var1=self.nanneg_samp_var1, samp_var2=self.nanneg_samp_var2,
+                    influence=influence,
+                    threshold=self.threshold[p], fold=self.fold,
+                    fold_value=self.fold_value[p], param=p))
+
+
 
     def test_pointwise_comparison(self):
         for p in ['p', 'r']:
