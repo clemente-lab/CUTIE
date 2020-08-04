@@ -255,7 +255,7 @@ def resample1_cutie_pc(var1_index, var2_index, samp_var1, samp_var2, **kwargs):
 def cookd(var1_index, var2_index, samp_var1, samp_var2, **kwargs):
     """
     Takes a given var1 and var2 by indices and recomputes Cook's D for each i-th
-    sample. (UT in test_pointwise_metrics)
+    sample. Not intended to be used with nan data. (UT in test_pointwise_metrics)
     ----------------------------------------------------------------------------
     INPUTS
     var1_index - Integer. Index for variable from file 1 in pairwise correlation.
@@ -310,7 +310,7 @@ def cookd(var1_index, var2_index, samp_var1, samp_var2, **kwargs):
 def dffits(var1_index, var2_index, samp_var1, samp_var2, **kwargs):
     """
     Takes a given var1 and var2 by indices and recomputes DFFITS for each i-th
-    sample. (UT in test_pointwise_metrics)
+    sample. Not intended to be used with nan data. (UT in test_pointwise_metrics)
     ----------------------------------------------------------------------------
     INPUTS
     var1_index - Integer. Index for variable from file 1 in pairwise correlation.
@@ -365,7 +365,7 @@ def dffits(var1_index, var2_index, samp_var1, samp_var2, **kwargs):
 def dsr(var1_index, var2_index, samp_var1, samp_var2, **kwargs):
     """
     Takes a given var1 and var2 by indices and recomputes DFFITS for each i-th
-    sample. (UT in test_pointwise_metrics)
+    sample. Not intended to be used with nan data. (UT in test_pointwise_metrics)
     ----------------------------------------------------------------------------
     INPUTS
     var1_index - Integer. Index for variable from file 1 in pairwise correlation.
