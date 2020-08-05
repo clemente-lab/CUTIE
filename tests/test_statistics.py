@@ -458,7 +458,7 @@ class TestStatistics(unittest.TestCase):
             for p in ['p', 'r']:
                 pointwise_results[str(t)][p] = {}
 
-                for f in self.infln_metrics:#self.infln_mapping:
+                for f in self.infln_mapping::
                     x_old = self.samp_var1[:, t1]
                     y_old = self.samp_var2[:, t2]
 
