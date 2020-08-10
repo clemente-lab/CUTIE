@@ -284,7 +284,7 @@ class TestStatistics(unittest.TestCase):
 
     def test_read_taxa(self):
         assert self.taxa_short == utils.read_taxa(self.taxa)
-        assert self.unchar_taxa_short == utils.read_taxa(self.unchar_taxa))
+        assert self.unchar_taxa_short == utils.read_taxa(self.unchar_taxa)
 
 if __name__ == '__main__':
     unittest.main()

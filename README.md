@@ -24,7 +24,7 @@ CUTIE is written for python 3.7 and requires the following packages
 3. Create a conda environment for CUTIE: `conda create -n 'cutie' python=3.7 click numpy pandas statsmodels scipy matplotlib seaborn py pytest`
 4. Activate the conda environment: `conda activate cutie`
 5. Install dependencies: `conda install -c anaconda click numpy pandas statsmodels scipy matplotlib seaborn py pytest`
-6. In CUTIE's install directory, run: `python3 setup.py install --prefix=<your_install_directory`. You may need to set your `$PYTHONPATH` variable accordingly, e.g. `export PYTHONPATH=/Users/<user>/tools/sandbox/lib/python3.7/site-packages/` then `Python setup.py install  --prefix=/Users/<user>/tools/sandbox/`
+6. In CUTIE's install directory, run: `python setup.py install`
 
 ### Usage ###
 ---
