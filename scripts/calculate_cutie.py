@@ -11,6 +11,7 @@ matplotlib.use('Agg')
 import time
 import click
 import os
+import shutil
 import numpy as np
 import pandas as pd
 import datetime
@@ -48,18 +49,20 @@ def calculate_cutie(input_config_fp):
      statistic, corr_compare, resample_k, paired, overwrite, alpha, multi_corr,
      fold, fold_value, graph_bound, fix_axis) = parse.parse_config(input_config_fp)
 
-    # create subfolder to hold data analysis files
+    # create working directory
     if os.path.exists(working_dir) is not True:
+        print('No working directory found, creating working_dir...')
         os.makedirs(working_dir)
     elif overwrite is not True:
-        print('Working directory already exists, exiting.')
+        print('Working directory already exists, exiting...')
         sys.exit()
+    else: # if overwrite is True and working dir already exists
+        print('Overwriting pre-existing directory...')
+        shutil.rmtree(working_dir)
+        os.makedirs(working_dir)
 
     if os.path.exists(working_dir + 'data_processing') is not True:
         os.makedirs(working_dir + 'data_processing')
-    elif overwrite is not True:
-        print('Data_processing directory already exists, exiting.')
-        sys.exit()
 
     # initialize and write log file
     start_time = time.process_time()
@@ -68,7 +71,7 @@ def calculate_cutie(input_config_fp):
     ###
     # Parsing and Pre-processing
     ###
-
+    print('Parsing input...')
     # define possible stats
     forward_stats = ['pearson',  'spearman', 'kendall']
     reverse_stats = ['rpearson', 'rspearman', 'rkendall']
@@ -121,6 +124,9 @@ def calculate_cutie(input_config_fp):
     ###
     # Pearson, Spearman, Kendall
     ###
+
+    print('Computing initial (pre-CUTIE) significance of all pairwise correlations...')
+
     # initial setup
     pvalues, corrs, r2vals = statistics.assign_statistics(samp_var1,
         samp_var2, statistic, pearson_stats, spearman_stats, kendall_stats,
@@ -128,6 +134,9 @@ def calculate_cutie(input_config_fp):
 
     # determine parameter (either r or p)
     output.write_log('The parameter chosen was ' + param, log_fp)
+
+    # determine statistic
+    output.write_log('The statistic chosen was ' + statistic, log_fp)
 
     # determine significance threshold and number of correlations
     if param == 'p':
@@ -153,6 +162,7 @@ def calculate_cutie(input_config_fp):
     # if interested in evaluating dffits, dsr, etc.
     region_sets = []
     if corr_compare:
+        print('Assessing CooksD, DFFITS, DSR...')
         infln_metrics = ['cutie_1pc', 'cookd', 'dffits', 'dsr']
         infln_mapping = {
             'cutie_1pc': statistics.resample1_cutie_pc,
@@ -180,11 +190,14 @@ def calculate_cutie(input_config_fp):
 
     # return sets of interest; some of these will be empty dicts depending
     # on the statistic
+    print('Performing CUTIE resampling...')
+
     (true_corr, true_corr_to_rev, false_corr_to_rev, corr_extrema_p,
     corr_extrema_r, samp_counter, var1_counter,
     var2_counter, exceeds_points, rev_points) = statistics.update_cutiek_true_corr(
         initial_corr, samp_var1, samp_var2, pvalues, corrs, threshold,
         statistic, forward_stats, reverse_stats, resample_k, fold, fold_value, param)
+
 
     ###
     # Determine indicator matrices
@@ -213,6 +226,8 @@ def calculate_cutie(input_config_fp):
     ###
     # Report statistics
     ###
+
+    print('Printing results...')
 
     for k in range(resample_k):
         resample_key = str(k+1)
