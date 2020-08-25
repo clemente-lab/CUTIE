@@ -91,16 +91,14 @@ def print_summary_df(var1_names, var2_names, col_names, col_vars, working_dir,
         headers.append(var)
 
     # create matrix locally in python
-    summary_matrix = np.zeros([n_corr, len(headers)])
-    row = 0
+    summary_matrix = []
     for i, var1 in enumerate(var1_names):
         for j, var2 in enumerate(var1_names):
             if not (paired and (i <= j)):
                 entries = [var1, var2]
                 for col_var in col_vars:
                     entries.append(col_var[i][j])
-                summary_matrix[row] = np.array([entries])
-                row += 1
+                summary_matrix.append(entries)
 
     # convert to dataframe
     summary_df = pd.DataFrame(summary_matrix, columns=headers)
