@@ -57,7 +57,7 @@ def report_results(initial_corr, true_corr,
             write_log('The number of reversed correlations for FP/TN' + str(i+1)
                       + ' is ' + str(len(incorrect_to_rev[str(i+1)])), log_fp)
 
-def print_summary_df(n_var1, n_var2, col_names, col_vars, working_dir,
+def print_summary_df(var1_names, var2_names, col_names, col_vars, working_dir,
                      resample_index, n_corr, paired=False):
     """
     Creates summary datafrane containing CUTIE's analysis results.
@@ -65,8 +65,8 @@ def print_summary_df(n_var1, n_var2, col_names, col_vars, working_dir,
     pvalue, correlation strength etc.
     ----------------------------------------------------------------------------
     INPUTS
-    n_var1         - Integer. Number of variables in file 1.
-    n_var2         - Integer. Number of variables in file 2.
+    var1_names     - List. Names of variables in file 1.
+    var2_names     - List. Names of variables in file 2.
     col_names      - List of strings. Contains names of columns (e.g. pvalues).
     col_vars       - List of 2D arrays. Contains various statistics (e.g. 2D
                      array of pvalues, 2D array of correlations). For each
@@ -85,7 +85,7 @@ def print_summary_df(n_var1, n_var2, col_names, col_vars, working_dir,
                      and features per correlation (variable pair).
     """
     # create header row
-    headers = ['var1_index', 'var2_index']
+    headers = ['var1', 'var2']
 
     for var in col_names:
         headers.append(var)
@@ -93,12 +93,12 @@ def print_summary_df(n_var1, n_var2, col_names, col_vars, working_dir,
     # create matrix locally in python
     summary_matrix = np.zeros([n_corr, len(headers)])
     row = 0
-    for var1 in range(n_var1):
-        for var2 in range(n_var2):
-            if not (paired and (var1 <= var2)):
+    for i, var1 in enumerate(var1_names):
+        for j, var2 in enumerate(var1_names):
+            if not (paired and (i <= j)):
                 entries = [var1, var2]
                 for col_var in col_vars:
-                    entries.append(col_var[var1][var2])
+                    entries.append(col_var[i][j])
                 summary_matrix[row] = np.array([entries])
                 row += 1
 

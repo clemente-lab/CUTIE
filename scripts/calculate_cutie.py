@@ -236,33 +236,33 @@ def calculate_cutie(input_config_fp):
         # respectively
         p_ratio = np.divide(corr_extrema_p[resample_key], pvalues)
         r2_ratio = np.divide(np.square(corr_extrema_r[resample_key]), r2vals)
-        variables = [pvalues, corrs, r2vals,
+        stat_values = [pvalues, corrs, r2vals,
             true_indicators[resample_key], true_rev_indicators[resample_key],
             false_rev_indicators[resample_key], corr_extrema_p[resample_key],
             corr_extrema_r[resample_key], p_ratio, r2_ratio]
         if statistic in forward_stats:
-            variable_names = ['pvalues', 'correlations', 'r2vals',
+            stat_names = ['pvalues', 'correlations', 'r2vals',
                 'indicators','TP_rev_indicators', 'FP_rev_indicators',
                 'extreme_p', 'extreme_r', 'p_ratio', 'r2_ratio']
         elif statistic in reverse_stats:
-            variable_names = ['pvalues', 'correlations', 'r2vals',
+            stat_names = ['pvalues', 'correlations', 'r2vals',
                 'indicators', 'FN_rev_indicators', 'TN_rev_indicators',
                 'extreme_p', 'extreme_r', 'p_ratio', 'r2_ratio']
 
         # for pointwise
         if corr_compare:
-            variable_names.extend(region_sets)
+            stat_names.extend(region_sets)
             for region in region_sets:
-                variables.append(metric_set_to_indicator[region])
+                stat_values.append(metric_set_to_indicator[region])
 
         # Output results, write summary df
         if statistic in forward_stats:
-            summary_df = output.print_summary_df(n_var1, n_var2, variable_names,
-                variables, working_dir, resample_key, n_corr, paired)
+            summary_df = output.print_summary_df(var1_names, var2_names,
+                stat_names, stat_values, working_dir, resample_key, n_corr, paired)
 
         elif statistic in reverse_stats:
-            summary_df = output.print_summary_df(n_var1, n_var2, variable_names,
-                variables, working_dir, resample_key, n_corr, paired)
+            summary_df = output.print_summary_df(var1_names, var2_names,
+                stat_names, stat_values, working_dir, resample_key, n_corr, paired)
 
         output.report_results(initial_corr, true_corr, true_corr_to_rev,
                               false_corr_to_rev, resample_key, log_fp)
