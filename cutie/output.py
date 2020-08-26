@@ -505,13 +505,12 @@ def plot_corr(row, df_folder_fp, var1_names, var2_names, samp_var1, samp_var2,
     forward           - Boolean. True if CUTIE is run in the forward direction, False if
                         reverse.
     """
-    var1, var2 = int(row['var1_index']), int(row['var2_index'])
+    var1_name, var2_name = row['var1'], row['var2']
+    var1, var2 = var1_names.index(var1_name), var1_names.index(var2_name)
 
     # obtain variable values
     x = samp_var1[:, var1]
     y = samp_var2[:, var2]
-    var1_name = var1_names[var1]
-    var2_name = var2_names[var2]
 
     # convert variable name of otu formats
     if var1_name[0:3] == 'k__':
@@ -566,7 +565,7 @@ def plot_corr(row, df_folder_fp, var1_names, var2_names, samp_var1, samp_var2,
     # create plot and title
     title = 'p, ext_p = ' + '%.2E' % Decimal(row['pvalues']) + \
             ', ' + '%.2E' % Decimal(row['extreme_p']) + ' ' + \
-            'Rsq, ext_r2 = ' + '%.2E' % Decimal(row['r2vals']) + \
+            'r, ext_r = ' + '%.2E' % Decimal(row['correlations']) + \
             ', ' + '%.2E' % Decimal(row['extreme_r'])
 
     fig = plt.figure(figsize=(5,5))
