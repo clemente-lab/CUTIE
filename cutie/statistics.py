@@ -841,10 +841,18 @@ def evaluate_correlation_k(var1, var2, n_samp, samp_var1, samp_var2, pvalues,
     # obtain most extreme p and R-sq values
     if forward:
         extrema_p = np.nanmax(extrema_p)
-        extrema_r = np.nanmin(extrema_r)
+        if sign == 1:
+            extrema_r = np.nanmin(extrema_r)
+        else: # if negative
+            extrema_r = np.nanmax(extrema_r)
+
     elif not forward:
         extrema_p = np.nanmin(extrema_p)
-        extrema_r = np.nanmax(extrema_r)
+        if sign == 1:
+            extrema_r = np.nanmax(extrema_r)
+        else:
+            extrema_r = np.nanmin(extrema_r)
+
 
     return new_rev_corr, new_truths, extrema_p, extrema_r
 
