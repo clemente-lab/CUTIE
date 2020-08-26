@@ -506,7 +506,7 @@ def plot_corr(row, df_folder_fp, var1_names, var2_names, samp_var1, samp_var2,
                         reverse.
     """
     var1_name, var2_name = row['var1'], row['var2']
-    var1, var2 = var1_names.index(var1_name), var1_names.index(var2_name)
+    var1, var2 = var1_names.index(var1_name), var2_names.index(var2_name)
 
     # obtain variable values
     x = samp_var1[:, var1]
