@@ -46,9 +46,10 @@ def initial_stats(samp_var1, samp_var2, statistic, paired):
             # if data is not paired (i.e. df1 != df2), fill in entire matrix
             # if paired is false, the expresion will always be not False = True
             # if paired is True, then the expression will only be True if var1 > var2
-            var1_values, var2_values = samp_var1[:, var1], samp_var2[:, var2]
 
             if not (paired and (var1 <= var2)):
+                var1_values, var2_values = samp_var1[:, var1], samp_var2[:, var2]
+
                 if statistic in ('pearson', 'rpearson'):
                     p_value, r_value = compute_pc(var1_values, var2_values)
                 elif statistic in ('spearman', 'rspearman'):
