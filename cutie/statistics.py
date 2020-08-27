@@ -5,6 +5,7 @@ import matplotlib
 import numpy as np
 import statsmodels.api as sm
 import scipy.stats
+import minepy
 from cutie import utils
 
 matplotlib.use('Agg')
@@ -51,11 +52,13 @@ def initial_stats(samp_var1, samp_var2, statistic, paired):
                 var1_values, var2_values = samp_var1[:, var1], samp_var2[:, var2]
 
                 if statistic in ('pearson', 'rpearson'):
-                    p_value, r_value = compute_pc(var1_values, var2_values)
+                    r_value, p_value = compute_pc(var1_values, var2_values)
                 elif statistic in ('spearman', 'rspearman'):
-                    p_value, r_value = compute_sc(var1_values, var2_values)
+                    r_value, p_value = compute_sc(var1_values, var2_values)
                 elif statistic in ('kendall', 'rkendall'):
-                    p_value, r_value = compute_kc(var1_values, var2_values)
+                    r_value, p_value = compute_kc(var1_values, var2_values)
+                elif statistic in ('mine', 'rmine'):
+                    r_value, p_value = compute_mine(var1_values, var2_values)
 
                 corrs[var1][var2], pvalues[var1][var2] = r_value, p_value
 
@@ -830,7 +833,7 @@ def compute_pc(new_var1, new_var2):
     except ValueError:
         r_value, p_value = np.nan, np.nan
 
-    return p_value, r_value
+    return r_value, p_value
 
 
 def compute_sc(new_var1, new_var2):
@@ -848,7 +851,7 @@ def compute_sc(new_var1, new_var2):
     except ValueError:
         r_value, p_value = np.nan, np.nan
 
-    return p_value, r_value
+    return r_value, p_value
 
 
 def compute_kc(new_var1, new_var2):
@@ -866,7 +869,39 @@ def compute_kc(new_var1, new_var2):
     except ValueError:
         r_value, p_value = np.nan, np.nan
 
-    return p_value, r_value
+    return r_value, p_value
+
+def compute_mine(new_var1, new_var2):
+    """
+    Compute MINE correlation and return p and r values. Defaults are used from
+    MINE API's page. Permutation test with 1k iterations.
+    https://minepy.readthedocs.io/en/latest/python.html
+    ----------------------------------------------------------------------------
+    INPUTS
+    new_var1 - Array. Length sample size containing observations for given
+               variable from file 1.
+    new_var2 - Array. Same as new_var1 but for file 2.
+    """
+    var1, var2 = utils.remove_nans(new_var1, new_var2)
+
+    r_value = minepy.pstats(np.stack([var1, var2], 0), alpha=0.6, c=10, est="mic_approx")[0][0]
+    new = np.copy(var2)
+
+    n_perm = 1000
+    rvals = []
+    for i in range(n_perm):
+        np.random.seed(i)
+        np.random.shuffle(new)
+
+        x, new_y = utils.remove_nans(var1, new)
+        new_r = minepy.pstats(np.stack([x, new_y], 0), alpha=0.6, c=10, est="mic_approx")[0]
+        rvals.append(new_r)
+
+    rvals = np.sort(np.array(rvals))
+    p = (100 - scipy.stats.percentileofscore(rvals,r_value)) + scipy.stats.percentileofscore(rvals,-r_value)
+    p_value = p/100
+
+    return r_value, p_value
 
 
 def update_rev_extrema_rp(sign, r_value, p_value, indices, reverse, extrema_p,
@@ -977,11 +1012,13 @@ def resamplek_cutie(var1_index, var2_index, n_samp, samp_var1, samp_var2,
 
         # compute new p_value and r_value depending on statistic
         if statistic in ('pearson', 'rpearson'):
-            p_value, r_value = compute_pc(new_var1, new_var2)
+            r_value, p_value = compute_pc(new_var1, new_var2)
         elif statistic in ('spearman', 'rspearman'):
-            p_value, r_value = compute_sc(new_var1, new_var2)
+            r_value, p_value = compute_sc(new_var1, new_var2)
         elif statistic in ('kendall', 'rkendall'):
-            p_value, r_value = compute_kc(new_var1, new_var2)
+            r_value, p_value = compute_kc(new_var1, new_var2)
+        elif statistic in ('mine', 'rmine'):
+            r_value, p_value = compute_mine(new_var1, new_var2)
 
         # update reverse, maxp, and minr
         reverse, extrema_p, extrema_r = update_rev_extrema_rp(
