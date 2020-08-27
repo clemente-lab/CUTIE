@@ -12,51 +12,7 @@ matplotlib.use('Agg')
 # silences divide by 0 warnings and NaN division with correlations
 np.seterr(divide='ignore', invalid='ignore')
 
-def assign_statistics(samp_var1, samp_var2, statistic, pearson_stats,
-                      spearman_stats, kendall_stats, paired):
-    """
-    Creates dictionary mapping statistics to 2D matrix containing relevant
-    statistics (e.g. pvalue, correlation) for correlation between var i and j.
-    ----------------------------------------------------------------------------
-    INPUTS
-    samp_var1      - 2D array. Each value in row i col j is the level of
-                     variable j corresponding to sample i in the order that the
-                     samples are presented in samp_ids.
-    samp_var2      - 2D array. Same as samp_var1 but for file 2.
-    statistic      - String. Describes analysis being performed.
-    pearson_stats  - List of strings. Describes possible Pearson-based
-                     statistics.
-    spearman_stats - List of strings. Describes possible Spearman-based
-                     statistics.
-    kendall_stats  - List of strings. Describes possible Kendall-based
-                     statistics.
-
-    OUTPUTS
-    pvalues        - 2D arrays where entry i,j represents corresponding value
-                     for var i and var j.
-    corrs
-    np.square(corrs)
-    """
-    if statistic in pearson_stats:
-        corrs, pvalues = initial_stats(samp_var1, samp_var2, scipy.stats.pearsonr,
-                                       paired)
-        # Index 0 gets you the r values, 1 gets the p values
-
-    elif statistic in spearman_stats:
-        corrs, pvalues = initial_stats(samp_var1, samp_var2, scipy.stats.spearmanr,
-                                       paired)
-
-    elif statistic in kendall_stats:
-        corrs, pvalues = initial_stats(samp_var1, samp_var2, scipy.stats.kendalltau,
-                                       paired)
-
-    else:
-        raise ValueError('Invalid statistic chosen: ' + statistic)
-
-    return pvalues, corrs, np.square(corrs)
-
-
-def initial_stats(samp_var1, samp_var2, corr_func, paired):
+def initial_stats(samp_var1, samp_var2, statistic, paired):
     """
     Helper function for assign_statistics. Forks between desired correlation
     coefficient (Pearson, Spearman, Kendall and MINE). Computes an initial
@@ -70,15 +26,14 @@ def initial_stats(samp_var1, samp_var2, corr_func, paired):
                  corresponding to sample i in the order that the samples are
                  presented in samp_ids.
     samp_var2  - 2D array. Same as samp_var1 but for file 2.
-    corr_func  - Function. Desired function for computing correlation (e.g.
-                 scipy.stats.pearsonr, scipy.stats.spearmanr,
-                 scipy.stats.kendalltau).
+    corr_func  - Function.
     paired     - Boolean. True if variables are paired.
 
     OUTPUTS
-    stat_array - 3D array. Depth k = 2, row i, col j corresponds to the value of
-                 that quantity k (correlation or pvalue) for the correlation
-                 between var i and var j.
+    pvalues        - 2D arrays where entry i,j represents corresponding value
+                     for var i and var j.
+    corrs
+    np.square(corrs)
     """
     n_var1, n_var2, n_samp = utils.get_param(samp_var1, samp_var2)
 
@@ -91,15 +46,17 @@ def initial_stats(samp_var1, samp_var2, corr_func, paired):
             # if data is not paired (i.e. df1 != df2), fill in entire matrix
             # if paired is false, the expresion will always be not False = True
             # if paired is True, then the expression will only be True if var1 > var2
-            if not (paired and (var1 <= var2)):
-                var1_values, var2_values = utils.remove_nans(samp_var1[:, var1],
-                                                             samp_var2[:, var2])
+            var1_values, var2_values = samp_var1[:, var1], samp_var2[:, var2]
 
-                try:
-                    corrs[var1][var2], pvalues[var1][var2] = corr_func(var1_values,
-                                                                       var2_values)
-                except ValueError:
-                    corrs[var1][var2], pvalues[var1][var2] = np.nan, np.nan
+            if not (paired and (var1 <= var2)):
+                if statistic in ('pearson', 'rpearson'):
+                    p_value, r_value = compute_pc(var1_values, var2_values)
+                elif statistic in ('spearman', 'rspearman'):
+                    p_value, r_value = compute_sc(var1_values, var2_values)
+                elif statistic in ('kendall', 'rkendall'):
+                    p_value, r_value = compute_kc(var1_values, var2_values)
+
+                corrs[var1][var2], pvalues[var1][var2] = r_value, p_value
 
             # if data is paired, fill in the diagonal with 1/0
             elif paired and var1 == var2:
@@ -109,7 +66,7 @@ def initial_stats(samp_var1, samp_var2, corr_func, paired):
             else:
                 corrs[var1][var2], pvalues[var1][var2] = np.nan, np.nan
 
-    return corrs, pvalues
+    return pvalues, corrs, np.square(corrs)
 
 
 def set_threshold(pvalues, param, alpha, multi_corr, paired=False):

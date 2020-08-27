@@ -76,9 +76,7 @@ def calculate_cutie(input_config_fp):
     forward_stats = ['pearson',  'spearman', 'kendall']
     reverse_stats = ['rpearson', 'rspearman', 'rkendall']
     all_stats = forward_stats + reverse_stats
-    pearson_stats = ['pearson', 'rpearson']
-    spearman_stats = ['spearman', 'rspearman']
-    kendall_stats = ['kendall', 'rkendall']
+
     if statistic not in all_stats:
         raise ValueError('Invalid statistic: %s chosen' % statistic)
     if corr_compare and resample_k != 1:
@@ -128,9 +126,8 @@ def calculate_cutie(input_config_fp):
     print('Computing initial (pre-CUTIE) significance of all pairwise correlations...')
 
     # initial setup
-    pvalues, corrs, r2vals = statistics.assign_statistics(samp_var1,
-        samp_var2, statistic, pearson_stats, spearman_stats, kendall_stats,
-        paired)
+    pvalues, corrs, r2vals = statistics.initial_stats(samp_var1,
+        samp_var2, statistic, paired)
 
     # determine parameter (either r or p)
     output.write_log('The parameter chosen was ' + param, log_fp)
