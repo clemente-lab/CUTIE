@@ -73,8 +73,8 @@ def calculate_cutie(input_config_fp):
     ###
     print('Parsing input...')
     # define possible stats
-    forward_stats = ['pearson',  'spearman', 'kendall']
-    reverse_stats = ['rpearson', 'rspearman', 'rkendall']
+    forward_stats = ['pearson',  'spearman', 'kendall', 'mine']
+    reverse_stats = ['rpearson', 'rspearman', 'rkendall', 'rmine']
     all_stats = forward_stats + reverse_stats
 
     if statistic not in all_stats:
