@@ -58,7 +58,7 @@ def report_results(initial_corr, true_corr,
                       + ' is ' + str(len(incorrect_to_rev[str(i+1)])), log_fp)
 
 def print_summary_df(var1_names, var2_names, col_names, col_vars, working_dir,
-                     resample_index, n_corr, paired=False):
+                     resample_index, n_corr, paired, forward):
     """
     Creates summary datafrane containing CUTIE's analysis results.
     Each row is a correlation and columns contain relevant statistics e.g.
@@ -80,6 +80,9 @@ def print_summary_df(var1_names, var2_names, col_names, col_vars, working_dir,
                      double counted (only corr(i,i) are ignored)
     paired         - Boolean. True if variables are paired (i.e. file 1 and file
                      2 are the same), False otherwise.
+    forward        - Boolean. True if CUTIE is run in the forward direction, False if
+                     reverse.
+
     OUTPUTS
     summary_df     - Array. Dataframe object summarizing the above statistics
                      and features per correlation (variable pair).
@@ -103,7 +106,66 @@ def print_summary_df(var1_names, var2_names, col_names, col_vars, working_dir,
     # convert to dataframe
     summary_df = pd.DataFrame(summary_matrix, columns=headers)
 
-    summary_df.to_csv(working_dir + 'data_processing/summary_df_resample_' + \
+    # convert indicators to class
+    if forward:
+        def label_class(x):
+            if x == 1:
+                return 'TP'
+            elif x == -1:
+                return 'FP'
+            else:
+                return 'N'
+
+        summary_df['class'] = summary_df['indicators'].apply(lambda x: label_class(x))
+
+        def label_rev(row):
+            if row['class'] == 'TP':
+                if row['TP_rev_indicators'] == 1:
+                    return 'Yes'
+                else:
+                    return 'No'
+            elif row['class'] == 'FP':
+                if row['FP_rev_indicators'] == 1:
+                    return 'Yes'
+                else:
+                    return 'No'
+            else:
+                return 'NA'
+
+        summary_df['reverse'] = summary_df.apply(lambda row: label_rev(row), axis=1)
+        df = summary_df.drop(['TP_rev_indicators', 'FP_rev_indicators'], axis=1)
+
+
+    else:
+        def label_class(x):
+            if x == 1:
+                return 'FN'
+            elif x == -1:
+                return 'TN'
+            else:
+                return 'P'
+
+        summary_df['class'] = summary_df['indicators'].apply(lambda x: label_class(x))
+
+        def label_rev(row):
+            if row['class'] == 'FN':
+                if row['FN_rev_indicators'] == 1:
+                    return 'Yes'
+                else:
+                    return 'No'
+            elif row['class'] == 'TN':
+                if row['TN_rev_indicators'] == 1:
+                    return 'Yes'
+                else:
+                    return 'No'
+            else:
+                return 'NA'
+
+        summary_df['reverse'] = summary_df.apply(lambda row: label_rev(row), axis=1)
+        df = summary_df.drop(['TN_rev_indicators', 'FN_rev_indicators'], axis=1)
+
+    df = summary_df.drop(['indicators'], axis=1)
+    df.to_csv(working_dir + 'data_processing/summary_df_resample_' + \
         str(resample_index) + '.txt', sep='\t', index=False)
 
     return summary_df
@@ -135,8 +197,8 @@ def graph_subsets(working_dir, var1_names, var2_names, f1type, f2type, summary_d
     f2type            - String. Same as f1type but for file 2.
     summary_df        - Dataframe. Output from print_summary_df.
     statistic         - String. Describes analysis being performed.
-    forward_stats     - List of strings. Contains list of statistics e.g. 'kpc'
-                        'jkp' that pertain to forward (non-reverse) CUTIE
+    forward_stats     - List of strings. Contains list of statistics e.g. 'pearson'
+                        that pertain to forward (non-reverse) CUTIE
                         analysis
     resample_k        - Integer. Number of points being resampled by CUTIE.
     initial_corr      - Set of integer tuples. Contains variable pairs initially
@@ -228,8 +290,12 @@ def generate_dfs(statistic, forward_stats, initial_corr, true_corr,
     # determine labels depending on forward or reverse cutie
     if statistic in forward_stats:
         true_label, false_label = 'TP', 'FP'
+        consider, not_consider = 'initial_sig', 'initial_insig'
+        true, false = 'P', 'N'
     else:
         true_label, false_label = 'FN', 'TN'
+        consider, not_consider = 'initial_insig', 'initial_sig'
+        true, false = 'N', 'P'
 
     # create class for each set of plots
     class dfSet:
@@ -257,10 +323,10 @@ def generate_dfs(statistic, forward_stats, initial_corr, true_corr,
     false_corr = {}
 
     # create N (negatives; TN + FN) and P (positives; TP + FP))
-    initial_insig_corr = dfSet('initial_insig',
-                               set(all_pairs).difference(initial_corr), 'N',
+    initial_insig_corr = dfSet(not_consider,
+                               set(all_pairs).difference(initial_corr), false,
                                False, summary_df.loc[summary_df['indicators'] == 0], 0)
-    initial_sig_corr = dfSet('initial_sig', initial_corr, 'P', False,
+    initial_sig_corr = dfSet(consider, initial_corr, true, False,
                              summary_df.loc[summary_df['indicators'] != 0], 0)
 
     # create df_set instances
