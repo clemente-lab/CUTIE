@@ -66,7 +66,7 @@ def initial_stats(samp_var1, samp_var2, statistic, paired):
             elif paired and var1 == var2:
                 corrs[var1][var2], pvalues[var1][var2] = 1, 0
 
-            # if data is unpaired, convert upper part of matrix to NA
+            # if data is paired, convert upper part of matrix to NA
             else:
                 corrs[var1][var2], pvalues[var1][var2] = np.nan, np.nan
 
@@ -887,7 +887,7 @@ def compute_mine(new_var1, new_var2):
     r_value = minepy.pstats(np.stack([var1, var2], 0), alpha=0.6, c=10, est="mic_approx")[0][0]
     new = np.copy(var2)
 
-    n_perm = 1000
+    n_perm = 100 # 1000
     rvals = []
     for i in range(n_perm):
         np.random.seed(i)
