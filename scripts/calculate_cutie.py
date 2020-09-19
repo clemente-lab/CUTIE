@@ -241,10 +241,12 @@ def calculate_cutie(input_config_fp):
             stat_names = ['pvalues', 'correlations', 'r2vals',
                 'indicators','TP_rev_indicators', 'FP_rev_indicators',
                 'extreme_p', 'extreme_r', 'p_ratio', 'r2_ratio']
+            forward = True
         elif statistic in reverse_stats:
             stat_names = ['pvalues', 'correlations', 'r2vals',
                 'indicators', 'FN_rev_indicators', 'TN_rev_indicators',
                 'extreme_p', 'extreme_r', 'p_ratio', 'r2_ratio']
+            forward = False
 
         # for pointwise
         if corr_compare:
@@ -255,7 +257,8 @@ def calculate_cutie(input_config_fp):
         # Output results, write summary df
         if statistic in forward_stats:
             summary_df = output.print_summary_df(var1_names, var2_names,
-                stat_names, stat_values, working_dir, resample_key, n_corr, paired)
+                stat_names, stat_values, working_dir, resample_key, n_corr,
+                paired, forward)
 
         elif statistic in reverse_stats:
             summary_df = output.print_summary_df(var1_names, var2_names,
