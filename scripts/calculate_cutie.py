@@ -255,14 +255,10 @@ def calculate_cutie(input_config_fp):
                 stat_values.append(metric_set_to_indicator[region])
 
         # Output results, write summary df
-        if statistic in forward_stats:
-            summary_df = output.print_summary_df(var1_names, var2_names,
+        summary_df = output.print_summary_df(var1_names, var2_names,
                 stat_names, stat_values, working_dir, resample_key, n_corr,
                 paired, forward)
 
-        elif statistic in reverse_stats:
-            summary_df = output.print_summary_df(var1_names, var2_names,
-                stat_names, stat_values, working_dir, resample_key, n_corr, paired)
 
         output.report_results(initial_corr, true_corr, true_corr_to_rev,
                               false_corr_to_rev, resample_key, log_fp)
