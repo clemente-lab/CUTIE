@@ -52,7 +52,8 @@ def parse_input(ftype, fp, startcol, endcol, delimiter, skip):
     # -1 are the defaults; if no start and endcols are specified, read in all
     # cols, else subset
     if startcol != -1 and endcol != -1:
-        df = df.iloc[:, (startcol-1):(endcol-1)]
+        # df = df.iloc[:, (startcol-1):(endcol-1)]
+        df = df.iloc[:, startcol:endcol]
     elif not (startcol == -1 and endcol == -1):
         raise ValueError('Both startcol and endcol must be specified')
     # obtain list of sample ids, variable names, number of var, and number of
