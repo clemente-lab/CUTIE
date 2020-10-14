@@ -234,6 +234,8 @@ def read_taxa(taxa, delim=';'):
     """
     parts = taxa.split(delim) # set as param with default
     while parts:
+        if len(parts) == 1:
+            return('u.c. ' + parts[0])
         if not parts[-1].endswith('__'):
             taxastr1 = parts[-2].split('__')[1]
             taxastr2 = parts[-1].split('__')[1]
