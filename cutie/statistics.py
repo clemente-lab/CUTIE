@@ -172,14 +172,14 @@ def resample1_cutie_pc(var1_index, var2_index, samp_var1, samp_var2, **kwargs):
     p_values = np.zeros(n_samp)
 
     # iteratively delete one sample and recompute statistics
-    original_p, original_r = compute_pc(var1, var2)
+    original_r, original_p = compute_pc(var1, var2)
 
     for s in range(n_samp):
         new_var1 = var1[~np.in1d(range(n_samp), s)]
         new_var2 = var2[~np.in1d(range(n_samp), s)]
 
         # compute new p_value and r_value
-        p_value, r_value = compute_pc(new_var1, new_var2)
+        r_value, p_value = compute_pc(new_var1, new_var2)
 
         # update reverse, maxp, and minr
         # sign is artificially 0 since we are not interested in that
