@@ -195,7 +195,7 @@ def resample1_cutie_pc(var1_index, var2_index, samp_var1, samp_var2, **kwargs):
         if kwargs['forward'] is True:
             if kwargs['param'] == 'p':
                 # fold change p-value restraint
-                if fold:
+                if kwargs['fold']:
                     if (p_value > kwargs['threshold'] and
                         p_value > original_p * kwargs['fold_value']) or \
                             np.isnan(p_value):
@@ -204,7 +204,7 @@ def resample1_cutie_pc(var1_index, var2_index, samp_var1, samp_var2, **kwargs):
                     exceeds[s] += 1
             elif kwargs['param'] == 'r':
                 # fold change r-value restraint
-                if fold:
+                if kwargs['fold']:
                     if (np.abs(r_value) < kwargs['threshold'] and
                         np.abs(r_value) < np.abs(original_r) * kwargs['fold_value']) or \
                             np.isnan(r_value):
@@ -215,7 +215,7 @@ def resample1_cutie_pc(var1_index, var2_index, samp_var1, samp_var2, **kwargs):
         elif kwargs['forward'] is False:
             if kwargs['param'] == 'p':
                 # fold change p-value restraint
-                if fold:
+                if kwargs['fold']:
                     if (p_value < kwargs['threshold'] and
                         p_value < original_p / kwargs['fold_value']):
                         exceeds[s] += 1
@@ -223,7 +223,7 @@ def resample1_cutie_pc(var1_index, var2_index, samp_var1, samp_var2, **kwargs):
                     exceeds[s] += 1
             elif kwargs['param'] == 'r':
                 # fold change p-value restraint
-                if fold:
+                if kwargs['fold']:
                     if (np.abs(r_value) > kwargs['threshold'] and
                         np.abs(r_value) > np.abs(original_r) * kwargs['fold_value']) or \
                             np.isnan(r_value):
