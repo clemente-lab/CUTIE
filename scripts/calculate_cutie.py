@@ -225,7 +225,10 @@ def calculate_cutie(input_config_fp):
         metric_set_to_indicator = {}
         for region in region_sets:
             region_truths = {}
-            region_truths['1'] = set(initial_corr).difference(region_sets[region])
+            if forward:
+                region_truths['1'] = set(initial_corr).difference(region_sets[region])
+            else:
+                region_truths['1'] = region_sets[region]
             metric_set_to_indicator[region] = utils.return_indicators(
                 n_var1, n_var2, initial_corr, region_truths, 1)['1']
 

@@ -186,10 +186,9 @@ def resample1_cutie_pc(var1_index, var2_index, samp_var1, samp_var2, **kwargs):
 
         # update reverse, maxp, and minr
         # sign is artificially 0 since we are not interested in that
-        # Forward is True since we only apply Cook's D to TP/FP separation
         reverse, maxp, minr = update_rev_extrema_rp(0, r_value, p_value,
                                                     [s], reverse, maxp, minr,
-                                                    True)
+                                                    forward)
 
 
         if kwargs['forward'] is True:
@@ -488,13 +487,10 @@ def calculate_incorrect_sets(initial_corr, samp_var1, samp_var2, infln_metrics,
                     threshold=threshold, fold=fold,
                     fold_value=fold_value, param=param, forward=forward)
 
-                # if exceeds == 0 then it is a TP in the forward case, or a TN in the rev case
-                if forward:
-                    if exceeds.sum() != 0:
-                        infln_sets[metric].add(pair)
-                else:
-                    if exceeds.sum() == 0:
-                        infln_sets[metric].add(pair)
+                # if exceeds sum != 0 then that means the corr was incorrectly classified
+                if exceeds.sum() != 0:
+                    infln_sets[metric].add(pair)
+
     return infln_sets
 
 
