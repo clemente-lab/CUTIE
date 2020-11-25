@@ -76,6 +76,10 @@ def calculate_cutie(input_config_fp):
     forward_stats = ['pearson',  'spearman', 'kendall', 'mine']
     reverse_stats = ['rpearson', 'rspearman', 'rkendall', 'rmine']
     all_stats = forward_stats + reverse_stats
+    if statistic in forward_stats:
+        forward = True
+    elif statistc in reverse_stats:
+        forward = False
 
     if statistic not in all_stats:
         raise ValueError('Invalid statistic: %s chosen' % statistic)
@@ -167,9 +171,9 @@ def calculate_cutie(input_config_fp):
             'dffits': statistics.dffits,
             'dsr': statistics.dsr
         }
-        (FP_infln_sets, region_combs, region_sets) = statistics.pointwise_comparison(
+        (incorrect_infln_sets, region_combs, region_sets) = statistics.pointwise_comparison(
             infln_metrics, infln_mapping, samp_var1, samp_var2, initial_corr,
-            threshold, fold_value, fold, param)
+            threshold, fold_value, fold, param, forward)
 
         for region in region_combs:
             output.write_log('The amount of unique elements in set ' +
@@ -178,12 +182,18 @@ def calculate_cutie(input_config_fp):
 
         # report results
         for metric in infln_metrics:
-            metric_FP = FP_infln_sets[metric]
+            metric_incorrect = incorrect_infln_sets[metric]
+            if forward:
+                false_corrs = len(metric_incorrect)
+                true_corrs = len(initial_corr) - len(metric_incorrect)
+            else:
+                false_corrs = len(initial_corr) - len(metric_incorrect)
+                true_corrs = len(metric_incorrect)
+
             output.write_log('The number of false correlations according to ' +
-                             metric + ' is ' + str(len(metric_FP)), log_fp)
+                             metric + ' is ' + str(false_corrs), log_fp)
             output.write_log('The number of true correlations according to ' +
-                             metric + ' is ' + str(len(initial_corr) - len(metric_FP)),
-                             log_fp)
+                             metric + ' is ' + str(true_corrs), log_fp)
 
     # return sets of interest; some of these will be empty dicts depending
     # on the statistic
@@ -241,12 +251,10 @@ def calculate_cutie(input_config_fp):
             stat_names = ['pvalues', 'correlations', 'r2vals',
                 'indicators','TP_rev_indicators', 'FP_rev_indicators',
                 'extreme_p', 'extreme_r', 'p_ratio', 'r2_ratio']
-            forward = True
         elif statistic in reverse_stats:
             stat_names = ['pvalues', 'correlations', 'r2vals',
                 'indicators', 'FN_rev_indicators', 'TN_rev_indicators',
                 'extreme_p', 'extreme_r', 'p_ratio', 'r2_ratio']
-            forward = False
 
         # for pointwise
         if corr_compare:
