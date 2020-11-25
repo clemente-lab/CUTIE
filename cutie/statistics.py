@@ -188,7 +188,7 @@ def resample1_cutie_pc(var1_index, var2_index, samp_var1, samp_var2, **kwargs):
         # sign is artificially 0 since we are not interested in that
         reverse, maxp, minr = update_rev_extrema_rp(0, r_value, p_value,
                                                     [s], reverse, maxp, minr,
-                                                    forward)
+                                                    kwargs['forward'])
 
 
         if kwargs['forward'] is True:
