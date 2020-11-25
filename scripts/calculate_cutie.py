@@ -78,7 +78,7 @@ def calculate_cutie(input_config_fp):
     all_stats = forward_stats + reverse_stats
     if statistic in forward_stats:
         forward = True
-    elif statistc in reverse_stats:
+    elif statistic in reverse_stats:
         forward = False
 
     if statistic not in all_stats:
