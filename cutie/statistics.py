@@ -276,7 +276,8 @@ def cookd(var1_index, var2_index, samp_var1, samp_var2, **kwargs):
 
     # for x in [kwargs['influence1'],kwargs['influence2']]:
     # c is the distance and p is p-value
-    (c, p) = x.cooks_distance
+    # (c, p) = x.cooks_distance
+    (c, p) = kwargs['influence'].cooks_distance
 
     new_cooksd = np.zeros(n_samp)
     new_cooksp = np.zeros(n_samp)
