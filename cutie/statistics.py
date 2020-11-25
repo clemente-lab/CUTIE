@@ -544,7 +544,7 @@ def pointwise_comparison(infln_metrics, infln_mapping, samp_var1, samp_var2,
     region_sets, region_combs = utils.calculate_intersection(infln_metrics,
                                                              infln_sets_list)
 
-    return infln_sets_list, region_combs, region_sets
+    return infln_sets, region_combs, region_sets
 
 
 def get_initial_corr(n_var1, n_var2, pvalues, corrs, threshold, param, paired):
