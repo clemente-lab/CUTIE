@@ -699,7 +699,8 @@ def diag_plots(samp_ids, var1_names, var2_names, samp_counter, var1_counter,
                          'var_number': var_counter}
         name_mapping = {'samp_number': samp_ids,
                          'var_number': var1_names}
-
+        file_mapping = {'samp_number': 'influential_samples',
+                         'var1_number': 'influential_variables',
     else:
         diag_stats = ['samp_number', 'var1_number', 'var2_number']
         stats_mapping = {'samp_number': samp_counter,
@@ -708,7 +709,9 @@ def diag_plots(samp_ids, var1_names, var2_names, samp_counter, var1_counter,
         name_mapping = {'samp_number': samp_ids,
                          'var1_number': var1_names,
                          'var2_number': var2_names}
-
+        file_mapping = {'samp_number': 'influential_samples',
+                         'var1_number': 'influential_variables1',
+                         'var2_number': 'influential_variables2'}
 
     # for each diagnostic quantity
     for stats in diag_stats:
@@ -723,7 +726,7 @@ def diag_plots(samp_ids, var1_names, var2_names, samp_counter, var1_counter,
             df = pd.DataFrame(counts, columns=['index', 'count'])
             df['name'] = df['index'].apply(lambda x: name_mapping[stats][int(x)])
 
-            df.to_csv(working_dir + 'data_processing/counter_'  + stats + \
+            df.to_csv(working_dir + 'data_processing/' + file_mapping[stats] + \
                 '_resample' + str(i+1) + '.txt', sep='\t', index=False)
 
             sns.set_style('white')
@@ -739,7 +742,7 @@ def diag_plots(samp_ids, var1_names, var2_names, samp_counter, var1_counter,
             ax = plt.gca()
             #fig.patch.set_visible(False)
             #ax.patch.set_visible(False)
-            diag_fp = working_dir + 'graphs/counter_' + stats + \
+            diag_fp = working_dir + 'graphs/' + file_mapping[stats] + \
                       '_resample' + str(i+1) + '.pdf'
             fig.set_tight_layout(True)
             plt.tick_params(axis='both', which='both', top=False, right=False)
