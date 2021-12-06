@@ -1,0 +1,25 @@
+Begin logging at 2021-07-22T09:50:34.518066
+The original command was -i /home/matt/cutie/configs/EAEscore-bile-config.ini
+The input_config_fp md5 was 235792fa5fb77767730b1981f7926130
+The length of variables for file 2 is 1
+The number of samples for file 2 is 30
+The md5 of samp_var2 was 265fed5be99a2e368f212c47de253d37
+The length of variables for file 1 is 20
+The number of samples for file 1 is 24
+The md5 of samp_var1 was 893a9849a605228c0c2de1977279e7db
+There are 24 samples
+The first 3 samples are ['287', '288', '289']
+The first 3 var1 are ['Alpha Muricholic Acid', 'Beta Muricholic Acid', 'Chenodeoxycholic Acid']
+Var2 was ['EAE Cummulative Score']
+The parameter chosen was p
+The statistic chosen was kendall
+The type of mc correction used was fdr
+The threshold value was 0.0125
+The number of correlations is 20
+The length of initial_corr is 5
+The number of false correlations for 1 is 3
+The number of true correlations for 1 is 2
+The number of reversed correlations for TP/FN1 is 0
+The number of reversed correlations for FP/TN1 is 0
+The runtime was 5.594494895
+Ended logging at 2021-07-22T09:50:40.242754

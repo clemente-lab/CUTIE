@@ -1,0 +1,4 @@
+index	count	name
+0.0	1.0	Ampicillin EAE
+1.0	0.0	Control EAE
+2.0	0.0	Vancomycin EAE

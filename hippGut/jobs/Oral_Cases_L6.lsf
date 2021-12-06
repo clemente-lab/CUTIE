@@ -1,0 +1,18 @@
+#!/bin/bash
+#BSUB -q premium
+#BSUB -W 96:00
+#BSUB -J Oral_Cases_L6
+#BSUB -P acc_clemej05a
+#BSUB -n 1 
+#BSUB -R "span[hosts=1]"
+#BSUB -R rusage[mem=10000]
+#BSUB -o /sc/arion/projects/clemej05a/jakleen/hippGut/pilot/fig_3b/cutie_analysis/CUTIE/hippGut/logs/Oral_Cases_L6_%J.stdout
+#BSUB -eo /sc/arion/projects/clemej05a/jakleen/hippGut/pilot/fig_3b/cutie_analysis/CUTIE/hippGut/logs/Oral_Cases_L6_%J.stderr
+#BSUB -L /bin/bash
+
+ml purge
+ml anaconda3 
+source activate cutie
+
+python /sc/arion/projects/clemej05a/jakleen/hippGut/pilot/fig_3b/cutie_analysis/CUTIE/hippGut/../scripts/calculate_cutie.py -i /sc/arion/projects/clemej05a/jakleen/hippGut/pilot/fig_3b/cutie_analysis/CUTIE/hippGut/inputs/config_files/config_Oral_Cases_L6.ini
+

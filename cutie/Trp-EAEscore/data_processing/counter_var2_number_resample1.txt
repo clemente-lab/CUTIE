@@ -1,0 +1,2 @@
+index	count	name
+0.0	2.0	EAE Cummulative Score

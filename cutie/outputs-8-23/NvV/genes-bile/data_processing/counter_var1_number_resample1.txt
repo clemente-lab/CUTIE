@@ -1,0 +1,21 @@
+index	count	name
+0.0	421.0	Alpha Muricholic Acid
+1.0	421.0	Beta Muricholic Acid
+2.0	63.0	Chenodeoxycholic Acid
+3.0	249.0	Cholic Acid
+4.0	292.0	Deoxycholic Acid
+5.0	0.0	Glycochenodeoxycholic Acid
+6.0	0.0	Glycocholic Acid
+7.0	12.0	Glycodeoxycholic Acid
+8.0	18.0	Glycolithocholic Acid
+9.0	13.0	Glycoursodeoxycholic Acid
+10.0	344.0	Lithocholic Acid
+11.0	237.0	Omega Muricholic Acid
+12.0	138.0	Tauro Alpha Muricholic Acid
+13.0	143.0	Tauro Beta Muricholic Acid
+14.0	21.0	Taurochenodeoxycholic Acid
+15.0	165.0	Taurocholic Acid
+16.0	342.0	Taurodeoxycholic Acid
+17.0	320.0	Taurolithocholic Acid
+18.0	57.0	Tauroursodeoxycholic Acid
+19.0	29.0	Ursodeoxycholic Acid

@@ -1,0 +1,25 @@
+Begin logging at 2021-08-19T15:33:31.566744
+The original command was -i /home/matt/cutie/configs-new/NvC/gene-Trp-both.ini
+The input_config_fp md5 was 379dee8b6c09ab936fd0c0ab151bc13d
+The length of variables for file 2 is 440
+The number of samples for file 2 is 9
+The md5 of samp_var2 was 6a67330c181b0bb1d7b6ce6296b6d1eb
+The length of variables for file 1 is 6
+The number of samples for file 1 is 36
+The md5 of samp_var1 was 82c0a87f2488270478e014629c2a64c8
+There are 7 samples
+The first 3 samples are ['208', '209', '210']
+The first 3 var1 are ['3-Indolelactic Acid', '3-Indolepropionic Acid', '3-Indoxyl Sulfate']
+The first 3 var2 are ['Igsf5', 'Btbd17', 'Lck']
+The parameter chosen was p
+The statistic chosen was kendall
+The type of mc correction used was fdr
+The threshold value was 0.05
+The number of correlations is 2640
+The length of initial_corr is 179
+The number of false correlations for 1 is 158
+The number of true correlations for 1 is 21
+The number of reversed correlations for TP/FN1 is 0
+The number of reversed correlations for FP/TN1 is 0
+The runtime was 12.767396943
+Ended logging at 2021-08-19T15:33:44.577732

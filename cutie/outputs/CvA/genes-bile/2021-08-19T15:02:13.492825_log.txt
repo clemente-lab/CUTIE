@@ -1,0 +1,25 @@
+Begin logging at 2021-08-19T15:02:13.492825
+The original command was -i /home/matt/cutie/configs-new/CvA/gene-bile-config.ini
+The input_config_fp md5 was be8a11164f51bf8a77789a2eaff88167
+The length of variables for file 2 is 845
+The number of samples for file 2 is 9
+The md5 of samp_var2 was 5892549cfee6ac5baa73ed5decd24096
+The length of variables for file 1 is 20
+The number of samples for file 1 is 24
+The md5 of samp_var1 was 893a9849a605228c0c2de1977279e7db
+There are 8 samples
+The first 3 samples are ['287', '293', '295']
+The first 3 var1 are ['Alpha Muricholic Acid', 'Beta Muricholic Acid', 'Chenodeoxycholic Acid']
+The first 3 var2 are ['Dlat', 'Btbd17', 'Mx1']
+The parameter chosen was p
+The statistic chosen was kendall
+The type of mc correction used was fdr
+The threshold value was 0.05
+The number of correlations is 16900
+The length of initial_corr is 2555
+The number of false correlations for 1 is 1992
+The number of true correlations for 1 is 563
+The number of reversed correlations for TP/FN1 is 0
+The number of reversed correlations for FP/TN1 is 0
+The runtime was 46.135426990999996
+Ended logging at 2021-08-19T15:03:00.673773

@@ -1,0 +1,7 @@
+index	count	name
+0.0	4.0	3-Indolelactic Acid
+1.0	17.0	3-Indolepropionic Acid
+2.0	12.0	3-Indoxyl Sulfate
+3.0	0.0	4-Ethylphenyl Sulfate
+4.0	0.0	Tryptophan
+5.0	14.0	p-Cresol Sulfate

@@ -1,0 +1,25 @@
+Begin logging at 2021-08-19T15:33:12.746547
+The original command was -i /home/matt/cutie/configs-new/CvA/gene-Trp-EAE.ini
+The input_config_fp md5 was cec01ce22c740495edb07a25a9e45927
+The length of variables for file 2 is 845
+The number of samples for file 2 is 9
+The md5 of samp_var2 was 5892549cfee6ac5baa73ed5decd24096
+The length of variables for file 1 is 6
+The number of samples for file 1 is 18
+The md5 of samp_var1 was d233b6b551a0ea147f0fa86df09e0600
+There are 6 samples
+The first 3 samples are ['287', '293', '295']
+The first 3 var1 are ['3-Indolelactic Acid', '3-Indolepropionic Acid', '3-Indoxyl Sulfate']
+The first 3 var2 are ['Dlat', 'Btbd17', 'Mx1']
+The parameter chosen was p
+The statistic chosen was kendall
+The type of mc correction used was fdr
+The threshold value was 0.05
+The number of correlations is 5070
+The length of initial_corr is 686
+The number of false correlations for 1 is 598
+The number of true correlations for 1 is 88
+The number of reversed correlations for TP/FN1 is 0
+The number of reversed correlations for FP/TN1 is 0
+The runtime was 17.213919897
+Ended logging at 2021-08-19T15:33:30.464174

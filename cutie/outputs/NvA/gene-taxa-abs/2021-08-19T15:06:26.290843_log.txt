@@ -1,0 +1,25 @@
+Begin logging at 2021-08-19T15:06:26.290843
+The original command was -i /home/matt/cutie/configs-new/NvA/gene-taxa-config-absab.ini
+The input_config_fp md5 was 0bd3dd9a4f17a71bf823824c58b5f2df
+The length of variables for file 2 is 816
+The number of samples for file 2 is 9
+The md5 of samp_var2 was e6b6b469ea1c7ef485e8758164398da7
+The length of variables for file 1 is 208
+The number of samples for file 1 is 48
+The md5 of samp_var1 was 9ab458e87079855535c212f28fd93ffb
+There are 8 samples
+The first 3 samples are ['208', '209', '210']
+The first 3 var1 are ['Bacteria_Actinobacteriota_Actinobacteria_Actinomycetales_Actinomycetaceae_Actinomyces_Schaalia odontolytica', 'Bacteria_Actinobacteriota_Actinobacteria_Bifidobacteriales_Bifidobacteriaceae_Bifidobacterium', 'Bacteria_Actinobacteriota_Actinobacteria_Corynebacteriales_Corynebacteriaceae_Corynebacterium_Corynebacterium durum']
+The first 3 var2 are ['Narf', 'Fap', '1-Sep']
+The parameter chosen was p
+The statistic chosen was kendall
+The type of mc correction used was fdr
+The threshold value was 0.05
+The number of correlations is 169728
+The length of initial_corr is 13318
+The number of false correlations for 1 is 10798
+The number of true correlations for 1 is 2520
+The number of reversed correlations for TP/FN1 is 0
+The number of reversed correlations for FP/TN1 is 170
+The runtime was 144.204822658
+Ended logging at 2021-08-19T15:08:52.636196

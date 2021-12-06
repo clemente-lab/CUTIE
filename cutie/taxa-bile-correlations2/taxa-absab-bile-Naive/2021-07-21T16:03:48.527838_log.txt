@@ -1,0 +1,25 @@
+Begin logging at 2021-07-21T16:03:48.527838
+The original command was -i /home/matt/cutie/configs/taxa-absab-bile-Naive.ini
+The input_config_fp md5 was 8779f605df4fb12381040a173b5382b0
+The length of variables for file 2 is 208
+The number of samples for file 2 is 24
+The md5 of samp_var2 was aa80f153a128d2d9f566558ad149b45e
+The length of variables for file 1 is 19
+The number of samples for file 1 is 24
+The md5 of samp_var1 was 150dc608505012823dbef3b6408a34ea
+There are 24 samples
+The first 3 samples are ['206', '207', '208']
+The first 3 var1 are ['Alpha Muricholic Acid', 'Beta Muricholic Acid', 'Chenodeoxycholic Acid']
+The first 3 var2 are ['Bacteria_Actinobacteriota_Actinobacteria_Actinomycetales_Actinomycetaceae_Actinomyces_Schaalia odontolytica', 'Bacteria_Actinobacteriota_Actinobacteria_Bifidobacteriales_Bifidobacteriaceae_Bifidobacterium', 'Bacteria_Actinobacteriota_Actinobacteria_Corynebacteriales_Corynebacteriaceae_Corynebacterium_Corynebacterium durum']
+The parameter chosen was p
+The statistic chosen was kendall
+The type of mc correction used was fdr
+The threshold value was 0.007479861910241657
+The number of correlations is 3952
+The length of initial_corr is 520
+The number of false correlations for 1 is 195
+The number of true correlations for 1 is 325
+The number of reversed correlations for TP/FN1 is 0
+The number of reversed correlations for FP/TN1 is 0
+The runtime was 22.537397759
+Ended logging at 2021-07-21T16:04:11.531305

@@ -1,0 +1,625 @@
+var1	var2	pvalues	correlations	r2vals	indicators	TP_rev_indicators	FP_rev_indicators	extreme_p	extreme_r	p_ratio	r2_ratio
+Bacteria_Actinobacteriota_Actinobacteria_Actinomycetales_Actinomycetaceae_Actinomyces_Schaalia odontolytica	Ampicillin EAE	0.8272593465627114	0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.2088107606822835	0.0
+Bacteria_Actinobacteriota_Actinobacteria_Actinomycetales_Actinomycetaceae_Actinomyces_Schaalia odontolytica	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Actinobacteriota_Actinobacteria_Actinomycetales_Actinomycetaceae_Actinomyces_Schaalia odontolytica	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Actinobacteriota_Actinobacteria_Bifidobacteriales_Bifidobacteriaceae_Bifidobacterium	Ampicillin EAE	0.03404927476867484	-0.6182840223353117	0.38227513227513216	-1.0	-1.0	-1.0	0.1361111111111111	-0.48795003647426666	3.9974746022001213	0.6228373702422149
+Bacteria_Actinobacteriota_Actinobacteria_Bifidobacteriales_Bifidobacteriaceae_Bifidobacterium	Control EAE	0.15172772231980938	-0.44543540318737396	0.1984126984126984	0.0	0.0	0.0	1.0	0.0	6.590753388442853	0.0
+Bacteria_Actinobacteriota_Actinobacteria_Bifidobacteriales_Bifidobacteriaceae_Bifidobacterium	Vancomycin EAE	0.8694170607412391	0.052414241836095915	0.0027472527472527475	0.0	0.0	0.0	1.0	0.0	1.150195970559204	0.0
+Bacteria_Actinobacteriota_Actinobacteria_Corynebacteriales_Corynebacteriaceae_Corynebacterium_Corynebacterium durum	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Actinobacteriota_Actinobacteria_Corynebacteriales_Corynebacteriaceae_Corynebacterium_Corynebacterium durum	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Actinobacteriota_Actinobacteria_Corynebacteriales_Corynebacteriaceae_Corynebacterium_Corynebacterium durum	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Actinobacteriota_Actinobacteria_Corynebacteriales_Corynebacteriaceae_Corynebacterium	Ampicillin EAE	1.0	0.0	0.0	0.0	0.0	0.0	1.0	0.0	1.0	
+Bacteria_Actinobacteriota_Actinobacteria_Corynebacteriales_Corynebacteriaceae_Corynebacterium	Control EAE	0.27523352407483437	-0.3571428571428571	0.12755102040816324	0.0	0.0	0.0	1.0	0.0	3.633278334684644	0.0
+Bacteria_Actinobacteriota_Actinobacteria_Corynebacteriales_Corynebacteriaceae_Corynebacterium	Vancomycin EAE	0.13898246029318553	-0.47172817652486326	0.22252747252747257	0.0	0.0	0.0	1.0	0.0	7.195152524214102	0.0
+Bacteria_Actinobacteriota_Actinobacteria_Corynebacteriales_Corynebacteriaceae_Lawsonella_uncultured bacterium	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Actinobacteriota_Actinobacteria_Corynebacteriales_Corynebacteriaceae_Lawsonella_uncultured bacterium	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Actinobacteriota_Actinobacteria_Corynebacteriales_Corynebacteriaceae_Lawsonella_uncultured bacterium	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Actinobacteriota_Actinobacteria_Corynebacteriales_Dietziaceae_Dietzia	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Actinobacteriota_Actinobacteria_Corynebacteriales_Dietziaceae_Dietzia	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Actinobacteriota_Actinobacteria_Corynebacteriales_Dietziaceae_Dietzia	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Actinobacteriota_Actinobacteria_Micrococcales_Dermacoccaceae_Dermacoccus_Dermacoccus nishinomiyaensis	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Actinobacteriota_Actinobacteria_Micrococcales_Dermacoccaceae_Dermacoccus_Dermacoccus nishinomiyaensis	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Actinobacteriota_Actinobacteria_Micrococcales_Dermacoccaceae_Dermacoccus_Dermacoccus nishinomiyaensis	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Actinobacteriota_Actinobacteria_Micrococcales_Micrococcaceae_Micrococcus	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Actinobacteriota_Actinobacteria_Micrococcales_Micrococcaceae_Micrococcus	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Actinobacteriota_Actinobacteria_Micrococcales_Micrococcaceae_Micrococcus	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Actinobacteriota_Actinobacteria_Micrococcales_Micrococcaceae_Rothia	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Actinobacteriota_Actinobacteria_Micrococcales_Micrococcaceae_Rothia	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Actinobacteriota_Actinobacteria_Micrococcales_Micrococcaceae_Rothia	Vancomycin EAE	0.8272593465627114	0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.2088107606822835	0.0
+Bacteria_Actinobacteriota_Actinobacteria_Propionibacteriales_Propionibacteriaceae_Cutibacterium	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Actinobacteriota_Actinobacteria_Propionibacteriales_Propionibacteriaceae_Cutibacterium	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Actinobacteriota_Actinobacteria_Propionibacteriales_Propionibacteriaceae_Cutibacterium	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Actinobacteriota_Coriobacteriia_Coriobacteriales_Atopobiaceae_Coriobacteriaceae UCG-002_uncultured bacterium	Ampicillin EAE	0.17886904761904762	-0.42857142857142855	0.18367346938775508	0.0	0.0	0.0	1.0	0.0	5.590682196339434	0.0
+Bacteria_Actinobacteriota_Coriobacteriia_Coriobacteriales_Atopobiaceae_Coriobacteriaceae UCG-002_uncultured bacterium	Control EAE	0.9007802600472399	-0.036369648372665396	0.0013227513227513227	0.0	0.0	0.0	1.0	0.0	1.110148661503258	0.0
+Bacteria_Actinobacteriota_Coriobacteriia_Coriobacteriales_Atopobiaceae_Coriobacteriaceae UCG-002_uncultured bacterium	Vancomycin EAE	0.9007802600472399	0.036369648372665396	0.0013227513227513227	0.0	0.0	0.0	1.0	0.0	1.110148661503258	0.0
+Bacteria_Actinobacteriota_Coriobacteriia_Coriobacteriales_Coriobacteriaceae_Collinsella	Ampicillin EAE	0.24981744183594812	0.36689969285267143	0.13461538461538464	0.0	0.0	0.0	1.0	0.0	4.002923065142453	0.0
+Bacteria_Actinobacteriota_Coriobacteriia_Coriobacteriales_Coriobacteriaceae_Collinsella	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Actinobacteriota_Coriobacteriia_Coriobacteriales_Coriobacteriaceae_Collinsella	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Actinobacteriota_Coriobacteriia_Coriobacteriales_Coriobacteriaceae_Collinsella_uncultured bacterium	Ampicillin EAE	0.5126907602619235	-0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.9504935089704365	0.0
+Bacteria_Actinobacteriota_Coriobacteriia_Coriobacteriales_Coriobacteriaceae_Collinsella_uncultured bacterium	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Actinobacteriota_Coriobacteriia_Coriobacteriales_Coriobacteriaceae_Collinsella_uncultured bacterium	Vancomycin EAE	0.27523352407483437	-0.3571428571428571	0.12755102040816324	0.0	0.0	0.0	1.0	0.0	3.633278334684644	0.0
+Bacteria_Actinobacteriota_Coriobacteriia_Coriobacteriales_Coriobacteriales Incertae Sedis_uncultured_gut metagenome	Ampicillin EAE	0.8694170607412391	-0.052414241836095915	0.0027472527472527475	0.0	0.0	0.0	1.0	0.0	1.150195970559204	0.0
+Bacteria_Actinobacteriota_Coriobacteriia_Coriobacteriales_Coriobacteriales Incertae Sedis_uncultured_gut metagenome	Control EAE	0.25175949861106117	-0.3401680257083045	0.11571428571428571	0.0	0.0	0.0	1.0	0.0	3.9720447709696245	0.0
+Bacteria_Actinobacteriota_Coriobacteriia_Coriobacteriales_Coriobacteriales Incertae Sedis_uncultured_gut metagenome	Vancomycin EAE	0.7743488608474193	0.0890870806374748	0.007936507936507936	0.0	0.0	0.0	1.0	0.0	1.2914075948993278	0.0
+Bacteria_Actinobacteriota_Coriobacteriia_Coriobacteriales_Eggerthellaceae_Adlercreutzia	Ampicillin EAE	0.2514790234630305	-0.3563483225498992	0.12698412698412698	0.0	0.0	0.0	1.0	0.0	3.9764748018715292	0.0
+Bacteria_Actinobacteriota_Coriobacteriia_Coriobacteriales_Eggerthellaceae_Adlercreutzia	Control EAE	0.5330356744917513	-0.18184824186332696	0.03306878306878306	0.0	0.0	0.0	1.0	0.0	1.876047041229461	0.0
+Bacteria_Actinobacteriota_Coriobacteriia_Coriobacteriales_Eggerthellaceae_Adlercreutzia	Vancomycin EAE	0.27523352407483437	-0.3571428571428571	0.12755102040816324	0.0	0.0	0.0	1.0	0.0	3.633278334684644	0.0
+Bacteria_Actinobacteriota_Coriobacteriia_Coriobacteriales_Eggerthellaceae_Enterorhabdus_uncultured bacterium	Ampicillin EAE	0.8986690010530557	-0.03779644730092272	0.0014285714285714284	0.0	0.0	0.0	1.0	0.0	1.1127567534077676	0.0
+Bacteria_Actinobacteriota_Coriobacteriia_Coriobacteriales_Eggerthellaceae_Enterorhabdus_uncultured bacterium	Control EAE	0.27509920634920637	-0.3571428571428571	0.12755102040816324	0.0	0.0	0.0	1.0	0.0	3.6350522899386943	0.0
+Bacteria_Actinobacteriota_Coriobacteriia_Coriobacteriales_Eggerthellaceae_Enterorhabdus_uncultured bacterium	Vancomycin EAE	0.4254200204693487	-0.24174688920761409	0.05844155844155844	0.0	0.0	0.0	1.0	0.0	2.350618099488455	0.0
+Bacteria_Actinobacteriota_Coriobacteriia_Coriobacteriales_Eggerthellaceae_Parvibacter_uncultured bacterium	Ampicillin EAE	0.8272593465627114	-0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.2088107606822835	0.0
+Bacteria_Actinobacteriota_Coriobacteriia_Coriobacteriales_Eggerthellaceae_Parvibacter_uncultured bacterium	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Actinobacteriota_Coriobacteriia_Coriobacteriales_Eggerthellaceae_Parvibacter_uncultured bacterium	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Actinobacteriota_Coriobacteriia_Coriobacteriales_Eggerthellaceae	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Actinobacteriota_Coriobacteriia_Coriobacteriales_Eggerthellaceae	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Actinobacteriota_Coriobacteriia_Coriobacteriales_Eggerthellaceae	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Bacteroidaceae_Bacteroides_Bacteroides massiliensis	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Bacteroidaceae_Bacteroides_Bacteroides massiliensis	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Bacteroidaceae_Bacteroides_Bacteroides massiliensis	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Bacteroidaceae_Bacteroides_Bacteroides plebeius	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Bacteroidaceae_Bacteroides_Bacteroides plebeius	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Bacteroidaceae_Bacteroides_Bacteroides plebeius	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Bacteroidaceae_Bacteroides_Bacteroides stercoris	Ampicillin EAE	0.5126907602619235	-0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.9504935089704365	0.0
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Bacteroidaceae_Bacteroides_Bacteroides stercoris	Control EAE	0.27523352407483437	0.3571428571428571	0.12755102040816324	0.0	0.0	0.0	1.0	0.0	3.633278334684644	0.0
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Bacteroidaceae_Bacteroides_Bacteroides stercoris	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Bacteroidaceae_Bacteroides_Bacteroides vulgatus	Ampicillin EAE	0.26182770092717633	-0.32732683535398854	0.10714285714285712	0.0	0.0	0.0	1.0	0.0	3.819305583247419	0.0
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Bacteroidaceae_Bacteroides_Bacteroides vulgatus	Control EAE	0.4254200204693487	-0.24174688920761409	0.05844155844155844	0.0	0.0	0.0	1.0	0.0	2.350618099488455	0.0
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Bacteroidaceae_Bacteroides_Bacteroides vulgatus	Vancomycin EAE	0.9048611111111111	0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.1051419800460476	0.0
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Bacteroidaceae_Bacteroides	Ampicillin EAE	0.5484126984126985	-0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.8234442836468885	0.0
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Bacteroidaceae_Bacteroides	Control EAE	0.7195436507936508	0.14285714285714285	0.02040816326530612	0.0	0.0	0.0	1.0	0.0	1.3897697504480904	0.0
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Bacteroidaceae_Bacteroides	Vancomycin EAE	0.9048611111111111	0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.1051419800460476	0.0
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Barnesiellaceae_Barnesiella	Ampicillin EAE	0.12663045794761718	-0.4999999999999999	0.2499999999999999	0.0	0.0	0.0	1.0	0.0	7.896994263525975	0.0
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Barnesiellaceae_Barnesiella	Control EAE	0.5126907602619235	-0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.9504935089704365	0.0
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Barnesiellaceae_Barnesiella	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Marinifilaceae_Butyricimonas	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Marinifilaceae_Butyricimonas	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Marinifilaceae_Butyricimonas	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Marinifilaceae_Butyricimonas_uncultured bacterium	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Marinifilaceae_Butyricimonas_uncultured bacterium	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Marinifilaceae_Butyricimonas_uncultured bacterium	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Marinifilaceae_Odoribacter	Ampicillin EAE	0.12663045794761718	0.4999999999999999	0.2499999999999999	0.0	0.0	0.0	1.0	0.0	7.896994263525975	0.0
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Marinifilaceae_Odoribacter	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Marinifilaceae_Odoribacter	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Muribaculaceae_Muribaculaceae	Ampicillin EAE	0.27509920634920637	-0.3571428571428571	0.12755102040816324	0.0	0.0	0.0	1.0	0.0	3.6350522899386943	0.0
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Muribaculaceae_Muribaculaceae	Control EAE	0.06101190476190476	-0.5714285714285714	0.32653061224489793	0.0	0.0	0.0	1.0	0.0	16.390243902439025	0.0
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Muribaculaceae_Muribaculaceae	Vancomycin EAE	0.5484126984126985	0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.8234442836468885	0.0
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Muribaculaceae_Muribaculaceae_uncultured bacterium	Ampicillin EAE	0.5484126984126985	-0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.8234442836468885	0.0
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Muribaculaceae_Muribaculaceae_uncultured bacterium	Control EAE	0.7195436507936508	0.14285714285714285	0.02040816326530612	0.0	0.0	0.0	1.0	0.0	1.3897697504480904	0.0
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Muribaculaceae_Muribaculaceae_uncultured bacterium	Vancomycin EAE	1.0951388888888889	0.0	0.0	0.0	0.0	0.0	1.0	0.0	0.9131261889663919	
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Prevotellaceae_Alloprevotella_Prevotellaceae bacterium	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Prevotellaceae_Alloprevotella_Prevotellaceae bacterium	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Prevotellaceae_Alloprevotella_Prevotellaceae bacterium	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Prevotellaceae_Alloprevotella	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Prevotellaceae_Alloprevotella	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Prevotellaceae_Alloprevotella	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Prevotellaceae_Prevotella_Massiliprevotella massiliensis	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Prevotellaceae_Prevotella_Massiliprevotella massiliensis	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Prevotellaceae_Prevotella_Massiliprevotella massiliensis	Vancomycin EAE	0.12663045794761718	0.4999999999999999	0.2499999999999999	0.0	0.0	0.0	1.0	0.0	7.896994263525975	0.0
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Prevotellaceae_Prevotella_Prevotella melaninogenica	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Prevotellaceae_Prevotella_Prevotella melaninogenica	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Prevotellaceae_Prevotella_Prevotella melaninogenica	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Prevotellaceae_Prevotella_gut metagenome	Ampicillin EAE	0.27523352407483437	0.3571428571428571	0.12755102040816324	0.0	0.0	0.0	1.0	0.0	3.633278334684644	0.0
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Prevotellaceae_Prevotella_gut metagenome	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Prevotellaceae_Prevotella_gut metagenome	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Prevotellaceae_Prevotella	Ampicillin EAE	0.38281014365989596	-0.2545875386086578	0.06481481481481483	0.0	0.0	0.0	1.0	0.0	2.612260977306914	0.0
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Prevotellaceae_Prevotella	Control EAE	0.08540580828461942	-0.5345224838248488	0.28571428571428575	0.0	0.0	0.0	1.0	0.0	11.708805526053293	0.0
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Prevotellaceae_Prevotella	Vancomycin EAE	0.7195436507936508	-0.14285714285714285	0.02040816326530612	0.0	0.0	0.0	1.0	0.0	1.3897697504480904	0.0
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Prevotellaceae_uncultured	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Prevotellaceae_uncultured	Control EAE	0.5126907602619235	0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.9504935089704365	0.0
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Prevotellaceae_uncultured	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Prevotellaceae_uncultured_uncultured bacterium	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Prevotellaceae_uncultured_uncultured bacterium	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Prevotellaceae_uncultured_uncultured bacterium	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Rikenellaceae_Alistipes_Alistipes shahii	Ampicillin EAE	0.27523352407483437	-0.3571428571428571	0.12755102040816324	0.0	0.0	0.0	1.0	0.0	3.633278334684644	0.0
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Rikenellaceae_Alistipes_Alistipes shahii	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Rikenellaceae_Alistipes_Alistipes shahii	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Rikenellaceae_Alistipes	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Rikenellaceae_Alistipes	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Rikenellaceae_Alistipes	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Rikenellaceae_Alistipes_uncultured Alistipes	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Rikenellaceae_Alistipes_uncultured Alistipes	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Rikenellaceae_Alistipes_uncultured Alistipes	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Tannerellaceae_Parabacteroides_Parabacteroides merdae	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Tannerellaceae_Parabacteroides_Parabacteroides merdae	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Tannerellaceae_Parabacteroides_Parabacteroides merdae	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Tannerellaceae	Ampicillin EAE	0.12663045794761718	-0.4999999999999999	0.2499999999999999	0.0	0.0	0.0	1.0	0.0	7.896994263525975	0.0
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Tannerellaceae	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Bacteroidales_Tannerellaceae	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Flavobacteriales_Weeksellaceae_Cloacibacterium	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Flavobacteriales_Weeksellaceae_Cloacibacterium	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Flavobacteriales_Weeksellaceae_Cloacibacterium	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Sphingobacteriales_Sphingobacteriaceae_Sphingobacterium	Ampicillin EAE	0.8272593465627114	0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.2088107606822835	0.0
+Bacteria_Bacteroidota_Bacteroidia_Sphingobacteriales_Sphingobacteriaceae_Sphingobacterium	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Bacteroidota_Bacteroidia_Sphingobacteriales_Sphingobacteriaceae_Sphingobacterium	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Deinococcota_Deinococci_Deinococcales_Deinococcaceae_Deinococcus_Deinococcus xinjiangensis	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Deinococcota_Deinococci_Deinococcales_Deinococcaceae_Deinococcus_Deinococcus xinjiangensis	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Deinococcota_Deinococci_Deinococcales_Deinococcaceae_Deinococcus_Deinococcus xinjiangensis	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Desulfobacterota_Desulfovibrionia_Desulfovibrionales_Desulfovibrionaceae_Bilophila	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Desulfobacterota_Desulfovibrionia_Desulfovibrionales_Desulfovibrionaceae_Bilophila	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Desulfobacterota_Desulfovibrionia_Desulfovibrionales_Desulfovibrionaceae_Bilophila	Vancomycin EAE	0.12663045794761718	-0.4999999999999999	0.2499999999999999	0.0	0.0	0.0	1.0	0.0	7.896994263525975	0.0
+Bacteria_Firmicutes_Bacilli_Acholeplasmatales_Acholeplasmataceae_Anaeroplasma_uncultured bacterium	Ampicillin EAE	0.5484126984126985	-0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.8234442836468885	0.0
+Bacteria_Firmicutes_Bacilli_Acholeplasmatales_Acholeplasmataceae_Anaeroplasma_uncultured bacterium	Control EAE	0.9048611111111111	-0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.1051419800460476	0.0
+Bacteria_Firmicutes_Bacilli_Acholeplasmatales_Acholeplasmataceae_Anaeroplasma_uncultured bacterium	Vancomycin EAE	0.17886904761904762	0.42857142857142855	0.18367346938775508	0.0	0.0	0.0	1.0	0.0	5.590682196339434	0.0
+Bacteria_Firmicutes_Bacilli_Bacillales_Bacillaceae_Bacillus	Ampicillin EAE	0.5484126984126985	-0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.8234442836468885	0.0
+Bacteria_Firmicutes_Bacilli_Bacillales_Bacillaceae_Bacillus	Control EAE	0.9007802600472399	-0.036369648372665396	0.0013227513227513227	0.0	0.0	0.0	1.0	0.0	1.110148661503258	0.0
+Bacteria_Firmicutes_Bacilli_Bacillales_Bacillaceae_Bacillus	Vancomycin EAE	0.7083840532183997	0.10910894511799618	0.011904761904761902	0.0	0.0	0.0	1.0	0.0	1.4116636243527818	0.0
+Bacteria_Firmicutes_Bacilli_Erysipelotrichales_Erysipelatoclostridiaceae_Erysipelatoclostridiaceae_uncultured bacterium	Ampicillin EAE	0.8694170607412391	-0.052414241836095915	0.0027472527472527475	0.0	0.0	0.0	1.0	0.0	1.150195970559204	0.0
+Bacteria_Firmicutes_Bacilli_Erysipelotrichales_Erysipelatoclostridiaceae_Erysipelatoclostridiaceae_uncultured bacterium	Control EAE	0.8986690010530557	0.03779644730092272	0.0014285714285714284	0.0	0.0	0.0	1.0	0.0	1.1127567534077676	0.0
+Bacteria_Firmicutes_Bacilli_Erysipelotrichales_Erysipelatoclostridiaceae_Erysipelatoclostridiaceae_uncultured bacterium	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Bacilli_Erysipelotrichales_Erysipelatoclostridiaceae_Erysipelatoclostridium	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Bacilli_Erysipelotrichales_Erysipelatoclostridiaceae_Erysipelatoclostridium	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Bacilli_Erysipelotrichales_Erysipelatoclostridiaceae_Erysipelatoclostridium	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Bacilli_Erysipelotrichales_Erysipelotrichaceae_Erysipelotrichaceae_uncultured bacterium	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Bacilli_Erysipelotrichales_Erysipelotrichaceae_Erysipelotrichaceae_uncultured bacterium	Control EAE	0.25175949861106117	-0.3401680257083045	0.11571428571428571	0.0	0.0	0.0	1.0	0.0	3.9720447709696245	0.0
+Bacteria_Firmicutes_Bacilli_Erysipelotrichales_Erysipelotrichaceae_Erysipelotrichaceae_uncultured bacterium	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Bacilli_Erysipelotrichales_Erysipelotrichaceae_Faecalibaculum_uncultured bacterium	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Bacilli_Erysipelotrichales_Erysipelotrichaceae_Faecalibaculum_uncultured bacterium	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Bacilli_Erysipelotrichales_Erysipelotrichaceae_Faecalibaculum_uncultured bacterium	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Bacilli_Erysipelotrichales_Erysipelotrichaceae_Holdemanella_uncultured bacterium	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Bacilli_Erysipelotrichales_Erysipelotrichaceae_Holdemanella_uncultured bacterium	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Bacilli_Erysipelotrichales_Erysipelotrichaceae_Holdemanella_uncultured bacterium	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Bacilli_Erysipelotrichales_Erysipelotrichaceae_Turicibacter	Ampicillin EAE	0.7195436507936508	-0.14285714285714285	0.02040816326530612	0.0	0.0	0.0	1.0	0.0	1.3897697504480904	0.0
+Bacteria_Firmicutes_Bacilli_Erysipelotrichales_Erysipelotrichaceae_Turicibacter	Control EAE	0.9048611111111111	-0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.1051419800460476	0.0
+Bacteria_Firmicutes_Bacilli_Erysipelotrichales_Erysipelotrichaceae_Turicibacter	Vancomycin EAE	1.0951388888888889	0.0	0.0	0.0	0.0	0.0	1.0	0.0	0.9131261889663919	
+Bacteria_Firmicutes_Bacilli_Erysipelotrichales_Erysipelotrichaceae_[Clostridium] innocuum group	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Bacilli_Erysipelotrichales_Erysipelotrichaceae_[Clostridium] innocuum group	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Bacilli_Erysipelotrichales_Erysipelotrichaceae_[Clostridium] innocuum group	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Bacilli_Erysipelotrichales_Erysipelotrichaceae	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Bacilli_Erysipelotrichales_Erysipelotrichaceae	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Bacilli_Erysipelotrichales_Erysipelotrichaceae	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Bacilli_Erysipelotrichales_Erysipelotrichaceae_uncultured_unidentified	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Bacilli_Erysipelotrichales_Erysipelotrichaceae_uncultured_unidentified	Control EAE	0.7083840532183997	-0.10910894511799618	0.011904761904761902	0.0	0.0	0.0	1.0	0.0	1.4116636243527818	0.0
+Bacteria_Firmicutes_Bacilli_Erysipelotrichales_Erysipelotrichaceae_uncultured_unidentified	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Bacilli_Lactobacillales_Aerococcaceae_Aerococcus	Ampicillin EAE	0.27523352407483437	-0.3571428571428571	0.12755102040816324	0.0	0.0	0.0	1.0	0.0	3.633278334684644	0.0
+Bacteria_Firmicutes_Bacilli_Lactobacillales_Aerococcaceae_Aerococcus	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Bacilli_Lactobacillales_Aerococcaceae_Aerococcus	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Bacilli_Lactobacillales_Enterococcaceae_Enterococcus	Ampicillin EAE	0.27509920634920637	-0.3571428571428571	0.12755102040816324	0.0	0.0	0.0	1.0	0.0	3.6350522899386943	0.0
+Bacteria_Firmicutes_Bacilli_Lactobacillales_Enterococcaceae_Enterococcus	Control EAE	0.39875992063492066	-0.2857142857142857	0.08163265306122448	0.0	0.0	0.0	1.0	0.0	2.5077745988307	0.0
+Bacteria_Firmicutes_Bacilli_Lactobacillales_Enterococcaceae_Enterococcus	Vancomycin EAE	0.9048611111111111	0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.1051419800460476	0.0
+Bacteria_Firmicutes_Bacilli_Lactobacillales_Lactobacillaceae_Lactobacillus_Lactobacillus fermentum	Ampicillin EAE	0.9048611111111111	-0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.1051419800460476	0.0
+Bacteria_Firmicutes_Bacilli_Lactobacillales_Lactobacillaceae_Lactobacillus_Lactobacillus fermentum	Control EAE	0.5243108008991832	-0.1889822365046136	0.035714285714285705	0.0	0.0	0.0	1.0	0.0	1.9072656872317308	0.0
+Bacteria_Firmicutes_Bacilli_Lactobacillales_Lactobacillaceae_Lactobacillus_Lactobacillus fermentum	Vancomycin EAE	0.7024400589591436	0.11338934190276816	0.012857142857142855	0.0	0.0	0.0	1.0	0.0	1.4236090143859002	0.0
+Bacteria_Firmicutes_Bacilli_Lactobacillales_Lactobacillaceae_Lactobacillus_Lactobacillus reuteri	Ampicillin EAE	0.12663045794761718	-0.4999999999999999	0.2499999999999999	0.0	0.0	0.0	1.0	0.0	7.896994263525975	0.0
+Bacteria_Firmicutes_Bacilli_Lactobacillales_Lactobacillaceae_Lactobacillus_Lactobacillus reuteri	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Bacilli_Lactobacillales_Lactobacillaceae_Lactobacillus_Lactobacillus reuteri	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Bacilli_Lactobacillales_Lactobacillaceae_Lactobacillus_Lactobacillus ruminis	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Bacilli_Lactobacillales_Lactobacillaceae_Lactobacillus_Lactobacillus ruminis	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Bacilli_Lactobacillales_Lactobacillaceae_Lactobacillus_Lactobacillus ruminis	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Bacilli_Lactobacillales_Lactobacillaceae_Lactobacillus	Ampicillin EAE	0.5484126984126985	-0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.8234442836468885	0.0
+Bacteria_Firmicutes_Bacilli_Lactobacillales_Lactobacillaceae_Lactobacillus	Control EAE	0.27509920634920637	-0.3571428571428571	0.12755102040816324	0.0	0.0	0.0	1.0	0.0	3.6350522899386943	0.0
+Bacteria_Firmicutes_Bacilli_Lactobacillales_Lactobacillaceae_Lactobacillus	Vancomycin EAE	0.9048611111111111	-0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.1051419800460476	0.0
+Bacteria_Firmicutes_Bacilli_Lactobacillales_Lactobacillaceae_Pediococcus	Ampicillin EAE	0.7195436507936508	-0.14285714285714285	0.02040816326530612	0.0	0.0	0.0	1.0	0.0	1.3897697504480904	0.0
+Bacteria_Firmicutes_Bacilli_Lactobacillales_Lactobacillaceae_Pediococcus	Control EAE	0.9048611111111111	-0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.1051419800460476	0.0
+Bacteria_Firmicutes_Bacilli_Lactobacillales_Lactobacillaceae_Pediococcus	Vancomycin EAE	0.9048611111111111	0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.1051419800460476	0.0
+Bacteria_Firmicutes_Bacilli_Lactobacillales_Listeriaceae_Listeria	Ampicillin EAE	0.9007802600472399	0.036369648372665396	0.0013227513227513227	0.0	0.0	0.0	1.0	0.0	1.110148661503258	0.0
+Bacteria_Firmicutes_Bacilli_Lactobacillales_Listeriaceae_Listeria	Control EAE	0.8694170607412391	0.052414241836095915	0.0027472527472527475	0.0	0.0	0.0	1.0	0.0	1.150195970559204	0.0
+Bacteria_Firmicutes_Bacilli_Lactobacillales_Listeriaceae_Listeria	Vancomycin EAE	1.0	0.0	0.0	0.0	0.0	0.0	1.0	0.0	1.0	
+Bacteria_Firmicutes_Bacilli_Lactobacillales_Streptococcaceae_Streptococcus_Streptococcus salivarius	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Bacilli_Lactobacillales_Streptococcaceae_Streptococcus_Streptococcus salivarius	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Bacilli_Lactobacillales_Streptococcaceae_Streptococcus_Streptococcus salivarius	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Bacilli_Lactobacillales_Streptococcaceae_Streptococcus	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Bacilli_Lactobacillales_Streptococcaceae_Streptococcus	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Bacilli_Lactobacillales_Streptococcaceae_Streptococcus	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Bacilli_Lactobacillales	Ampicillin EAE	0.8272593465627114	0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.2088107606822835	0.0
+Bacteria_Firmicutes_Bacilli_Lactobacillales	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Bacilli_Lactobacillales	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Bacilli_RF39_RF39_RF39	Ampicillin EAE	0.10868055555555556	-0.4999999999999999	0.2499999999999999	0.0	0.0	0.0	1.0	0.0	9.201277955271566	0.0
+Bacteria_Firmicutes_Bacilli_RF39_RF39_RF39	Control EAE	1.0951388888888889	0.0	0.0	0.0	0.0	0.0	1.0	0.0	0.9131261889663919	
+Bacteria_Firmicutes_Bacilli_RF39_RF39_RF39	Vancomycin EAE	0.5484126984126985	0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.8234442836468885	0.0
+Bacteria_Firmicutes_Bacilli_RF39_RF39_RF39_uncultured bacterium	Ampicillin EAE	0.8272593465627114	-0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.2088107606822835	0.0
+Bacteria_Firmicutes_Bacilli_RF39_RF39_RF39_uncultured bacterium	Control EAE	0.27509920634920637	0.3571428571428571	0.12755102040816324	0.0	0.0	0.0	1.0	0.0	3.6350522899386943	0.0
+Bacteria_Firmicutes_Bacilli_RF39_RF39_RF39_uncultured bacterium	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Bacilli_RF39_RF39_RF39_unidentified	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Bacilli_RF39_RF39_RF39_unidentified	Control EAE	0.24981744183594812	-0.36689969285267143	0.13461538461538464	0.0	0.0	0.0	1.0	0.0	4.002923065142453	0.0
+Bacteria_Firmicutes_Bacilli_RF39_RF39_RF39_unidentified	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Bacilli_Staphylococcales_Staphylococcaceae_Jeotgalicoccus	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Bacilli_Staphylococcales_Staphylococcaceae_Jeotgalicoccus	Control EAE	0.8694170607412391	0.052414241836095915	0.0027472527472527475	0.0	0.0	0.0	1.0	0.0	1.150195970559204	0.0
+Bacteria_Firmicutes_Bacilli_Staphylococcales_Staphylococcaceae_Jeotgalicoccus	Vancomycin EAE	0.5126907602619235	0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.9504935089704365	0.0
+Bacteria_Firmicutes_Bacilli_Staphylococcales_Staphylococcaceae_Staphylococcus	Ampicillin EAE	0.39875992063492066	-0.2857142857142857	0.08163265306122448	0.0	0.0	0.0	1.0	0.0	2.5077745988307	0.0
+Bacteria_Firmicutes_Bacilli_Staphylococcales_Staphylococcaceae_Staphylococcus	Control EAE	1.0951388888888889	0.0	0.0	0.0	0.0	0.0	1.0	0.0	0.9131261889663919	
+Bacteria_Firmicutes_Bacilli_Staphylococcales_Staphylococcaceae_Staphylococcus	Vancomycin EAE	0.9048611111111111	-0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.1051419800460476	0.0
+Bacteria_Firmicutes_Bacilli_Thermicanales_Thermicanaceae_Thermicanus_uncultured bacterium	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Bacilli_Thermicanales_Thermicanaceae_Thermicanus_uncultured bacterium	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Bacilli_Thermicanales_Thermicanaceae_Thermicanus_uncultured bacterium	Vancomycin EAE	0.27523352407483437	-0.3571428571428571	0.12755102040816324	0.0	0.0	0.0	1.0	0.0	3.633278334684644	0.0
+Bacteria_Firmicutes_Clostridia_Christensenellales_Christensenellaceae_uncultured_uncultured bacterium	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Christensenellales_Christensenellaceae_uncultured_uncultured bacterium	Control EAE	0.7083840532183997	0.10910894511799618	0.011904761904761902	0.0	0.0	0.0	1.0	0.0	1.4116636243527818	0.0
+Bacteria_Firmicutes_Clostridia_Christensenellales_Christensenellaceae_uncultured_uncultured bacterium	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Clostridia UCG-014_Clostridia UCG-014_Clostridia UCG-014	Ampicillin EAE	0.7904822281393452	0.08058229640253801	0.006493506493506491	0.0	0.0	0.0	1.0	0.0	1.2650505784979156	0.0
+Bacteria_Firmicutes_Clostridia_Clostridia UCG-014_Clostridia UCG-014_Clostridia UCG-014	Control EAE	0.7195436507936508	-0.14285714285714285	0.02040816326530612	0.0	0.0	0.0	1.0	0.0	1.3897697504480904	0.0
+Bacteria_Firmicutes_Clostridia_Clostridia UCG-014_Clostridia UCG-014_Clostridia UCG-014	Vancomycin EAE	0.7743488608474193	-0.0890870806374748	0.007936507936507936	0.0	0.0	0.0	1.0	0.0	1.2914075948993278	0.0
+Bacteria_Firmicutes_Clostridia_Clostridia UCG-014_Clostridia UCG-014_Clostridia UCG-014_uncultured bacterium	Ampicillin EAE	0.5126907602619235	-0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.9504935089704365	0.0
+Bacteria_Firmicutes_Clostridia_Clostridia UCG-014_Clostridia UCG-014_Clostridia UCG-014_uncultured bacterium	Control EAE	0.7195436507936508	0.14285714285714285	0.02040816326530612	0.0	0.0	0.0	1.0	0.0	1.3897697504480904	0.0
+Bacteria_Firmicutes_Clostridia_Clostridia UCG-014_Clostridia UCG-014_Clostridia UCG-014_uncultured bacterium	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Clostridia UCG-014_Clostridia UCG-014_Clostridia UCG-014_unidentified	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Clostridia UCG-014_Clostridia UCG-014_Clostridia UCG-014_unidentified	Control EAE	0.7024400589591436	-0.11338934190276816	0.012857142857142855	0.0	0.0	0.0	1.0	0.0	1.4236090143859002	0.0
+Bacteria_Firmicutes_Clostridia_Clostridia UCG-014_Clostridia UCG-014_Clostridia UCG-014_unidentified	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Clostridia vadinBB60 group_Clostridia vadinBB60 group_Clostridia vadinBB60 group_uncultured Clostridia	Ampicillin EAE	0.8694170607412391	0.052414241836095915	0.0027472527472527475	0.0	0.0	0.0	1.0	0.0	1.150195970559204	0.0
+Bacteria_Firmicutes_Clostridia_Clostridia vadinBB60 group_Clostridia vadinBB60 group_Clostridia vadinBB60 group_uncultured Clostridia	Control EAE	0.3897486554380263	-0.2672612419124244	0.07142857142857144	0.0	0.0	0.0	1.0	0.0	2.565756125254958	0.0
+Bacteria_Firmicutes_Clostridia_Clostridia vadinBB60 group_Clostridia vadinBB60 group_Clostridia vadinBB60 group_uncultured Clostridia	Vancomycin EAE	0.39875992063492066	0.2857142857142857	0.08163265306122448	0.0	0.0	0.0	1.0	0.0	2.5077745988307	0.0
+Bacteria_Firmicutes_Clostridia_Clostridia vadinBB60 group_Clostridia vadinBB60 group_Clostridia vadinBB60 group_uncultured bacterium	Ampicillin EAE	0.9048611111111111	-0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.1051419800460476	0.0
+Bacteria_Firmicutes_Clostridia_Clostridia vadinBB60 group_Clostridia vadinBB60 group_Clostridia vadinBB60 group_uncultured bacterium	Control EAE	0.9048611111111111	0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.1051419800460476	0.0
+Bacteria_Firmicutes_Clostridia_Clostridia vadinBB60 group_Clostridia vadinBB60 group_Clostridia vadinBB60 group_uncultured bacterium	Vancomycin EAE	1.0951388888888889	0.0	0.0	0.0	0.0	0.0	1.0	0.0	0.9131261889663919	
+Bacteria_Firmicutes_Clostridia_Clostridia vadinBB60 group_Clostridia vadinBB60 group_Clostridia vadinBB60 group_unidentified	Ampicillin EAE	0.7195436507936508	-0.14285714285714285	0.02040816326530612	0.0	0.0	0.0	1.0	0.0	1.3897697504480904	0.0
+Bacteria_Firmicutes_Clostridia_Clostridia vadinBB60 group_Clostridia vadinBB60 group_Clostridia vadinBB60 group_unidentified	Control EAE	0.10868055555555556	-0.4999999999999999	0.2499999999999999	0.0	0.0	0.0	1.0	0.0	9.201277955271566	0.0
+Bacteria_Firmicutes_Clostridia_Clostridia vadinBB60 group_Clostridia vadinBB60 group_Clostridia vadinBB60 group_unidentified	Vancomycin EAE	0.7195436507936508	0.14285714285714285	0.02040816326530612	0.0	0.0	0.0	1.0	0.0	1.3897697504480904	0.0
+Bacteria_Firmicutes_Clostridia_Clostridiales_Clostridiaceae_Clostridium sensu stricto 1	Ampicillin EAE	0.5484126984126985	-0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.8234442836468885	0.0
+Bacteria_Firmicutes_Clostridia_Clostridiales_Clostridiaceae_Clostridium sensu stricto 1	Control EAE	0.39875992063492066	-0.2857142857142857	0.08163265306122448	0.0	0.0	0.0	1.0	0.0	2.5077745988307	0.0
+Bacteria_Firmicutes_Clostridia_Clostridiales_Clostridiaceae_Clostridium sensu stricto 1	Vancomycin EAE	0.7024400589591436	-0.11338934190276816	0.012857142857142855	0.0	0.0	0.0	1.0	0.0	1.4236090143859002	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Defluviitaleaceae_Defluviitaleaceae UCG-011_uncultured organism	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Defluviitaleaceae_Defluviitaleaceae UCG-011_uncultured organism	Control EAE	0.4254200204693487	-0.24174688920761409	0.05844155844155844	0.0	0.0	0.0	1.0	0.0	2.350618099488455	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Defluviitaleaceae_Defluviitaleaceae UCG-011_uncultured organism	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_A2	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_A2	Control EAE	0.13898246029318553	-0.47172817652486326	0.22252747252747257	0.0	0.0	0.0	1.0	0.0	7.195152524214102	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_A2	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_A2_uncultured bacterium	Ampicillin EAE	0.5484126984126985	-0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.8234442836468885	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_A2_uncultured bacterium	Control EAE	0.7195436507936508	-0.14285714285714285	0.02040816326530612	0.0	0.0	0.0	1.0	0.0	1.3897697504480904	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_A2_uncultured bacterium	Vancomycin EAE	0.7195436507936508	0.14285714285714285	0.02040816326530612	0.0	0.0	0.0	1.0	0.0	1.3897697504480904	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_ASF356_uncultured bacterium	Ampicillin EAE	0.39875992063492066	-0.2857142857142857	0.08163265306122448	0.0	0.0	0.0	1.0	0.0	2.5077745988307	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_ASF356_uncultured bacterium	Control EAE	1.0951388888888889	0.0	0.0	0.0	0.0	0.0	1.0	0.0	0.9131261889663919	
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_ASF356_uncultured bacterium	Vancomycin EAE	0.27509920634920637	-0.3571428571428571	0.12755102040816324	0.0	0.0	0.0	1.0	0.0	3.6350522899386943	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Acetatifactor	Ampicillin EAE	0.2879008453058348	-0.32232918561015206	0.10389610389610386	0.0	0.0	0.0	1.0	0.0	3.473418075371428	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Acetatifactor	Control EAE	0.5484126984126985	0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.8234442836468885	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Acetatifactor	Vancomycin EAE	0.5126907602619235	-0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.9504935089704365	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Acetatifactor_uncultured bacterium	Ampicillin EAE	0.27523352407483437	0.3571428571428571	0.12755102040816324	0.0	0.0	0.0	1.0	0.0	3.633278334684644	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Acetatifactor_uncultured bacterium	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Acetatifactor_uncultured bacterium	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Agathobacter	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Agathobacter	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Agathobacter	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Blautia_Lachnospiraceae bacterium	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Blautia_Lachnospiraceae bacterium	Control EAE	0.9048611111111111	-0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.1051419800460476	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Blautia_Lachnospiraceae bacterium	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Blautia	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Blautia	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Blautia	Vancomycin EAE	0.5126907602619235	0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.9504935089704365	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Blautia_unidentified	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Blautia_unidentified	Control EAE	0.5243108008991832	0.1889822365046136	0.035714285714285705	0.0	0.0	0.0	1.0	0.0	1.9072656872317308	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Blautia_unidentified	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Dorea	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Dorea	Control EAE	0.27523352407483437	0.3571428571428571	0.12755102040816324	0.0	0.0	0.0	1.0	0.0	3.633278334684644	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Dorea	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Fusicatenibacter	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Fusicatenibacter	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Fusicatenibacter	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_GCA-900066575_uncultured bacterium	Ampicillin EAE	0.11091211748658877	-0.48349377841522817	0.23376623376623376	0.0	0.0	0.0	1.0	0.0	9.016147402657943	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_GCA-900066575_uncultured bacterium	Control EAE	0.9048611111111111	-0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.1051419800460476	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_GCA-900066575_uncultured bacterium	Vancomycin EAE	0.8272593465627114	0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.2088107606822835	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnoclostridium_Dorea sp.	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnoclostridium_Dorea sp.	Control EAE	0.7083840532183997	-0.10910894511799618	0.011904761904761902	0.0	0.0	0.0	1.0	0.0	1.4116636243527818	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnoclostridium_Dorea sp.	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnoclostridium_[Clostridium] scindens	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnoclostridium_[Clostridium] scindens	Control EAE	0.8694170607412391	0.052414241836095915	0.0027472527472527475	0.0	0.0	0.0	1.0	0.0	1.150195970559204	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnoclostridium_[Clostridium] scindens	Vancomycin EAE	0.27523352407483437	0.3571428571428571	0.12755102040816324	0.0	0.0	0.0	1.0	0.0	3.633278334684644	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnoclostridium	Ampicillin EAE	0.9048611111111111	-0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.1051419800460476	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnoclostridium	Control EAE	1.0951388888888889	0.0	0.0	0.0	0.0	0.0	1.0	0.0	0.9131261889663919	
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnoclostridium	Vancomycin EAE	0.9007802600472399	-0.036369648372665396	0.0013227513227513227	0.0	0.0	0.0	1.0	0.0	1.110148661503258	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnoclostridium_uncultured bacterium	Ampicillin EAE	0.12663045794761718	0.4999999999999999	0.2499999999999999	0.0	0.0	0.0	1.0	0.0	7.896994263525975	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnoclostridium_uncultured bacterium	Control EAE	0.9007802600472399	-0.036369648372665396	0.0013227513227513227	0.0	0.0	0.0	1.0	0.0	1.110148661503258	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnoclostridium_uncultured bacterium	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnospiraceae FCS020 group	Ampicillin EAE	0.24981744183594812	-0.36689969285267143	0.13461538461538464	0.0	0.0	0.0	1.0	0.0	4.002923065142453	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnospiraceae FCS020 group	Control EAE	0.7195436507936508	0.14285714285714285	0.02040816326530612	0.0	0.0	0.0	1.0	0.0	1.3897697504480904	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnospiraceae FCS020 group	Vancomycin EAE	0.41107977872331547	-0.2620712091804796	0.0686813186813187	0.0	0.0	0.0	1.0	0.0	2.4326178317641545	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnospiraceae FCS020 group_uncultured bacterium	Ampicillin EAE	0.27523352407483437	0.3571428571428571	0.12755102040816324	0.0	0.0	0.0	1.0	0.0	3.633278334684644	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnospiraceae FCS020 group_uncultured bacterium	Control EAE	0.7904822281393452	-0.08058229640253801	0.006493506493506491	0.0	0.0	0.0	1.0	0.0	1.2650505784979156	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnospiraceae FCS020 group_uncultured bacterium	Vancomycin EAE	0.8694170607412391	-0.052414241836095915	0.0027472527472527475	0.0	0.0	0.0	1.0	0.0	1.150195970559204	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnospiraceae NK4A136 group_Clostridiales bacterium	Ampicillin EAE	0.12663045794761718	-0.4999999999999999	0.2499999999999999	0.0	0.0	0.0	1.0	0.0	7.896994263525975	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnospiraceae NK4A136 group_Clostridiales bacterium	Control EAE	0.17886904761904762	0.42857142857142855	0.18367346938775508	0.0	0.0	0.0	1.0	0.0	5.590682196339434	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnospiraceae NK4A136 group_Clostridiales bacterium	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnospiraceae NK4A136 group_Lachnospiraceae bacterium	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnospiraceae NK4A136 group_Lachnospiraceae bacterium	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnospiraceae NK4A136 group_Lachnospiraceae bacterium	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnospiraceae NK4A136 group	Ampicillin EAE	0.39875992063492066	-0.2857142857142857	0.08163265306122448	0.0	0.0	0.0	1.0	0.0	2.5077745988307	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnospiraceae NK4A136 group	Control EAE	0.7195436507936508	0.14285714285714285	0.02040816326530612	0.0	0.0	0.0	1.0	0.0	1.3897697504480904	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnospiraceae NK4A136 group	Vancomycin EAE	1.0951388888888889	0.0	0.0	0.0	0.0	0.0	1.0	0.0	0.9131261889663919	
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnospiraceae NK4A136 group_uncultured bacterium	Ampicillin EAE	0.39875992063492066	-0.2857142857142857	0.08163265306122448	0.0	0.0	0.0	1.0	0.0	2.5077745988307	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnospiraceae NK4A136 group_uncultured bacterium	Control EAE	0.9048611111111111	0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.1051419800460476	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnospiraceae NK4A136 group_uncultured bacterium	Vancomycin EAE	0.9048611111111111	0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.1051419800460476	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnospiraceae NK4A136 group_uncultured organism	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnospiraceae NK4A136 group_uncultured organism	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnospiraceae NK4A136 group_uncultured organism	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnospiraceae UCG-001	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnospiraceae UCG-001	Control EAE	0.5126907602619235	-0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.9504935089704365	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnospiraceae UCG-001	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnospiraceae UCG-001_uncultured bacterium	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnospiraceae UCG-001_uncultured bacterium	Control EAE	0.9007802600472399	-0.036369648372665396	0.0013227513227513227	0.0	0.0	0.0	1.0	0.0	1.110148661503258	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnospiraceae UCG-001_uncultured bacterium	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnospiraceae UCG-004	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnospiraceae UCG-004	Control EAE	0.9048611111111111	0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.1051419800460476	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnospiraceae UCG-004	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnospiraceae UCG-006_Clostridium sp.	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnospiraceae UCG-006_Clostridium sp.	Control EAE	0.5126907602619235	0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.9504935089704365	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnospiraceae UCG-006_Clostridium sp.	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnospiraceae UCG-006_uncultured bacterium	Ampicillin EAE	0.2879008453058348	0.32232918561015206	0.10389610389610386	0.0	0.0	0.0	1.0	0.0	3.473418075371428	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnospiraceae UCG-006_uncultured bacterium	Control EAE	0.9048611111111111	-0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.1051419800460476	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnospiraceae UCG-006_uncultured bacterium	Vancomycin EAE	0.8272593465627114	0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.2088107606822835	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnospiraceae UCG-010_uncultured bacterium	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnospiraceae UCG-010_uncultured bacterium	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Lachnospiraceae UCG-010_uncultured bacterium	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Marvinbryantia_Clostridiales bacterium	Ampicillin EAE	0.5126907602619235	-0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.9504935089704365	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Marvinbryantia_Clostridiales bacterium	Control EAE	0.5951631467095726	-0.16116459280507603	0.025974025974025965	0.0	0.0	0.0	1.0	0.0	1.6802115613653401	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Marvinbryantia_Clostridiales bacterium	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Marvinbryantia_uncultured bacterium	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Marvinbryantia_uncultured bacterium	Control EAE	0.5330356744917513	0.18184824186332696	0.03306878306878306	0.0	0.0	0.0	1.0	0.0	1.876047041229461	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Marvinbryantia_uncultured bacterium	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Roseburia	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Roseburia	Control EAE	0.7024400589591436	0.11338934190276816	0.012857142857142855	0.0	0.0	0.0	1.0	0.0	1.4236090143859002	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Roseburia	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Roseburia_uncultured bacterium	Ampicillin EAE	1.0951388888888889	0.0	0.0	0.0	0.0	0.0	1.0	0.0	0.9131261889663919	
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Roseburia_uncultured bacterium	Control EAE	0.9048611111111111	-0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.1051419800460476	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Roseburia_uncultured bacterium	Vancomycin EAE	0.9048611111111111	-0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.1051419800460476	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Tuzzerella	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Tuzzerella	Control EAE	0.5126907602619235	0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.9504935089704365	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Tuzzerella	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Tuzzerella_uncultured bacterium	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Tuzzerella_uncultured bacterium	Control EAE	0.5126907602619235	0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.9504935089704365	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Tuzzerella_uncultured bacterium	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Tyzzerella_uncultured bacterium	Ampicillin EAE	0.17886904761904762	-0.42857142857142855	0.18367346938775508	0.0	0.0	0.0	1.0	0.0	5.590682196339434	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Tyzzerella_uncultured bacterium	Control EAE	0.9048611111111111	0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.1051419800460476	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_Tyzzerella_uncultured bacterium	Vancomycin EAE	0.17886904761904762	-0.42857142857142855	0.18367346938775508	0.0	0.0	0.0	1.0	0.0	5.590682196339434	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_[Eubacterium] fissicatena group_uncultured bacterium	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_[Eubacterium] fissicatena group_uncultured bacterium	Control EAE	0.8272593465627114	0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.2088107606822835	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_[Eubacterium] fissicatena group_uncultured bacterium	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_[Eubacterium] hallii group	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_[Eubacterium] hallii group	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_[Eubacterium] hallii group	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_[Eubacterium] ventriosum group_uncultured Clostridiales	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_[Eubacterium] ventriosum group_uncultured Clostridiales	Control EAE	0.7195436507936508	0.14285714285714285	0.02040816326530612	0.0	0.0	0.0	1.0	0.0	1.3897697504480904	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_[Eubacterium] ventriosum group_uncultured Clostridiales	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_[Eubacterium] xylanophilum group_uncultured bacterium	Ampicillin EAE	0.9048611111111111	-0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.1051419800460476	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_[Eubacterium] xylanophilum group_uncultured bacterium	Control EAE	0.9048611111111111	0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.1051419800460476	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_[Eubacterium] xylanophilum group_uncultured bacterium	Vancomycin EAE	0.9007802600472399	0.036369648372665396	0.0013227513227513227	0.0	0.0	0.0	1.0	0.0	1.110148661503258	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae	Ampicillin EAE	0.9048611111111111	-0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.1051419800460476	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae	Control EAE	0.7195436507936508	-0.14285714285714285	0.02040816326530612	0.0	0.0	0.0	1.0	0.0	1.3897697504480904	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae	Vancomycin EAE	1.0951388888888889	0.0	0.0	0.0	0.0	0.0	1.0	0.0	0.9131261889663919	
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_uncultured_Clostridium sp.	Ampicillin EAE	0.7904822281393452	0.08058229640253801	0.006493506493506491	0.0	0.0	0.0	1.0	0.0	1.2650505784979156	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_uncultured_Clostridium sp.	Control EAE	0.9048611111111111	0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.1051419800460476	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_uncultured_Clostridium sp.	Vancomycin EAE	0.8694170607412391	0.052414241836095915	0.0027472527472527475	0.0	0.0	0.0	1.0	0.0	1.150195970559204	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_uncultured	Ampicillin EAE	0.27523352407483437	0.3571428571428571	0.12755102040816324	0.0	0.0	0.0	1.0	0.0	3.633278334684644	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_uncultured	Control EAE	0.27509920634920637	0.3571428571428571	0.12755102040816324	0.0	0.0	0.0	1.0	0.0	3.6350522899386943	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_uncultured	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_uncultured_uncultured bacterium	Ampicillin EAE	0.39875992063492066	-0.2857142857142857	0.08163265306122448	0.0	0.0	0.0	1.0	0.0	2.5077745988307	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_uncultured_uncultured bacterium	Control EAE	0.5484126984126985	-0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.8234442836468885	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_uncultured_uncultured bacterium	Vancomycin EAE	0.5484126984126985	0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.8234442836468885	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_uncultured_unidentified	Ampicillin EAE	0.12663045794761718	-0.4999999999999999	0.2499999999999999	0.0	0.0	0.0	1.0	0.0	7.896994263525975	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_uncultured_unidentified	Control EAE	0.7195436507936508	0.14285714285714285	0.02040816326530612	0.0	0.0	0.0	1.0	0.0	1.3897697504480904	0.0
+Bacteria_Firmicutes_Clostridia_Lachnospirales_Lachnospiraceae_uncultured_unidentified	Vancomycin EAE	0.8694170607412391	0.052414241836095915	0.0027472527472527475	0.0	0.0	0.0	1.0	0.0	1.150195970559204	0.0
+Bacteria_Firmicutes_Clostridia_Monoglobales_Monoglobaceae_Monoglobus	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Monoglobales_Monoglobaceae_Monoglobus	Control EAE	0.15172772231980938	0.44543540318737396	0.1984126984126984	0.0	0.0	0.0	1.0	0.0	6.590753388442853	0.0
+Bacteria_Firmicutes_Clostridia_Monoglobales_Monoglobaceae_Monoglobus	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Monoglobales_Monoglobaceae_Monoglobus_uncultured rumen	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Monoglobales_Monoglobaceae_Monoglobus_uncultured rumen	Control EAE	0.621873424330741	0.15724272550828775	0.024725274725274724	0.0	0.0	0.0	1.0	0.0	1.6080442753703426	0.0
+Bacteria_Firmicutes_Clostridia_Monoglobales_Monoglobaceae_Monoglobus_uncultured rumen	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Butyricicoccaceae_Butyricicoccus_uncultured bacterium	Ampicillin EAE	0.12663045794761718	-0.4999999999999999	0.2499999999999999	0.0	0.0	0.0	1.0	0.0	7.896994263525975	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Butyricicoccaceae_Butyricicoccus_uncultured bacterium	Control EAE	0.1840386271964254	-0.40291148201269017	0.16233766233766236	0.0	0.0	0.0	1.0	0.0	5.433641921990077	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Butyricicoccaceae_Butyricicoccus_uncultured bacterium	Vancomycin EAE	0.8272593465627114	0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.2088107606822835	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Butyricicoccaceae_UCG-009_uncultured bacterium	Ampicillin EAE	0.06146490960741324	-0.5455447255899809	0.29761904761904756	0.0	0.0	0.0	1.0	0.0	16.269445548479105	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Butyricicoccaceae_UCG-009_uncultured bacterium	Control EAE	0.39875992063492066	-0.2857142857142857	0.08163265306122448	0.0	0.0	0.0	1.0	0.0	2.5077745988307	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Butyricicoccaceae_UCG-009_uncultured bacterium	Vancomycin EAE	0.1612822677790775	0.41576092031014994	0.17285714285714285	0.0	0.0	0.0	1.0	0.0	6.200309642035712	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_Colidextribacter	Ampicillin EAE	0.26182770092717633	-0.32732683535398854	0.10714285714285712	0.0	0.0	0.0	1.0	0.0	3.819305583247419	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_Colidextribacter	Control EAE	1.0951388888888889	0.0	0.0	0.0	0.0	0.0	1.0	0.0	0.9131261889663919	
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_Colidextribacter	Vancomycin EAE	0.3727144268392836	0.264575131106459	0.06999999999999998	0.0	0.0	0.0	1.0	0.0	2.683019298394922	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_Colidextribacter_uncultured bacterium	Ampicillin EAE	0.5243108008991832	0.1889822365046136	0.035714285714285705	0.0	0.0	0.0	1.0	0.0	1.9072656872317308	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_Colidextribacter_uncultured bacterium	Control EAE	0.1702399546290051	0.40006613209931935	0.16005291005291003	0.0	0.0	0.0	1.0	0.0	5.874061715883601	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_Colidextribacter_uncultured bacterium	Vancomycin EAE	0.621873424330741	0.15724272550828775	0.024725274725274724	0.0	0.0	0.0	1.0	0.0	1.6080442753703426	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_Intestinimonas_uncultured bacterium	Ampicillin EAE	0.8272593465627114	-0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.2088107606822835	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_Intestinimonas_uncultured bacterium	Control EAE	0.39875992063492066	-0.2857142857142857	0.08163265306122448	0.0	0.0	0.0	1.0	0.0	2.5077745988307	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_Intestinimonas_uncultured bacterium	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_NK4A214 group_uncultured organism	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_NK4A214 group_uncultured organism	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_NK4A214 group_uncultured organism	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_NK4A214 group_unidentified	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_NK4A214 group_unidentified	Control EAE	0.08540580828461942	-0.5345224838248488	0.28571428571428575	0.0	0.0	0.0	1.0	0.0	11.708805526053293	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_NK4A214 group_unidentified	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_Oscillibacter	Ampicillin EAE	0.9048611111111111	-0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.1051419800460476	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_Oscillibacter	Control EAE	0.27509920634920637	0.3571428571428571	0.12755102040816324	0.0	0.0	0.0	1.0	0.0	3.6350522899386943	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_Oscillibacter	Vancomycin EAE	0.9007802600472399	-0.036369648372665396	0.0013227513227513227	0.0	0.0	0.0	1.0	0.0	1.110148661503258	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_Oscillibacter_uncultured bacterium	Ampicillin EAE	1.0951388888888889	0.0	0.0	0.0	0.0	0.0	1.0	0.0	0.9131261889663919	
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_Oscillibacter_uncultured bacterium	Control EAE	0.39875992063492066	-0.2857142857142857	0.08163265306122448	0.0	0.0	0.0	1.0	0.0	2.5077745988307	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_Oscillibacter_uncultured bacterium	Vancomycin EAE	0.2879008453058348	-0.32232918561015206	0.10389610389610386	0.0	0.0	0.0	1.0	0.0	3.473418075371428	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_Oscillibacter_unidentified	Ampicillin EAE	0.5484126984126985	-0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.8234442836468885	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_Oscillibacter_unidentified	Control EAE	0.39875992063492066	0.2857142857142857	0.08163265306122448	0.0	0.0	0.0	1.0	0.0	2.5077745988307	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_Oscillibacter_unidentified	Vancomycin EAE	0.5951631467095726	0.16116459280507603	0.025974025974025965	0.0	0.0	0.0	1.0	0.0	1.6802115613653401	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_Oscillospira_uncultured bacterium	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_Oscillospira_uncultured bacterium	Control EAE	1.0951388888888889	0.0	0.0	0.0	0.0	0.0	1.0	0.0	0.9131261889663919	
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_Oscillospira_uncultured bacterium	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_UCG-005	Ampicillin EAE	0.5126907602619235	-0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.9504935089704365	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_UCG-005	Control EAE	0.9007802600472399	0.036369648372665396	0.0013227513227513227	0.0	0.0	0.0	1.0	0.0	1.110148661503258	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_UCG-005	Vancomycin EAE	0.8272593465627114	-0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.2088107606822835	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae	Control EAE	0.1702399546290051	0.40006613209931935	0.16005291005291003	0.0	0.0	0.0	1.0	0.0	5.874061715883601	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_uncultured_Clostridium sp.	Ampicillin EAE	0.9048611111111111	0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.1051419800460476	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_uncultured_Clostridium sp.	Control EAE	0.7195436507936508	-0.14285714285714285	0.02040816326530612	0.0	0.0	0.0	1.0	0.0	1.3897697504480904	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_uncultured_Clostridium sp.	Vancomycin EAE	0.38281014365989596	0.2545875386086578	0.06481481481481483	0.0	0.0	0.0	1.0	0.0	2.612260977306914	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_uncultured	Ampicillin EAE	0.5126907602619235	-0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.9504935089704365	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_uncultured	Control EAE	0.13898246029318553	0.47172817652486326	0.22252747252747257	0.0	0.0	0.0	1.0	0.0	7.195152524214102	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_uncultured	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_uncultured_uncultured bacterium	Ampicillin EAE	0.566385953918274	0.1781741612749496	0.031746031746031744	0.0	0.0	0.0	1.0	0.0	1.7655805075708038	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_uncultured_uncultured bacterium	Control EAE	0.5484126984126985	-0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.8234442836468885	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_uncultured_uncultured bacterium	Vancomycin EAE	0.8694170607412391	0.052414241836095915	0.0027472527472527475	0.0	0.0	0.0	1.0	0.0	1.150195970559204	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_uncultured_unidentified	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_uncultured_unidentified	Control EAE	0.4254200204693487	-0.24174688920761409	0.05844155844155844	0.0	0.0	0.0	1.0	0.0	2.350618099488455	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Oscillospiraceae_uncultured_unidentified	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_Anaerotruncus_uncultured bacterium	Ampicillin EAE	0.24981744183594812	-0.36689969285267143	0.13461538461538464	0.0	0.0	0.0	1.0	0.0	4.002923065142453	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_Anaerotruncus_uncultured bacterium	Control EAE	0.9048611111111111	0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.1051419800460476	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_Anaerotruncus_uncultured bacterium	Vancomycin EAE	0.566385953918274	0.1781741612749496	0.031746031746031744	0.0	0.0	0.0	1.0	0.0	1.7655805075708038	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_Anaerotruncus_uncultured organism	Ampicillin EAE	0.7195436507936508	-0.14285714285714285	0.02040816326530612	0.0	0.0	0.0	1.0	0.0	1.3897697504480904	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_Anaerotruncus_uncultured organism	Control EAE	0.17886904761904762	-0.42857142857142855	0.18367346938775508	0.0	0.0	0.0	1.0	0.0	5.590682196339434	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_Anaerotruncus_uncultured organism	Vancomycin EAE	0.5484126984126985	0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.8234442836468885	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_Faecalibacterium	Ampicillin EAE	0.566385953918274	0.1781741612749496	0.031746031746031744	0.0	0.0	0.0	1.0	0.0	1.7655805075708038	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_Faecalibacterium	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_Faecalibacterium	Vancomycin EAE	0.5126907602619235	0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.9504935089704365	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_Harryflintia_uncultured bacterium	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_Harryflintia_uncultured bacterium	Control EAE	0.8694170607412391	-0.052414241836095915	0.0027472527472527475	0.0	0.0	0.0	1.0	0.0	1.150195970559204	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_Harryflintia_uncultured bacterium	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_Incertae Sedis_Clostridium sp.	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_Incertae Sedis_Clostridium sp.	Control EAE	0.7904822281393452	0.08058229640253801	0.006493506493506491	0.0	0.0	0.0	1.0	0.0	1.2650505784979156	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_Incertae Sedis_Clostridium sp.	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_Incertae Sedis	Ampicillin EAE	0.27509920634920637	-0.3571428571428571	0.12755102040816324	0.0	0.0	0.0	1.0	0.0	3.6350522899386943	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_Incertae Sedis	Control EAE	1.0951388888888889	0.0	0.0	0.0	0.0	0.0	1.0	0.0	0.9131261889663919	
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_Incertae Sedis	Vancomycin EAE	0.5484126984126985	-0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.8234442836468885	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_Incertae Sedis_uncultured bacterium	Ampicillin EAE	0.7904822281393452	0.08058229640253801	0.006493506493506491	0.0	0.0	0.0	1.0	0.0	1.2650505784979156	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_Incertae Sedis_uncultured bacterium	Control EAE	0.26182770092717633	0.32732683535398854	0.10714285714285712	0.0	0.0	0.0	1.0	0.0	3.819305583247419	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_Incertae Sedis_uncultured bacterium	Vancomycin EAE	0.8272593465627114	0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.2088107606822835	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_Paludicola_uncultured bacterium	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_Paludicola_uncultured bacterium	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_Paludicola_uncultured bacterium	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_Ruminococcaceae_uncultured bacterium	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_Ruminococcaceae_uncultured bacterium	Control EAE	0.12663045794761718	0.4999999999999999	0.2499999999999999	0.0	0.0	0.0	1.0	0.0	7.896994263525975	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_Ruminococcaceae_uncultured bacterium	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_Ruminococcus	Ampicillin EAE	0.5126907602619235	0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.9504935089704365	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_Ruminococcus	Control EAE	0.7024400589591436	-0.11338934190276816	0.012857142857142855	0.0	0.0	0.0	1.0	0.0	1.4236090143859002	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_Ruminococcus	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_Ruminococcus_unidentified	Ampicillin EAE	0.07054600045686604	-0.5765566601970551	0.33241758241758246	0.0	0.0	0.0	1.0	0.0	14.175148038497664	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_Ruminococcus_unidentified	Control EAE	0.5243108008991832	-0.1889822365046136	0.035714285714285705	0.0	0.0	0.0	1.0	0.0	1.9072656872317308	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_Ruminococcus_unidentified	Vancomycin EAE	0.621873424330741	0.15724272550828775	0.024725274725274724	0.0	0.0	0.0	1.0	0.0	1.6080442753703426	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_Subdoligranulum	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_Subdoligranulum	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_Subdoligranulum	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_[Eubacterium] siraeum group_uncultured bacterium	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_[Eubacterium] siraeum group_uncultured bacterium	Control EAE	0.27523352407483437	0.3571428571428571	0.12755102040816324	0.0	0.0	0.0	1.0	0.0	3.633278334684644	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_[Eubacterium] siraeum group_uncultured bacterium	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae	Control EAE	1.0	0.0	0.0	0.0	0.0	0.0	1.0	0.0	1.0	
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_uncultured_[Clostridium] leptum	Ampicillin EAE	0.8986690010530557	0.03779644730092272	0.0014285714285714284	0.0	0.0	0.0	1.0	0.0	1.1127567534077676	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_uncultured_[Clostridium] leptum	Control EAE	0.27509920634920637	-0.3571428571428571	0.12755102040816324	0.0	0.0	0.0	1.0	0.0	3.6350522899386943	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_uncultured_[Clostridium] leptum	Vancomycin EAE	0.8694170607412391	0.052414241836095915	0.0027472527472527475	0.0	0.0	0.0	1.0	0.0	1.150195970559204	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_uncultured	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_uncultured	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_uncultured	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_uncultured_uncultured bacterium	Ampicillin EAE	0.621873424330741	-0.15724272550828775	0.024725274725274724	0.0	0.0	0.0	1.0	0.0	1.6080442753703426	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_uncultured_uncultured bacterium	Control EAE	0.5484126984126985	-0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.8234442836468885	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_Ruminococcaceae_uncultured_uncultured bacterium	Vancomycin EAE	0.8272593465627114	-0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.2088107606822835	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_UCG-010_UCG-010	Ampicillin EAE	0.24981744183594812	0.36689969285267143	0.13461538461538464	0.0	0.0	0.0	1.0	0.0	4.002923065142453	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_UCG-010_UCG-010	Control EAE	0.7195436507936508	0.14285714285714285	0.02040816326530612	0.0	0.0	0.0	1.0	0.0	1.3897697504480904	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_UCG-010_UCG-010	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Oscillospirales_[Eubacterium] coprostanoligenes group_[Eubacterium] coprostanoligenes group_gut metagenome	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Oscillospirales_[Eubacterium] coprostanoligenes group_[Eubacterium] coprostanoligenes group_gut metagenome	Control EAE	0.07054600045686604	0.5765566601970551	0.33241758241758246	0.0	0.0	0.0	1.0	0.0	14.175148038497664	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_[Eubacterium] coprostanoligenes group_[Eubacterium] coprostanoligenes group_gut metagenome	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Oscillospirales_[Eubacterium] coprostanoligenes group_[Eubacterium] coprostanoligenes group	Ampicillin EAE	0.5126907602619235	0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.9504935089704365	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_[Eubacterium] coprostanoligenes group_[Eubacterium] coprostanoligenes group	Control EAE	0.5243108008991832	-0.1889822365046136	0.035714285714285705	0.0	0.0	0.0	1.0	0.0	1.9072656872317308	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_[Eubacterium] coprostanoligenes group_[Eubacterium] coprostanoligenes group	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Oscillospirales_[Eubacterium] coprostanoligenes group_[Eubacterium] coprostanoligenes group_unidentified	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Oscillospirales_[Eubacterium] coprostanoligenes group_[Eubacterium] coprostanoligenes group_unidentified	Control EAE	0.566385953918274	-0.1781741612749496	0.031746031746031744	0.0	0.0	0.0	1.0	0.0	1.7655805075708038	0.0
+Bacteria_Firmicutes_Clostridia_Oscillospirales_[Eubacterium] coprostanoligenes group_[Eubacterium] coprostanoligenes group_unidentified	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Peptococcales_Peptococcaceae_uncultured_uncultured bacterium	Ampicillin EAE	0.621873424330741	-0.15724272550828775	0.024725274725274724	0.0	0.0	0.0	1.0	0.0	1.6080442753703426	0.0
+Bacteria_Firmicutes_Clostridia_Peptococcales_Peptococcaceae_uncultured_uncultured bacterium	Control EAE	0.5484126984126985	-0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.8234442836468885	0.0
+Bacteria_Firmicutes_Clostridia_Peptococcales_Peptococcaceae_uncultured_uncultured bacterium	Vancomycin EAE	0.12663045794761718	-0.4999999999999999	0.2499999999999999	0.0	0.0	0.0	1.0	0.0	7.896994263525975	0.0
+Bacteria_Firmicutes_Clostridia_Peptostreptococcales-Tissierellales_Anaerovoracaceae_Family XIII AD3011 group	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Peptostreptococcales-Tissierellales_Anaerovoracaceae_Family XIII AD3011 group	Control EAE	0.621873424330741	0.15724272550828775	0.024725274725274724	0.0	0.0	0.0	1.0	0.0	1.6080442753703426	0.0
+Bacteria_Firmicutes_Clostridia_Peptostreptococcales-Tissierellales_Anaerovoracaceae_Family XIII AD3011 group	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Peptostreptococcales-Tissierellales_Anaerovoracaceae_Family XIII AD3011 group_uncultured bacterium	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Peptostreptococcales-Tissierellales_Anaerovoracaceae_Family XIII AD3011 group_uncultured bacterium	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Peptostreptococcales-Tissierellales_Anaerovoracaceae_Family XIII AD3011 group_uncultured bacterium	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Peptostreptococcales-Tissierellales_Anaerovoracaceae_[Eubacterium] brachy group_uncultured bacterium	Ampicillin EAE	0.8272593465627114	0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.2088107606822835	0.0
+Bacteria_Firmicutes_Clostridia_Peptostreptococcales-Tissierellales_Anaerovoracaceae_[Eubacterium] brachy group_uncultured bacterium	Control EAE	0.26182770092717633	-0.32732683535398854	0.10714285714285712	0.0	0.0	0.0	1.0	0.0	3.819305583247419	0.0
+Bacteria_Firmicutes_Clostridia_Peptostreptococcales-Tissierellales_Anaerovoracaceae_[Eubacterium] brachy group_uncultured bacterium	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Peptostreptococcales-Tissierellales_Anaerovoracaceae_[Eubacterium] nodatum group	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Peptostreptococcales-Tissierellales_Anaerovoracaceae_[Eubacterium] nodatum group	Control EAE	0.7195436507936508	0.14285714285714285	0.02040816326530612	0.0	0.0	0.0	1.0	0.0	1.3897697504480904	0.0
+Bacteria_Firmicutes_Clostridia_Peptostreptococcales-Tissierellales_Anaerovoracaceae_[Eubacterium] nodatum group	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Peptostreptococcales-Tissierellales_Anaerovoracaceae_[Eubacterium] nodatum group_uncultured organism	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Peptostreptococcales-Tissierellales_Anaerovoracaceae_[Eubacterium] nodatum group_uncultured organism	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Peptostreptococcales-Tissierellales_Anaerovoracaceae_[Eubacterium] nodatum group_uncultured organism	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Peptostreptococcales-Tissierellales_Peptostreptococcaceae_Peptostreptococcus_uncultured organism	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Peptostreptococcales-Tissierellales_Peptostreptococcaceae_Peptostreptococcus_uncultured organism	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Peptostreptococcales-Tissierellales_Peptostreptococcaceae_Peptostreptococcus_uncultured organism	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Peptostreptococcales-Tissierellales_Peptostreptococcaceae_Romboutsia	Ampicillin EAE	0.10868055555555556	-0.4999999999999999	0.2499999999999999	0.0	0.0	0.0	1.0	0.0	9.201277955271566	0.0
+Bacteria_Firmicutes_Clostridia_Peptostreptococcales-Tissierellales_Peptostreptococcaceae_Romboutsia	Control EAE	0.11091211748658877	-0.48349377841522817	0.23376623376623376	0.0	0.0	0.0	1.0	0.0	9.016147402657943	0.0
+Bacteria_Firmicutes_Clostridia_Peptostreptococcales-Tissierellales_Peptostreptococcaceae_Romboutsia	Vancomycin EAE	0.2879008453058348	-0.32232918561015206	0.10389610389610386	0.0	0.0	0.0	1.0	0.0	3.473418075371428	0.0
+Bacteria_Firmicutes_Clostridia_Peptostreptococcales-Tissierellales_Peptostreptococcales-Tissierellales_Anaerococcus	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Clostridia_Peptostreptococcales-Tissierellales_Peptostreptococcales-Tissierellales_Anaerococcus	Control EAE	0.5126907602619235	0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.9504935089704365	0.0
+Bacteria_Firmicutes_Clostridia_Peptostreptococcales-Tissierellales_Peptostreptococcales-Tissierellales_Anaerococcus	Vancomycin EAE	0.8272593465627114	-0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.2088107606822835	0.0
+Bacteria_Firmicutes_Negativicutes_Acidaminococcales_Acidaminococcaceae_Phascolarctobacterium	Ampicillin EAE	0.5126907602619235	-0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.9504935089704365	0.0
+Bacteria_Firmicutes_Negativicutes_Acidaminococcales_Acidaminococcaceae_Phascolarctobacterium	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Negativicutes_Acidaminococcales_Acidaminococcaceae_Phascolarctobacterium	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Negativicutes_Veillonellales-Selenomonadales_Veillonellaceae_Allisonella_uncultured bacterium	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Negativicutes_Veillonellales-Selenomonadales_Veillonellaceae_Allisonella_uncultured bacterium	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Negativicutes_Veillonellales-Selenomonadales_Veillonellaceae_Allisonella_uncultured bacterium	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Negativicutes_Veillonellales-Selenomonadales_Veillonellaceae_Dialister	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Negativicutes_Veillonellales-Selenomonadales_Veillonellaceae_Dialister	Control EAE	0.27523352407483437	-0.3571428571428571	0.12755102040816324	0.0	0.0	0.0	1.0	0.0	3.633278334684644	0.0
+Bacteria_Firmicutes_Negativicutes_Veillonellales-Selenomonadales_Veillonellaceae_Dialister	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Negativicutes_Veillonellales-Selenomonadales_Veillonellaceae_Megasphaera	Ampicillin EAE	0.621873424330741	-0.15724272550828775	0.024725274725274724	0.0	0.0	0.0	1.0	0.0	1.6080442753703426	0.0
+Bacteria_Firmicutes_Negativicutes_Veillonellales-Selenomonadales_Veillonellaceae_Megasphaera	Control EAE	0.27523352407483437	-0.3571428571428571	0.12755102040816324	0.0	0.0	0.0	1.0	0.0	3.633278334684644	0.0
+Bacteria_Firmicutes_Negativicutes_Veillonellales-Selenomonadales_Veillonellaceae_Megasphaera	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Negativicutes_Veillonellales-Selenomonadales_Veillonellaceae_Megasphaera_uncultured bacterium	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Negativicutes_Veillonellales-Selenomonadales_Veillonellaceae_Megasphaera_uncultured bacterium	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Negativicutes_Veillonellales-Selenomonadales_Veillonellaceae_Megasphaera_uncultured bacterium	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Negativicutes_Veillonellales-Selenomonadales_Veillonellaceae_Veillonella	Ampicillin EAE	0.12663045794761718	-0.4999999999999999	0.2499999999999999	0.0	0.0	0.0	1.0	0.0	7.896994263525975	0.0
+Bacteria_Firmicutes_Negativicutes_Veillonellales-Selenomonadales_Veillonellaceae_Veillonella	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Firmicutes_Negativicutes_Veillonellales-Selenomonadales_Veillonellaceae_Veillonella	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Fusobacteriota_Fusobacteriia_Fusobacteriales_Fusobacteriaceae_Fusobacterium_Fusobacterium mortiferum	Ampicillin EAE	0.12663045794761718	0.4999999999999999	0.2499999999999999	0.0	0.0	0.0	1.0	0.0	7.896994263525975	0.0
+Bacteria_Fusobacteriota_Fusobacteriia_Fusobacteriales_Fusobacteriaceae_Fusobacterium_Fusobacterium mortiferum	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Fusobacteriota_Fusobacteriia_Fusobacteriales_Fusobacteriaceae_Fusobacterium_Fusobacterium mortiferum	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Proteobacteria_Alphaproteobacteria_Acetobacterales_Acetobacteraceae_Roseomonas	Ampicillin EAE	0.7743488608474193	-0.0890870806374748	0.007936507936507936	0.0	0.0	0.0	1.0	0.0	1.2914075948993278	0.0
+Bacteria_Proteobacteria_Alphaproteobacteria_Acetobacterales_Acetobacteraceae_Roseomonas	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Proteobacteria_Alphaproteobacteria_Acetobacterales_Acetobacteraceae_Roseomonas	Vancomycin EAE	0.8272593465627114	0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.2088107606822835	0.0
+Bacteria_Proteobacteria_Alphaproteobacteria_Rhizobiales_Beijerinckiaceae_Methylobacterium-Methylorubrum	Ampicillin EAE	0.8986690010530557	0.03779644730092272	0.0014285714285714284	0.0	0.0	0.0	1.0	0.0	1.1127567534077676	0.0
+Bacteria_Proteobacteria_Alphaproteobacteria_Rhizobiales_Beijerinckiaceae_Methylobacterium-Methylorubrum	Control EAE	0.12663045794761718	-0.4999999999999999	0.2499999999999999	0.0	0.0	0.0	1.0	0.0	7.896994263525975	0.0
+Bacteria_Proteobacteria_Alphaproteobacteria_Rhizobiales_Beijerinckiaceae_Methylobacterium-Methylorubrum	Vancomycin EAE	0.07054600045686604	-0.5765566601970551	0.33241758241758246	0.0	0.0	0.0	1.0	0.0	14.175148038497664	0.0
+Bacteria_Proteobacteria_Alphaproteobacteria_Rhizobiales_Hyphomicrobiaceae_Pedomicrobium_Pedomicrobium ferrugineum	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Proteobacteria_Alphaproteobacteria_Rhizobiales_Hyphomicrobiaceae_Pedomicrobium_Pedomicrobium ferrugineum	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Proteobacteria_Alphaproteobacteria_Rhizobiales_Hyphomicrobiaceae_Pedomicrobium_Pedomicrobium ferrugineum	Vancomycin EAE	0.5126907602619235	0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.9504935089704365	0.0
+Bacteria_Proteobacteria_Alphaproteobacteria_Rhizobiales_Rhizobiaceae_Mesorhizobium	Ampicillin EAE	0.9048611111111111	-0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.1051419800460476	0.0
+Bacteria_Proteobacteria_Alphaproteobacteria_Rhizobiales_Rhizobiaceae_Mesorhizobium	Control EAE	0.11091211748658877	-0.48349377841522817	0.23376623376623376	0.0	0.0	0.0	1.0	0.0	9.016147402657943	0.0
+Bacteria_Proteobacteria_Alphaproteobacteria_Rhizobiales_Rhizobiaceae_Mesorhizobium	Vancomycin EAE	0.2514790234630305	0.3563483225498992	0.12698412698412698	0.0	0.0	0.0	1.0	0.0	3.9764748018715292	0.0
+Bacteria_Proteobacteria_Alphaproteobacteria_Rhizobiales_Xanthobacteraceae_Bradyrhizobium	Ampicillin EAE	0.7195436507936508	-0.14285714285714285	0.02040816326530612	0.0	0.0	0.0	1.0	0.0	1.3897697504480904	0.0
+Bacteria_Proteobacteria_Alphaproteobacteria_Rhizobiales_Xanthobacteraceae_Bradyrhizobium	Control EAE	0.9048611111111111	0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.1051419800460476	0.0
+Bacteria_Proteobacteria_Alphaproteobacteria_Rhizobiales_Xanthobacteraceae_Bradyrhizobium	Vancomycin EAE	0.39875992063492066	-0.2857142857142857	0.08163265306122448	0.0	0.0	0.0	1.0	0.0	2.5077745988307	0.0
+Bacteria_Proteobacteria_Alphaproteobacteria_Sphingomonadales_Sphingomonadaceae_Sphingomonas	Ampicillin EAE	0.9048611111111111	0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.1051419800460476	0.0
+Bacteria_Proteobacteria_Alphaproteobacteria_Sphingomonadales_Sphingomonadaceae_Sphingomonas	Control EAE	0.621873424330741	-0.15724272550828775	0.024725274725274724	0.0	0.0	0.0	1.0	0.0	1.6080442753703426	0.0
+Bacteria_Proteobacteria_Alphaproteobacteria_Sphingomonadales_Sphingomonadaceae_Sphingomonas	Vancomycin EAE	0.8694170607412391	0.052414241836095915	0.0027472527472527475	0.0	0.0	0.0	1.0	0.0	1.150195970559204	0.0
+Bacteria_Proteobacteria_Gammaproteobacteria_Burkholderiales_Burkholderiaceae_Ralstonia	Ampicillin EAE	0.25175949861106117	-0.3401680257083045	0.11571428571428571	0.0	0.0	0.0	1.0	0.0	3.9720447709696245	0.0
+Bacteria_Proteobacteria_Gammaproteobacteria_Burkholderiales_Burkholderiaceae_Ralstonia	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Proteobacteria_Gammaproteobacteria_Burkholderiales_Burkholderiaceae_Ralstonia	Vancomycin EAE	0.41107977872331547	-0.2620712091804796	0.0686813186813187	0.0	0.0	0.0	1.0	0.0	2.4326178317641545	0.0
+Bacteria_Proteobacteria_Gammaproteobacteria_Burkholderiales_Comamonadaceae	Ampicillin EAE	0.27523352407483437	-0.3571428571428571	0.12755102040816324	0.0	0.0	0.0	1.0	0.0	3.633278334684644	0.0
+Bacteria_Proteobacteria_Gammaproteobacteria_Burkholderiales_Comamonadaceae	Control EAE	0.5126907602619235	0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.9504935089704365	0.0
+Bacteria_Proteobacteria_Gammaproteobacteria_Burkholderiales_Comamonadaceae	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Proteobacteria_Gammaproteobacteria_Burkholderiales_Hydrogenophilaceae_Hydrogenophilus	Ampicillin EAE	0.5126907602619235	0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.9504935089704365	0.0
+Bacteria_Proteobacteria_Gammaproteobacteria_Burkholderiales_Hydrogenophilaceae_Hydrogenophilus	Control EAE	0.8694170607412391	-0.052414241836095915	0.0027472527472527475	0.0	0.0	0.0	1.0	0.0	1.150195970559204	0.0
+Bacteria_Proteobacteria_Gammaproteobacteria_Burkholderiales_Hydrogenophilaceae_Hydrogenophilus	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Proteobacteria_Gammaproteobacteria_Burkholderiales_Neisseriaceae_Neisseria	Ampicillin EAE	0.8272593465627114	0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.2088107606822835	0.0
+Bacteria_Proteobacteria_Gammaproteobacteria_Burkholderiales_Neisseriaceae_Neisseria	Control EAE	0.12663045794761718	-0.4999999999999999	0.2499999999999999	0.0	0.0	0.0	1.0	0.0	7.896994263525975	0.0
+Bacteria_Proteobacteria_Gammaproteobacteria_Burkholderiales_Neisseriaceae_Neisseria	Vancomycin EAE	0.12663045794761718	-0.4999999999999999	0.2499999999999999	0.0	0.0	0.0	1.0	0.0	7.896994263525975	0.0
+Bacteria_Proteobacteria_Gammaproteobacteria_Burkholderiales_Sutterellaceae_Parasutterella_uncultured organism	Ampicillin EAE	0.39875992063492066	-0.2857142857142857	0.08163265306122448	0.0	0.0	0.0	1.0	0.0	2.5077745988307	0.0
+Bacteria_Proteobacteria_Gammaproteobacteria_Burkholderiales_Sutterellaceae_Parasutterella_uncultured organism	Control EAE	0.39875992063492066	-0.2857142857142857	0.08163265306122448	0.0	0.0	0.0	1.0	0.0	2.5077745988307	0.0
+Bacteria_Proteobacteria_Gammaproteobacteria_Burkholderiales_Sutterellaceae_Parasutterella_uncultured organism	Vancomycin EAE	1.0951388888888889	0.0	0.0	0.0	0.0	0.0	1.0	0.0	0.9131261889663919	
+Bacteria_Proteobacteria_Gammaproteobacteria_Burkholderiales_Sutterellaceae_Sutterella_Sutterellaceae bacterium	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Proteobacteria_Gammaproteobacteria_Burkholderiales_Sutterellaceae_Sutterella_Sutterellaceae bacterium	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Proteobacteria_Gammaproteobacteria_Burkholderiales_Sutterellaceae_Sutterella_Sutterellaceae bacterium	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Proteobacteria_Gammaproteobacteria_Burkholderiales	Ampicillin EAE	0.4254200204693487	-0.24174688920761409	0.05844155844155844	0.0	0.0	0.0	1.0	0.0	2.350618099488455	0.0
+Bacteria_Proteobacteria_Gammaproteobacteria_Burkholderiales	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Proteobacteria_Gammaproteobacteria_Burkholderiales	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Proteobacteria_Gammaproteobacteria_Enterobacterales_Enterobacteriaceae_Escherichia-Shigella	Ampicillin EAE	0.39875992063492066	-0.2857142857142857	0.08163265306122448	0.0	0.0	0.0	1.0	0.0	2.5077745988307	0.0
+Bacteria_Proteobacteria_Gammaproteobacteria_Enterobacterales_Enterobacteriaceae_Escherichia-Shigella	Control EAE	0.17886904761904762	-0.42857142857142855	0.18367346938775508	0.0	0.0	0.0	1.0	0.0	5.590682196339434	0.0
+Bacteria_Proteobacteria_Gammaproteobacteria_Enterobacterales_Enterobacteriaceae_Escherichia-Shigella	Vancomycin EAE	0.39875992063492066	-0.2857142857142857	0.08163265306122448	0.0	0.0	0.0	1.0	0.0	2.5077745988307	0.0
+Bacteria_Proteobacteria_Gammaproteobacteria_Enterobacterales_Enterobacteriaceae	Ampicillin EAE	0.5484126984126985	-0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.8234442836468885	0.0
+Bacteria_Proteobacteria_Gammaproteobacteria_Enterobacterales_Enterobacteriaceae	Control EAE	0.10868055555555556	-0.4999999999999999	0.2499999999999999	0.0	0.0	0.0	1.0	0.0	9.201277955271566	0.0
+Bacteria_Proteobacteria_Gammaproteobacteria_Enterobacterales_Enterobacteriaceae	Vancomycin EAE	0.27509920634920637	0.3571428571428571	0.12755102040816324	0.0	0.0	0.0	1.0	0.0	3.6350522899386943	0.0
+Bacteria_Proteobacteria_Gammaproteobacteria_Enterobacterales	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Proteobacteria_Gammaproteobacteria_Enterobacterales	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Proteobacteria_Gammaproteobacteria_Enterobacterales	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Proteobacteria_Gammaproteobacteria_Pasteurellales_Pasteurellaceae_Haemophilus	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Proteobacteria_Gammaproteobacteria_Pasteurellales_Pasteurellaceae_Haemophilus	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Proteobacteria_Gammaproteobacteria_Pasteurellales_Pasteurellaceae_Haemophilus	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Proteobacteria_Gammaproteobacteria_Pseudomonadales_Moraxellaceae_Acinetobacter	Ampicillin EAE	0.17886904761904762	-0.42857142857142855	0.18367346938775508	0.0	0.0	0.0	1.0	0.0	5.590682196339434	0.0
+Bacteria_Proteobacteria_Gammaproteobacteria_Pseudomonadales_Moraxellaceae_Acinetobacter	Control EAE	0.07054600045686604	-0.5765566601970551	0.33241758241758246	0.0	0.0	0.0	1.0	0.0	14.175148038497664	0.0
+Bacteria_Proteobacteria_Gammaproteobacteria_Pseudomonadales_Moraxellaceae_Acinetobacter	Vancomycin EAE	0.1612822677790775	-0.41576092031014994	0.17285714285714285	0.0	0.0	0.0	1.0	0.0	6.200309642035712	0.0
+Bacteria_Proteobacteria_Gammaproteobacteria_Pseudomonadales_Moraxellaceae_Enhydrobacter	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Proteobacteria_Gammaproteobacteria_Pseudomonadales_Moraxellaceae_Enhydrobacter	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Proteobacteria_Gammaproteobacteria_Pseudomonadales_Moraxellaceae_Enhydrobacter	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Proteobacteria_Gammaproteobacteria_Pseudomonadales_Pseudomonadaceae_Pseudomonas	Ampicillin EAE	0.5484126984126985	-0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.8234442836468885	0.0
+Bacteria_Proteobacteria_Gammaproteobacteria_Pseudomonadales_Pseudomonadaceae_Pseudomonas	Control EAE	0.9048611111111111	-0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.1051419800460476	0.0
+Bacteria_Proteobacteria_Gammaproteobacteria_Pseudomonadales_Pseudomonadaceae_Pseudomonas	Vancomycin EAE	0.7195436507936508	-0.14285714285714285	0.02040816326530612	0.0	0.0	0.0	1.0	0.0	1.3897697504480904	0.0
+Bacteria_Proteobacteria_Gammaproteobacteria_Xanthomonadales_Xanthomonadaceae_Stenotrophomonas	Ampicillin EAE	0.7083840532183997	-0.10910894511799618	0.011904761904761902	0.0	0.0	0.0	1.0	0.0	1.4116636243527818	0.0
+Bacteria_Proteobacteria_Gammaproteobacteria_Xanthomonadales_Xanthomonadaceae_Stenotrophomonas	Control EAE	0.9007802600472399	-0.036369648372665396	0.0013227513227513227	0.0	0.0	0.0	1.0	0.0	1.110148661503258	0.0
+Bacteria_Proteobacteria_Gammaproteobacteria_Xanthomonadales_Xanthomonadaceae_Stenotrophomonas	Vancomycin EAE	0.7195436507936508	-0.14285714285714285	0.02040816326530612	0.0	0.0	0.0	1.0	0.0	1.3897697504480904	0.0
+Bacteria_Proteobacteria_Gammaproteobacteria	Ampicillin EAE	0.5126907602619235	-0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.9504935089704365	0.0
+Bacteria_Proteobacteria_Gammaproteobacteria	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Proteobacteria_Gammaproteobacteria	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Verrucomicrobiota_Verrucomicrobiae_Verrucomicrobiales_Akkermansiaceae_Akkermansia_Akkermansia muciniphila	Ampicillin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Verrucomicrobiota_Verrucomicrobiae_Verrucomicrobiales_Akkermansiaceae_Akkermansia_Akkermansia muciniphila	Control EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Verrucomicrobiota_Verrucomicrobiae_Verrucomicrobiales_Akkermansiaceae_Akkermansia_Akkermansia muciniphila	Vancomycin EAE				0.0	0.0	0.0	1.0	0.0		
+Bacteria_Verrucomicrobiota_Verrucomicrobiae_Verrucomicrobiales_Akkermansiaceae_Akkermansia_uncultured bacterium	Ampicillin EAE	0.5484126984126985	-0.21428571428571427	0.04591836734693877	0.0	0.0	0.0	1.0	0.0	1.8234442836468885	0.0
+Bacteria_Verrucomicrobiota_Verrucomicrobiae_Verrucomicrobiales_Akkermansiaceae_Akkermansia_uncultured bacterium	Control EAE	0.7195436507936508	-0.14285714285714285	0.02040816326530612	0.0	0.0	0.0	1.0	0.0	1.3897697504480904	0.0
+Bacteria_Verrucomicrobiota_Verrucomicrobiae_Verrucomicrobiales_Akkermansiaceae_Akkermansia_uncultured bacterium	Vancomycin EAE	0.9048611111111111	0.07142857142857142	0.00510204081632653	0.0	0.0	0.0	1.0	0.0	1.1051419800460476	0.0

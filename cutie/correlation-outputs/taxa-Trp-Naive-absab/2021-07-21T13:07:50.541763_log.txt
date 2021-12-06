@@ -1,0 +1,25 @@
+Begin logging at 2021-07-21T13:07:50.541763
+The original command was -i /home/matt/cutie/configs/Trp-Naive-absab-taxa-config.ini
+The input_config_fp md5 was ad023ca71d38a8c86359b91984397abe
+The length of variables for file 2 is 6
+The number of samples for file 2 is 18
+The md5 of samp_var2 was b0d4478dc902653d23f63b8d9a6fd927
+The length of variables for file 1 is 208
+The number of samples for file 1 is 24
+The md5 of samp_var1 was aa80f153a128d2d9f566558ad149b45e
+There are 18 samples
+The first 3 samples are ['206', '208', '209']
+The first 3 var1 are ['Bacteria_Actinobacteriota_Actinobacteria_Actinomycetales_Actinomycetaceae_Actinomyces_Schaalia odontolytica', 'Bacteria_Actinobacteriota_Actinobacteria_Bifidobacteriales_Bifidobacteriaceae_Bifidobacterium', 'Bacteria_Actinobacteriota_Actinobacteria_Corynebacteriales_Corynebacteriaceae_Corynebacterium_Corynebacterium durum']
+The first 3 var2 are ['3-Indolelactic Acid', '3-Indolepropionic Acid', '3-Indoxyl Sulfate']
+The parameter chosen was p
+The statistic chosen was kendall
+The type of mc correction used was fdr
+The threshold value was 0.0045250896057347665
+The number of correlations is 1248
+The length of initial_corr is 101
+The number of false correlations for 1 is 52
+The number of true correlations for 1 is 49
+The number of reversed correlations for TP/FN1 is 0
+The number of reversed correlations for FP/TN1 is 0
+The runtime was 15.784562001000001
+Ended logging at 2021-07-21T13:08:06.394822

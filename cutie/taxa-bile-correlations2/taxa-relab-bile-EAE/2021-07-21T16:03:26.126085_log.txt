@@ -1,0 +1,25 @@
+Begin logging at 2021-07-21T16:03:26.126085
+The original command was -i /home/matt/cutie/configs/taxa-relab-bile-EAE.ini
+The input_config_fp md5 was fc11c527cfe711fdb3d2c4d05de3587b
+The length of variables for file 2 is 208
+The number of samples for file 2 is 24
+The md5 of samp_var2 was b7f29a764669d0a96cfe808435549e8a
+The length of variables for file 1 is 20
+The number of samples for file 1 is 24
+The md5 of samp_var1 was 893a9849a605228c0c2de1977279e7db
+There are 24 samples
+The first 3 samples are ['287', '288', '289']
+The first 3 var1 are ['Alpha Muricholic Acid', 'Beta Muricholic Acid', 'Chenodeoxycholic Acid']
+The first 3 var2 are ['Bacteria_Actinobacteriota_Actinobacteria_Actinomycetales_Actinomycetaceae_Actinomyces_Schaalia odontolytica', 'Bacteria_Actinobacteriota_Actinobacteria_Bifidobacteriales_Bifidobacteriaceae_Bifidobacterium', 'Bacteria_Actinobacteriota_Actinobacteria_Corynebacteriales_Corynebacteriaceae_Corynebacterium_Corynebacterium durum']
+The parameter chosen was p
+The statistic chosen was kendall
+The type of mc correction used was fdr
+The threshold value was 0.006791307126877597
+The number of correlations is 4160
+The length of initial_corr is 425
+The number of false correlations for 1 is 180
+The number of true correlations for 1 is 245
+The number of reversed correlations for TP/FN1 is 0
+The number of reversed correlations for FP/TN1 is 0
+The runtime was 21.054447256
+Ended logging at 2021-07-21T16:03:47.420377

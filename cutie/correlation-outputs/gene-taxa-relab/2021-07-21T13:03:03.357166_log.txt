@@ -1,0 +1,25 @@
+Begin logging at 2021-07-21T13:03:03.357166
+The original command was -i /home/matt/cutie/configs/gene-taxa-config-relab.ini
+The input_config_fp md5 was 635fa8ae0c5d342487d79a615371793d
+The length of variables for file 2 is 1414
+The number of samples for file 2 is 8
+The md5 of samp_var2 was 2062af937610ff3113ca9699d0b5abec
+The length of variables for file 1 is 208
+The number of samples for file 1 is 48
+The md5 of samp_var1 was cb29866cb571d57e653e9be1d8180e4d
+There are 8 samples
+The first 3 samples are ['287', '293', '295']
+The first 3 var1 are ['Bacteria_Actinobacteriota_Actinobacteria_Actinomycetales_Actinomycetaceae_Actinomyces_Schaalia odontolytica', 'Bacteria_Actinobacteriota_Actinobacteria_Bifidobacteriales_Bifidobacteriaceae_Bifidobacterium', 'Bacteria_Actinobacteriota_Actinobacteria_Corynebacteriales_Corynebacteriaceae_Corynebacterium_Corynebacterium durum']
+The first 3 var2 are ['Narf', 'Btbd17', 'Gmpr']
+The parameter chosen was p
+The statistic chosen was kendall
+The type of mc correction used was fdr
+The threshold value was 0.05
+The number of correlations is 294112
+The length of initial_corr is 22069
+The number of false correlations for 1 is 16919
+The number of true correlations for 1 is 5150
+The number of reversed correlations for TP/FN1 is 0
+The number of reversed correlations for FP/TN1 is 312
+The runtime was 234.08476711999998
+Ended logging at 2021-07-21T13:06:57.069835

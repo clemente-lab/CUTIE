@@ -1,0 +1,25 @@
+Begin logging at 2021-07-22T09:50:16.142457
+The original command was -i /home/matt/cutie/configs/EAEscore-relab-taxa-config.ini
+The input_config_fp md5 was e5a13f59f468d71bb4ff039a74bf6451
+The length of variables for file 2 is 1
+The number of samples for file 2 is 30
+The md5 of samp_var2 was 265fed5be99a2e368f212c47de253d37
+The length of variables for file 1 is 208
+The number of samples for file 1 is 24
+The md5 of samp_var1 was b7f29a764669d0a96cfe808435549e8a
+There are 24 samples
+The first 3 samples are ['287', '288', '289']
+The first 3 var1 are ['Bacteria_Actinobacteriota_Actinobacteria_Actinomycetales_Actinomycetaceae_Actinomyces_Schaalia odontolytica', 'Bacteria_Actinobacteriota_Actinobacteria_Bifidobacteriales_Bifidobacteriaceae_Bifidobacterium', 'Bacteria_Actinobacteriota_Actinobacteria_Corynebacteriales_Corynebacteriaceae_Corynebacterium_Corynebacterium durum']
+Var2 was ['EAE Cummulative Score']
+The parameter chosen was p
+The statistic chosen was kendall
+The type of mc correction used was fdr
+The threshold value was 0.05
+The number of correlations is 208
+The length of initial_corr is 42
+The number of false correlations for 1 is 27
+The number of true correlations for 1 is 15
+The number of reversed correlations for TP/FN1 is 0
+The number of reversed correlations for FP/TN1 is 0
+The runtime was 16.653203403
+Ended logging at 2021-07-22T09:50:32.857699

@@ -1,0 +1,103 @@
+#!/usr/bin/env python3
+
+import click
+import glob
+from pathlib import Path
+import pandas as pd
+from anapi.pandas_utils import (
+    write_dataframe_to_tsv, read_tsv_into_dataframe, sort_df, filter_by_col_val, fill_nan
+)
+
+CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
+
+
+@click.command(context_settings=CONTEXT_SETTINGS)
+@click.version_option(version='0.1')
+@click.option('-t', '--table_path',
+              required=True,
+              help="Path to taxa_tables.")
+@click.option('-o', '--output_folder',
+              required=False,
+              help="Output file for results table")
+@click.option('-m', '--map_path',
+              required=False,
+              help="Full path to mapping file")
+@click.option('-ao', '--analysis_option',
+              required=True,
+              help="Analysis option to execute")
+@click.option('-c', '--column',
+              required=False,
+              help="Full path to mapping file")
+@click.option('-a', '--analysis_name',
+              required=False,
+              help="Full path to mapping file")
+def table_analysis(table_path, output_folder, map_path, analysis_option, column, analysis_name):
+    """
+    Generic script for any sort of table-based calculations or transformations.
+    taxa_table_path: path to folder containing taxa tables
+    output_folder: path for output files to be written to.
+    map_path: path to mapping file
+    """
+    # Create output folder
+    output_dir = Path(output_folder)
+    if not output_dir.exists():
+        output_dir.mkdir(parents=True)
+    table_path = Path(table_path) / '*.tsv'
+    table_files = glob.glob(str(table_path))
+
+    for i, tsv_file in enumerate(table_files):
+        taxa_df = read_tsv_into_dataframe(tsv_file)
+
+        if analysis_option == 'sort':
+            taxa_df[column] = taxa_df[column].astype(float)
+            taxa_df = sort_df(taxa_df, column=column, ascending=False)
+        elif analysis_option == 'wide-to-long':
+            # success
+            df1 = pd.melt(taxa_df, id_vars=['PID'],
+                              value_vars=['Live-cm2', 'Dead-cm2', 'Total-cm2'], var_name='cm2',
+                          value_name='cm2-val')
+            df1['state'] = df1['cm2'].str.replace('-cm2', '')
+
+            df2 = pd.melt(taxa_df, id_vars=['PID'],
+                              value_vars=['#Live', '#Dead', '#Total'], var_name='number', value_name='number-val')
+            df2['state'] = df2['number'].str.replace('#', '')
+
+
+            taxa_df['Total%'] = 100
+            df3 = pd.melt(taxa_df, id_vars=['PID'],
+                              value_vars=['Live%', 'Dead%', 'Total%'], var_name='percent', value_name='percent-val')
+            df3['state'] = df3['percent'].str.replace('%', '')
+
+            final_df = df1.merge(df2, on=['PID', 'state'], how='outer')
+            final_df = final_df.merge(df3, on=['PID', 'state'], how='outer')
+
+            final_df['order'] = final_df['state'].str.replace('Dead', 'ZDead')
+            final_df['order2'] = final_df['order'].str.replace('Live', 'YLive')
+
+
+            final_df.sort_values(['PID', 'order2'], ascending=True, inplace=True)
+            #final_df = sort_df(final_df, column='PID', ascending=True)
+            final_df.drop('state', 1, inplace=True)
+            final_df.drop('order', 1, inplace=True)
+            final_df.drop('order2', 1, inplace=True)
+
+            table_name = str(Path(tsv_file).stem)
+            write_dataframe_to_tsv(final_df, f'{table_name}.tsv', output_folder)
+
+        elif analysis_option == 'long-to-wide':
+                taxa_df = pd.pivot_table(taxa_df, index='Sample_ID', columns='Analyte')
+                taxa_df = taxa_df.T
+                taxa_df.reset_index(inplace=True)
+                taxa_df = taxa_df.drop(columns='level_0')
+                # taxa_df.set_index(taxa_df.columns[0], inplace=True)
+                # taxa_df = taxa_df.T
+                # taxa_df.reset_index(inplace=True)
+
+                table_name = str(Path(tsv_file).stem)
+                write_dataframe_to_tsv(taxa_df, f'{table_name}.tsv', output_folder)
+
+
+            # final_table.columns = final_table.columns.str.replace('value', 'abundance')
+
+if __name__ == '__main__':
+    table_analysis()
