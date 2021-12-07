@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "/sc/arion/projects/clemej05a/jakleen/hippGut/pilot/fig_3b/cutie_analysis/CUTIE/hippGut/scripts/../../scripts/calculate_cutie.py", line 292, in <module>
+    calculate_cutie()
+  File "/hpc/packages/minerva-centos7/py_packages/3.7/lib/python3.7/site-packages/click/core.py", line 1128, in __call__
+    return self.main(*args, **kwargs)
+  File "/hpc/packages/minerva-centos7/py_packages/3.7/lib/python3.7/site-packages/click/core.py", line 1053, in main
+    rv = self.invoke(ctx)
+  File "/hpc/packages/minerva-centos7/py_packages/3.7/lib/python3.7/site-packages/click/core.py", line 1395, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/hpc/packages/minerva-centos7/py_packages/3.7/lib/python3.7/site-packages/click/core.py", line 754, in invoke
+    return __callback(*args, **kwargs)
+  File "/sc/arion/projects/clemej05a/jakleen/hippGut/pilot/fig_3b/cutie_analysis/CUTIE/hippGut/scripts/../../scripts/calculate_cutie.py", line 142, in calculate_cutie
+    multi_corr, paired)
+  File "/hpc/users/leej111/.local/lib/python3.7/site-packages/cutie-0.2.0-py3.7.egg/cutie/statistics.py", line 105, in set_threshold
+    minp = min(pvalues)
+ValueError: min() arg is an empty sequence

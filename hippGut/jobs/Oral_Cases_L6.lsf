@@ -6,13 +6,14 @@
 #BSUB -n 1 
 #BSUB -R "span[hosts=1]"
 #BSUB -R rusage[mem=10000]
-#BSUB -o /sc/arion/projects/clemej05a/jakleen/hippGut/pilot/fig_3b/cutie_analysis/CUTIE/hippGut/logs/Oral_Cases_L6_%J.stdout
-#BSUB -eo /sc/arion/projects/clemej05a/jakleen/hippGut/pilot/fig_3b/cutie_analysis/CUTIE/hippGut/logs/Oral_Cases_L6_%J.stderr
+#BSUB -o /sc/arion/projects/clemej05a/jakleen/hippGut/pilot/fig_3b/cutie_analysis/CUTIE/hippGut/scripts/../logs/Oral_Cases_L6_%J.stdout
+#BSUB -eo /sc/arion/projects/clemej05a/jakleen/hippGut/pilot/fig_3b/cutie_analysis/CUTIE/hippGut/scripts/../logs/Oral_Cases_L6_%J.stderr
 #BSUB -L /bin/bash
 
 ml purge
 ml anaconda3 
+ml python/3.7.3
 source activate cutie
 
-python /sc/arion/projects/clemej05a/jakleen/hippGut/pilot/fig_3b/cutie_analysis/CUTIE/hippGut/../scripts/calculate_cutie.py -i /sc/arion/projects/clemej05a/jakleen/hippGut/pilot/fig_3b/cutie_analysis/CUTIE/hippGut/inputs/config_files/config_Oral_Cases_L6.ini
+python /sc/arion/projects/clemej05a/jakleen/hippGut/pilot/fig_3b/cutie_analysis/CUTIE/hippGut/scripts/../../scripts/calculate_cutie.py -i /sc/arion/projects/clemej05a/jakleen/hippGut/pilot/fig_3b/cutie_analysis/CUTIE/hippGut/scripts/../inputs/config_files/config_Oral_Cases_L6.ini
 

@@ -1,10 +1,11 @@
 #!/bin/bash
 
-work_path=/sc/arion/projects/clemej05a/jakleen/hippGut/pilot/fig_3b/cutie_analysis/CUTIE/hippGut
+work_path=$(pwd)/..
 
 input_dir=$work_path/inputs/var_files
 output_dir=$work_path/inputs/config_files
 mkdir -p $output_dir
+rm $output_dir/*
 
 groups="Oral_Cases Oral_Controls Stool_Cases Stool_Controls"
 levels="L5 L6"

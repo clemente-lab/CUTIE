@@ -1,7 +1,0 @@
-Traceback (most recent call last):
-  File "/sc/arion/projects/clemej05a/jakleen/hippGut/pilot/fig_3b/cutie_analysis/CUTIE/hippGut/../scripts/calculate_cutie.py", line 3, in <module>
-    from cutie import output
-  File "/hpc/users/leej111/conda/envs/cutie/lib/python3.7/site-packages/cutie-0.2.0-py3.7.egg/cutie/output.py", line 704
-    else:
-       ^
-SyntaxError: invalid syntax

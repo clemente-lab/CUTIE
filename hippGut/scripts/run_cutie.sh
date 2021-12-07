@@ -1,6 +1,6 @@
 #!/bin/bash
 
-work_path=/sc/arion/projects/clemej05a/jakleen/hippGut/pilot/fig_3b/cutie_analysis/CUTIE/hippGut
+work_path=$(pwd)/..
 input_dir=$work_path/inputs/config_files
 job_dir=$work_path/jobs
 log_dir=$work_path/logs
@@ -36,6 +36,7 @@ for group in $groups; do
 
 ml purge
 ml anaconda3 
+# ml python/3.7.3
 source activate cutie
 
 python $work_path/../scripts/calculate_cutie.py -i $file_path

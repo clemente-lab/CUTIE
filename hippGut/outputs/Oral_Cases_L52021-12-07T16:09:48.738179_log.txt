@@ -1,0 +1,16 @@
+Begin logging at 2021-12-07T16:09:48.738179
+The original command was -i /sc/arion/projects/clemej05a/jakleen/hippGut/pilot/fig_3b/cutie_analysis/CUTIE/hippGut/scripts/../inputs/config_files/config_Oral_Cases_L5.ini
+The input_config_fp md5 was 253f9b733b1cf65cf61cce64f2d7cc5f
+The length of variables for file 2 is 21
+The number of samples for file 2 is 41
+The md5 of samp_var2 was 4c344f108e22375383f488aa899bece9
+The length of variables for file 1 is 15
+The number of samples for file 1 is 156
+The md5 of samp_var1 was 53e54acc4632ef204afe8b7b540c44c6
+There are 0 samples
+The first 3 samples are []
+The first 3 var1 are ['12o', '7o', '2o']
+The first 3 var2 are ['1o', '3o', '4o']
+The parameter chosen was p
+The statistic chosen was kendall
+The type of mc correction used was fdr
