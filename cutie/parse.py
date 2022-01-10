@@ -140,6 +140,7 @@ def parse_config(input_config_fp):
     delimiter2 = Config.get('input', 'delimiter2')
     f1type = Config.get('input', 'f1type')
     f2type = Config.get('input', 'f2type')
+    print(Config.getint('input', 'skip1'))
     skip1 = Config.getint('input', 'skip1')
     skip2 = Config.getint('input', 'skip2')
     startcol1 = Config.getint('input', 'startcol1')

@@ -701,6 +701,7 @@ def diag_plots(samp_ids, var1_names, var2_names, samp_counter, var1_counter,
                          'var_number': var1_names}
         file_mapping = {'samp_number': 'influential_samples',
                          'var1_number': 'influential_variables',
+                         'var2_number': 'influential_variables2'}
     else:
         diag_stats = ['samp_number', 'var1_number', 'var2_number']
         stats_mapping = {'samp_number': samp_counter,
