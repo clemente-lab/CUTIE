@@ -38,7 +38,7 @@ def parse_input(ftype, fp, startcol, endcol, delimiter, skip):
     """
 
     # read in df and set index
-    df = pd.read_csv(fp, sep=delimiter, skiprows=skip, engine='python')
+    df = pd.read_csv(fp, sep=delimiter, skiprows=skip, engine='python', dtype='str')
     df = df.set_index(list(df)[0])
 
     # remove completely NA rows or vars

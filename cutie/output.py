@@ -700,7 +700,7 @@ def diag_plots(samp_ids, var1_names, var2_names, samp_counter, var1_counter,
         name_mapping = {'samp_number': samp_ids,
                          'var_number': var1_names}
         file_mapping = {'samp_number': 'influential_samples',
-                         'var1_number': 'influential_variables',
+                         'var_number': 'influential_variables'}
     else:
         diag_stats = ['samp_number', 'var1_number', 'var2_number']
         stats_mapping = {'samp_number': samp_counter,
@@ -735,7 +735,7 @@ def diag_plots(samp_ids, var1_names, var2_names, samp_counter, var1_counter,
 
             counts_df = pd.DataFrame(
                 {stats: counts[:, 0], false_label: counts[:, i+1]})
-            sns.lmplot(stats, false_label, data=counts_df,
+            sns.lmplot(data=counts_df, x=stats, y=false_label,
                        fit_reg=False)
 
 
