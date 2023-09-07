@@ -45,6 +45,7 @@ setup(name='cutie',
           'matplotlib',
           'seaborn',
           'py',
-          'pytest'
+          'pytest',
+          'minepy'
       ],
       zip_safe=False)
