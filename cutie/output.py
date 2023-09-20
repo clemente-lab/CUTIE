@@ -466,9 +466,9 @@ def plot_figure(values, fp, summary_df, title):
     fig = plt.figure()
     sns.set_style('white')
     try:
-        sns.distplot(values, bins=20, kde=False, rug=False)
+        sns.displot(values, bins=20, kde=False, rug=False)
     except ValueError:
-        sns.distplot(values, bins=None, kde=False, rug=False)
+        sns.displot(values, bins=None, kde=False, rug=False)
     plt.ylim(0, int(len(summary_df)/10))
     plt.xlim(-1, 1)
     ax = plt.gca()
