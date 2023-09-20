@@ -21,3 +21,6 @@
 
 # OS X files
 .DS_Store
+
+# CUTIE.wiki is a repo
+/demos/CUTIE.wiki
