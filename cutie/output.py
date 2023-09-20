@@ -798,7 +798,7 @@ def diag_plots(samp_ids, var1_names, var2_names, samp_counter, var1_counter,
 
             counts_df = pd.DataFrame(
                 {stats: counts[:, 0], false_label: counts[:, i+1]})
-            sns.lmplot(stats, false_label, data=counts_df,
+            sns.lmplot(x=stats, y=false_label, data=counts_df,
                        fit_reg=False)
 
 
