@@ -579,11 +579,15 @@ def plot_corr(row, df_folder_fp, var1_names, var2_names, samp_var1, samp_var2,
     y = samp_var2[:, var2]
 
     # convert variable name of otu formats and shorten if necessary
-    for v in [var1_name, var2_name]:
-        if v[0:3] == 'k__':
-            v = utils.read_taxa(v)
-        elif len(v) > 25:
-            v = v[0:25]
+    if var1_name[0:3] == 'k__':
+        var1_name = utils.read_taxa(var1_name)
+    elif len(var1_name) > 25:
+        var1_name = var1_name[0:25]
+
+    if var2_name[0:3] == 'k__':
+        var2_name = utils.read_taxa(var2_name)
+    elif len(var2_name) > 25:
+        var2_name = var2_name[0:25]
 
     # consolidate variables into pd dataframe
     # example:
