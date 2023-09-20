@@ -628,6 +628,9 @@ def plot_corr(row, df_folder_fp, var1_names, var2_names, samp_var1, samp_var2,
         pair_df['label'] = pair_df['label'].apply(
             lambda x: 'FN' if x == 1 else ('FN (reverse sign)' if x == 2 else 'TN'))
 
+    # export pair_df to tsv should users wish to plot manually
+    pair_df.to_csv(df_folder_fp + '/' + str(var1) + '_' + str(var2) + '.tsv', sep='\t')
+
     # create plot and title
     title = 'p, ext_p = ' + '%.2E' % Decimal(row['pvalues']) + \
             ', ' + '%.2E' % Decimal(row['extreme_p']) + ' ' + \
