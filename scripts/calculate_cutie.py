@@ -10,12 +10,12 @@ matplotlib.use('Agg')
 
 import time
 import click
-import os
 import shutil
 import numpy as np
 import pandas as pd
 import datetime
 import sys
+from pathlib import Path
 
 import random
 from decimal import Decimal
@@ -50,19 +50,19 @@ def calculate_cutie(input_config_fp):
      fold, fold_value, graph_bound, fix_axis) = parse.parse_config(input_config_fp)
 
     # create working directory
-    if os.path.exists(working_dir) is not True:
+    if Path(working_dir).is_dir() is not True:
         print('No working directory found, creating working_dir...')
-        os.makedirs(working_dir)
+        Path(working_dir).mkdir()
     elif overwrite is not True:
         print('Working directory already exists, exiting...')
         sys.exit()
     else: # if overwrite is True and working dir already exists
         print('Overwriting pre-existing directory...')
         shutil.rmtree(working_dir)
-        os.makedirs(working_dir)
+        Path(working_dir).mkdir()
 
-    if os.path.exists(working_dir + 'data_processing') is not True:
-        os.makedirs(working_dir + 'data_processing')
+    if Path(working_dir + 'data_processing').is_dir() is not True:
+        Path(working_dir + 'data_processing').mkdir()
 
     # initialize and write log file
     start_time = time.process_time()
@@ -279,8 +279,8 @@ def calculate_cutie(input_config_fp):
     ###
 
     # create subfolder to hold graphing files
-    if os.path.exists(working_dir + 'graphs') is not True:
-        os.makedirs(working_dir + 'graphs')
+    if Path(working_dir + 'graphs').is_dir() is not True:
+        Path(working_dir + 'graphs').mkdir()
 
     output.graph_subsets(working_dir, var1_names, var2_names, f1type, f2type,
         summary_df, statistic, forward_stats, resample_k, initial_corr,

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import os
+from pathlib import Path
 import datetime
 from decimal import Decimal
 import numpy as np
@@ -711,8 +711,8 @@ def plot_corr_sets(graph_bound, df, working_dir, f1type, f2type, var1_names,
         + str(df.k) + '_' + str(len(df.pairs))
     if df.rev_sign:
         df_folder_fp = df_folder_fp + '_revsign'
-    if os.path.exists(df_folder_fp) is not True:
-        os.makedirs(df_folder_fp)
+    if Path(df_folder_fp).is_dir() is not True:
+        Path(df_folder_fp).mkdir()
 
     # plot representative plots
     for index, row in df_forplot.iterrows():

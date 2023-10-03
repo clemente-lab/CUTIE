@@ -4,7 +4,7 @@ import hashlib
 import pandas as pd
 import matplotlib
 import sys
-import os
+from pathlib import Path
 
 matplotlib.use('Agg')
 
@@ -135,9 +135,9 @@ def parse_config(input_config_fp):
         sys.exit('Error: No config file specified')
 
     # [input]
-    samp_var1_fp = os.path.expanduser(Config.get('input', 'samp_var1_fp'))
+    samp_var1_fp = Path(Config.get('input', 'samp_var1_fp')).expanduser()
     delimiter1 = Config.get('input', 'delimiter1')
-    samp_var2_fp = os.path.expanduser(Config.get('input', 'samp_var2_fp'))
+    samp_var2_fp = Path(Config.get('input', 'samp_var2_fp')).expanduser()
     delimiter2 = Config.get('input', 'delimiter2')
     f1type = Config.get('input', 'f1type')
     f2type = Config.get('input', 'f2type')
@@ -150,7 +150,7 @@ def parse_config(input_config_fp):
     paired = Config.getboolean('input', 'paired')
 
     # [output]
-    working_dir = os.path.expanduser(Config.get('output', 'working_dir'))
+    working_dir = Path(Config.get('output', 'working_dir')).expanduser().as_posix() + '/'
     overwrite = Config.getboolean('input', 'overwrite')
 
     # [stats]
