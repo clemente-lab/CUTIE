@@ -524,7 +524,7 @@ def plot_pdist(df, working_dir):
             dist_fp = working_dir + 'graphs/' + df.quadrant + '_' + str(df.k) \
                 + '_' + dist + '.pdf'
             fig = plt.figure()
-            sns.distplot(stat_vals, bins=20, kde=False, rug=False)
+            sns.displot(stat_vals, bins=20, kde=False, rug=False)
             plt.tick_params(axis='both', which='both', top=False, right=False)
             sns.despine()
             ax = plt.gca()
