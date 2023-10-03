@@ -635,8 +635,10 @@ def plot_corr(row, df_folder_fp, var1_names, var2_names, samp_var1, samp_var2,
     # create plot and title
     title = 'p, ext_p = ' + '%.2E' % Decimal(row['pvalues']) + \
             ', ' + '%.2E' % Decimal(row['extreme_p']) + ' ' + \
-            'r, ext_r = ' + '%.2E' % Decimal(row['correlations']) + \
-            ', ' + '%.2E' % Decimal(row['extreme_r'])
+            'r, ext_r = ' + str(row['correlations']) + \
+            ', ' + str(row['extreme_r'])
+            #'r, ext_r = ' + '%.2E' % Decimal(row['correlations']) + \
+            #', ' + '%.2E' % Decimal(row['extreme_r'])
 
     fig = plt.figure(figsize=(5,5))
     #sns.set_style("white")
