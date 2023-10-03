@@ -589,6 +589,11 @@ def plot_corr(row, df_folder_fp, var1_names, var2_names, samp_var1, samp_var2,
     elif len(var2_name) > 25:
         var2_name = var2_name[0:25]
 
+    # if var names are the same, append suffix
+    if var1_name == var2_name:
+        var1_name += '_df1'
+        var2_name += '_df2'
+
     # consolidate variables into pd dataframe
     # example:
     # let cutie = np.array([0,0,0,1,1])
