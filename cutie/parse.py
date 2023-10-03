@@ -39,7 +39,11 @@ def parse_input(ftype, fp, startcol, endcol, delimiter, skip):
 
     # read in df and set index
     df = pd.read_csv(fp, sep=delimiter, skiprows=skip, engine='python')
-    df = df.set_index(list(df)[0])
+
+    # if the header row has the same number of entries as the first row of data, the index is named
+    # otherwise use unnamed index
+    if list(df)[0] == len(df.iloc[1,:]):
+        df = df.set_index(list(df)[0])
 
     # remove completely NA rows or vars
     df = df.dropna(how='all', axis=1)
