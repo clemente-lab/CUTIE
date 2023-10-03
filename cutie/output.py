@@ -652,7 +652,7 @@ def plot_corr(row, df_folder_fp, var1_names, var2_names, samp_var1, samp_var2,
     plt.title(title, fontsize=8)
 
     # rotate axis labels
-    plt.xticks(rotation=90)
+    plt.xticks(rotation=45)
 
     fig.set_tight_layout(True)
     sns.despine()
