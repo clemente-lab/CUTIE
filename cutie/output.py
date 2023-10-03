@@ -641,21 +641,20 @@ def plot_corr(row, df_folder_fp, var1_names, var2_names, samp_var1, samp_var2,
             #', ' + '%.2E' % Decimal(row['extreme_r'])
 
     fig = plt.figure(figsize=(5,5))
-    #sns.set_style("white")
     sns.set_style('white')
-    sns_plot = sns.scatterplot(x=var1_name, y=var2_name, data=pair_df, hue='label')
-    #sns.set_style("dark")
     sns.axes_style("white")
+
+    sns_plot = sns.scatterplot(x=var1_name, y=var2_name, data=pair_df, hue='label')
     if fix_axis:
         sns_plot.set(xlim=(var1_min, var1_max), ylim=(var2_min, var2_max))
-    #ax = plt.gca()
-    #ax.grid(False)
-    #ax.set_title(title, fontsize=8)
+
+    # set title
     plt.title(title, fontsize=8)
-    #fig.patch.set_visible(False)
-    #ax.patch.set_visible(False)
+
+    # rotate axis labels
+    plt.xticks(rotation=90)
+
     fig.set_tight_layout(True)
-    #plt.tick_params(axis='both', which='both', top=False, right=False)
     sns.despine()
     plt.savefig(df_folder_fp + '/' + str(var1) + '_' + str(var2) + '.pdf')
     plt.close('all')
