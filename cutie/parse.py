@@ -95,7 +95,7 @@ def process_df(samp_var_df, samp_ids):
     # obtain values
     samp_var = samp_var_df.values
 
-    return samp_var, df_meta
+    return samp_var
 
 ###
 # Config parsing
