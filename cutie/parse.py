@@ -41,10 +41,6 @@ def parse_input(ftype, fp, startcol, endcol, delimiter, skip, metadata):
     # read in df and set index
     df = pd.read_csv(fp, sep=delimiter, skiprows=skip, engine='python', index_col=0)
 
-    # remove completely NA rows or vars
-    df = df.dropna(how='all', axis=1)
-    df = df.dropna(how='all', axis=0)
-
     # otu tables require transposition
     if ftype == 'untidy':
         df = df.T
@@ -62,6 +58,10 @@ def parse_input(ftype, fp, startcol, endcol, delimiter, skip, metadata):
         df = df.drop(metadata, axis=1)
     else:
         df_meta = pd.DataFrame() # empty placeholder dataframe
+
+    # remove completely NA rows or vars
+    df = df.dropna(how='all', axis=1)
+    df = df.dropna(how='all', axis=0)
 
     # obtain list of sample ids, variable names, number of var, and number of samples
     samp_ids = df.index.values
