@@ -648,7 +648,7 @@ def plot_corr(samp_ids, row, df_folder_fp, var1_names, var2_names, samp_var1, sa
     plot_categories = [None]
 
     # create one plot per metadata
-    if df_meta != 'None':
+    if not df_meta.empty:
         plot_categories = plot_categories + list(df_meta.columns.values)
     
     for m in plot_categories:

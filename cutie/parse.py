@@ -61,7 +61,7 @@ def parse_input(ftype, fp, startcol, endcol, delimiter, skip, metadata):
         df_meta = df[metadata]
         df = df.drop(metadata, axis=1)
     else:
-        df_meta = 'None'
+        df_meta = pd.DataFrame() # empty placeholder dataframe
 
     # obtain list of sample ids, variable names, number of var, and number of samples
     samp_ids = df.index.values
