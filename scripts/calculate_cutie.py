@@ -110,8 +110,8 @@ def calculate_cutie(input_config_fp):
 
     # subset dataframe
     samp_var1, df_meta = parse.process_df(samp_var1_df, samp_ids, metadata)
-    samp_var2, _ = parse.process_df(samp_var2_df, samp_ids, metadata)
-
+    samp_var2, _ = parse.process_df(samp_var2_df, samp_ids, 'None')
+    
     # printing of samp and var names for reference
     output.write_log('There are ' + str(len(samp_ids)) + ' samples', log_fp)
     output.write_log('The first 3 samples are ' + str(samp_ids[0:3]), log_fp)
