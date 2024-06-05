@@ -86,6 +86,7 @@ def process_df(samp_var_df, samp_ids, metadata):
     # extract metadata
     if metadata is not None:
         df_meta = samp_var_df[metadata]
+        samp_var_df = samp_var_df.drop(metadata, axis=1)
 
     # coerce NA's
     samp_var_df = samp_var_df.apply(pd.to_numeric, errors='coerce')
