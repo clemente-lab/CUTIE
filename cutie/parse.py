@@ -72,8 +72,8 @@ def process_df(samp_var_df, samp_ids, metadata):
                       of metadata.
     samp_ids        - List of strings. Contains sample names in order that they
                       were read.
-    metadata        - List of strings. Contains list of columns to extract prior to 
-                      computing correlations.
+    metadata        - List of strings (or None). Contains list of columns to extract 
+                      prior to computing correlations.
 
     OUTPUTS
     samp_var        - 2D array where each value in row i col j is the level of
@@ -84,7 +84,7 @@ def process_df(samp_var_df, samp_ids, metadata):
     samp_var_df = samp_var_df.loc[samp_ids]
 
     # extract metadata
-    if metadata is not None:
+    if metadata != 'None':
         df_meta = samp_var_df[metadata]
         samp_var_df = samp_var_df.drop(metadata, axis=1)
 
@@ -94,7 +94,7 @@ def process_df(samp_var_df, samp_ids, metadata):
     # obtain values
     samp_var = samp_var_df.values
 
-    return samp_var, metadata
+    return samp_var, df_meta
 
 ###
 # Config parsing
@@ -132,7 +132,7 @@ def parse_config(input_config_fp):
         'corr_compare': False,
         'graph_bound': 30,
         'fix_axis': False,
-        'metadata': None
+        'metadata': 'None'
     }
     Config = configparser.ConfigParser(defaults=defaults)
     try:

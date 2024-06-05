@@ -178,7 +178,7 @@ def graph_subsets(samp_ids, working_dir, var1_names, var2_names, f1type, f2type,
                   statistic, forward_stats, resample_k, initial_corr, true_corr,
                   true_corr_to_rev, false_corr_to_rev, graph_bound, samp_var1,
                   samp_var2, all_pairs, region_sets, corr_compare, exceeds_points,
-                  rev_points, fix_axis, df_meta=None):
+                  rev_points, fix_axis, df_meta):
     """
     Creates folders and plots corresponding to particular sets of variable
     pairs. Pairwise correlation scatterplots are plotted as well as fold p value
@@ -378,7 +378,7 @@ def generate_dfs(statistic, forward_stats, initial_corr, true_corr,
 
 def plot_dfs(sample_ids, graph_bound, working_dir, f1type, f2type, var1_names, var2_names,
              samp_var1, samp_var2, dfs, initial_insig_corr, initial_sig_corr,
-             summary_df, exceeds_points, rev_points, fix_axis, forward, df_meta=None):
+             summary_df, exceeds_points, rev_points, fix_axis, forward, df_meta):
     """
     Plot correlations and distribution of pvalues for each dataframe set.
     ----------------------------------------------------------------------------
@@ -543,7 +543,7 @@ def plot_pdist(df, working_dir):
 
 def plot_corr(samp_ids, row, df_folder_fp, var1_names, var2_names, samp_var1, samp_var2,
               resample_k, exceeds_points, rev_points, fix_axis, var1_max,
-              var1_min, var2_max, var2_min, forward, df_meta=None):
+              var1_min, var2_max, var2_min, forward, df_meta):
     """
     Helper function for plot_corr_sets(). Plots pairwise correlations within each
     set of correlations as defined by df.
@@ -648,7 +648,7 @@ def plot_corr(samp_ids, row, df_folder_fp, var1_names, var2_names, samp_var1, sa
     plot_categories = [None]
 
     # create one plot per metadata
-    if df_meta is not None:
+    if df_meta != 'None':
         plot_categories = plot_categories + list(df_meta.columns.values)
     
     for m in plot_categories:
