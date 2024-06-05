@@ -8,7 +8,7 @@ from pathlib import Path
 
 matplotlib.use('Agg')
 
-def parse_input(ftype, fp, startcol, endcol, delimiter, skip):
+def parse_input(ftype, fp, startcol, endcol, delimiter, skip, metadata):
     """
     Parses data in traditional tidy format (samples as rows, variables as
     cols) or untidy/OTU-table format (samples as cols, taxa/variables as rows)
@@ -26,7 +26,8 @@ def parse_input(ftype, fp, startcol, endcol, delimiter, skip):
                   only relevant if data is in tidy format.
     skip        - Integer. Number lines to skip in parsing the file
     delimiter   - String. Character that delimites file.
-
+    metadata    - List of strings (or None). Contains list of columns to extract 
+                  prior to computing correlations.
     OUTPUTS
     samp_ids      - List of strings. Contains sample names in order that they
                     were read.
@@ -54,16 +55,23 @@ def parse_input(ftype, fp, startcol, endcol, delimiter, skip):
         df = df.iloc[:, startcol:endcol]
     elif not (startcol == -1 and endcol == -1):
         raise ValueError('Both startcol and endcol must be specified')
-    # obtain list of sample ids, variable names, number of var, and number of
-    # samples
+    
+    # extract metadata
+    if metadata != 'None':
+        df_meta = df[metadata]
+        df = df.drop(metadata, axis=1)
+    else:
+        df_meta = 'None'
+
+    # obtain list of sample ids, variable names, number of var, and number of samples
     samp_ids = df.index.values
     var_names = [str(x) for x in list(df)]
     n_var = len(list(df))
     n_samp = len(df)
 
-    return samp_ids, var_names, df, n_var, n_samp
+    return samp_ids, var_names, df, df_meta, n_var, n_samp
 
-def process_df(samp_var_df, samp_ids, metadata):
+def process_df(samp_var_df, samp_ids):
     """
     Reads in dataframe. Returns matrix of values. Nans are ignored in all cases.
     ----------------------------------------------------------------------------
@@ -72,8 +80,6 @@ def process_df(samp_var_df, samp_ids, metadata):
                       of metadata.
     samp_ids        - List of strings. Contains sample names in order that they
                       were read.
-    metadata        - List of strings (or None). Contains list of columns to extract 
-                      prior to computing correlations.
 
     OUTPUTS
     samp_var        - 2D array where each value in row i col j is the level of
@@ -83,13 +89,6 @@ def process_df(samp_var_df, samp_ids, metadata):
     # subset dataframes
     samp_var_df = samp_var_df.loc[samp_ids]
 
-    # extract metadata
-    if metadata != 'None':
-        df_meta = samp_var_df[metadata]
-        samp_var_df = samp_var_df.drop(metadata, axis=1)
-    else:
-        df_meta = 'None'
-        
     # coerce NA's
     samp_var_df = samp_var_df.apply(pd.to_numeric, errors='coerce')
 

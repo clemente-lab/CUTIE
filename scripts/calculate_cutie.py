@@ -90,15 +90,15 @@ def calculate_cutie(input_config_fp):
     # file handling and parsing decisions
     # file 1 is the 'dominant' file type and should always contain the OTU file
     # we let the dominant fil 'override' the sample_id list ordering
-    samp_ids2, var2_names, samp_var2_df, n_var2, n_samp = parse.parse_input(
-        f2type, samp_var2_fp, startcol2, endcol2, delimiter2, skip2)
+    samp_ids2, var2_names, samp_var2_df, _, n_var2, n_samp = parse.parse_input(
+        f2type, samp_var2_fp, startcol2, endcol2, delimiter2, skip2, metadata='None')
     output.write_log('The length of variables for file 2 is ' + str(n_var2), log_fp)
     output.write_log('The number of samples for file 2 is ' + str(n_samp), log_fp)
     output.write_log('The md5 of samp_var2 was ' + \
         str(parse.md5_checksum(samp_var2_fp)), log_fp)
 
-    samp_ids1, var1_names, samp_var1_df, n_var1, n_samp = parse.parse_input(
-        f1type, samp_var1_fp, startcol1, endcol1, delimiter1, skip1)
+    samp_ids1, var1_names, samp_var1_df, df_meta, n_var1, n_samp = parse.parse_input(
+        f1type, samp_var1_fp, startcol1, endcol1, delimiter1, skip1, metadata)
     output.write_log('The length of variables for file 1 is ' + str(n_var1), log_fp)
     output.write_log('The number of samples for file 1 is ' + str(n_samp), log_fp)
     output.write_log('The md5 of samp_var1 was ' + \
@@ -109,8 +109,8 @@ def calculate_cutie(input_config_fp):
     n_samp = len(samp_ids)
 
     # subset dataframe
-    samp_var1, df_meta = parse.process_df(samp_var1_df, samp_ids, metadata)
-    samp_var2, _ = parse.process_df(samp_var2_df, samp_ids, 'None')
+    samp_var1 = parse.process_df(samp_var1_df, samp_ids)
+    samp_var2 = parse.process_df(samp_var2_df, samp_ids)
     
     # printing of samp and var names for reference
     output.write_log('There are ' + str(len(samp_ids)) + ' samples', log_fp)
