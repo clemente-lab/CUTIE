@@ -174,11 +174,11 @@ def print_summary_df(var1_names, var2_names, col_names, col_vars, working_dir,
 # Graphing
 ###
 
-def graph_subsets(working_dir, var1_names, var2_names, f1type, f2type, summary_df,
+def graph_subsets(samp_ids, working_dir, var1_names, var2_names, f1type, f2type, summary_df,
                   statistic, forward_stats, resample_k, initial_corr, true_corr,
                   true_corr_to_rev, false_corr_to_rev, graph_bound, samp_var1,
                   samp_var2, all_pairs, region_sets, corr_compare, exceeds_points,
-                  rev_points, fix_axis):
+                  rev_points, fix_axis, df_meta=None):
     """
     Creates folders and plots corresponding to particular sets of variable
     pairs. Pairwise correlation scatterplots are plotted as well as fold p value
@@ -189,6 +189,7 @@ def graph_subsets(working_dir, var1_names, var2_names, f1type, f2type, summary_d
     or not.
     ----------------------------------------------------------------------------
     INPUTS
+    samp_ids          - List of strings. Sample ids.
     working_dir       - String. Path of working directory specified by user.
     var1_names        - List of strings. List of variables in file 1.
     var2_names        - List of strings. List of variables in file 2.
@@ -236,6 +237,8 @@ def graph_subsets(working_dir, var1_names, var2_names, f1type, f2type, summary_d
                         resampling values (from 0 to k) in which that point
                         induces a sign change.
     fix_axis          - Boolean. True if axes are fixed (max and min for vars).
+    df_meta           - Pandas dataframe. Contains samples as rows and metadata
+                        variables and values as columns.
     """
 
     # generate dataframes in set set for plotting
@@ -250,9 +253,9 @@ def graph_subsets(working_dir, var1_names, var2_names, f1type, f2type, summary_d
         forward = False
 
     # plotting below taking in dfs
-    plot_dfs(graph_bound, working_dir, f1type, f2type, var1_names, var2_names,
+    plot_dfs(samp_ids, graph_bound, working_dir, f1type, f2type, var1_names, var2_names,
              samp_var1, samp_var2, dfs, initial_insig_corr, initial_sig_corr,
-             summary_df, exceeds_points, rev_points, fix_axis, forward)
+             summary_df, exceeds_points, rev_points, fix_axis, forward, df_meta)
 
 def generate_dfs(statistic, forward_stats, initial_corr, true_corr,
                  true_corr_to_rev, false_corr_to_rev, summary_df, resample_k,
@@ -373,13 +376,14 @@ def generate_dfs(statistic, forward_stats, initial_corr, true_corr,
     return dfs, initial_insig_corr, initial_sig_corr
 
 
-def plot_dfs(graph_bound, working_dir, f1type, f2type, var1_names, var2_names,
+def plot_dfs(sample_ids, graph_bound, working_dir, f1type, f2type, var1_names, var2_names,
              samp_var1, samp_var2, dfs, initial_insig_corr, initial_sig_corr,
-             summary_df, exceeds_points, rev_points, fix_axis, forward):
+             summary_df, exceeds_points, rev_points, fix_axis, forward, df_meta=None):
     """
     Plot correlations and distribution of pvalues for each dataframe set.
     ----------------------------------------------------------------------------
     INPUTS
+    sample_ids        - List of strings. Sample IDs. 
     working_dir       - String. Path of working directory specified by user.
     var1_names        - List of strings. List of variables in file 1.
     var2_names        - List of strings. List of variables in file 2.
@@ -422,6 +426,8 @@ def plot_dfs(graph_bound, working_dir, f1type, f2type, var1_names, var2_names,
     fix_axis          - Boolean. True if axes are fixed (max and min for vars).
     forward           - Boolean. True if CUTIE is run in the forward direction, False if
                         reverse.
+    df_meta           - Pandas dataframe. Contains samples as rows and metadata
+                        variables and values as columns.
     """
 
     # obtain global max and min for fixed axes
@@ -431,10 +437,10 @@ def plot_dfs(graph_bound, working_dir, f1type, f2type, var1_names, var2_names,
     # for each relevant set
     for df in dfs:
         # plot random / representative correlations
-        plot_corr_sets(graph_bound, df, working_dir, f1type, f2type, var1_names,
-                       var2_names, samp_var1, samp_var2, exceeds_points,
+        plot_corr_sets(sample_ids, graph_bound, df, working_dir, f1type, f2type, 
+                       var1_names, var2_names, samp_var1, samp_var2, exceeds_points,
                        rev_points, fix_axis, var1_max, var1_min, var2_max,
-                       var2_min, forward)
+                       var2_min, forward, df_meta)
 
         # this section plots pvalue and fold pvalue change distributions
         plot_pdist(df, working_dir)
@@ -535,14 +541,15 @@ def plot_pdist(df, working_dir):
             plt.savefig(dist_fp)
             plt.close('all')
 
-def plot_corr(row, df_folder_fp, var1_names, var2_names, samp_var1, samp_var2,
+def plot_corr(samp_ids, row, df_folder_fp, var1_names, var2_names, samp_var1, samp_var2,
               resample_k, exceeds_points, rev_points, fix_axis, var1_max,
-              var1_min, var2_max, var2_min, forward):
+              var1_min, var2_max, var2_min, forward, df_meta=None):
     """
     Helper function for plot_corr_sets(). Plots pairwise correlations within each
     set of correlations as defined by df.
     ----------------------------------------------------------------------------
     INPUTS
+    samp_ids          - List of strings. Sample IDs.
     row               - Pandas dataframe row.
     df_folder_fp      - File object. Points to directory where particular set of
                         plots will be stored.
@@ -570,6 +577,9 @@ def plot_corr(row, df_folder_fp, var1_names, var2_names, samp_var1, samp_var2,
     var2_min          - Float. Smallest value in var2 to use as upper bound.
     forward           - Boolean. True if CUTIE is run in the forward direction, False if
                         reverse.
+    df_meta           - Pandas dataframe. Contains samples as rows and metadata
+                        variables and values as columns.
+
     """
     var1_name, var2_name = row['var1'], row['var2']
     var1, var2 = var1_names.index(var1_name), var2_names.index(var2_name)
@@ -579,12 +589,12 @@ def plot_corr(row, df_folder_fp, var1_names, var2_names, samp_var1, samp_var2,
     y = samp_var2[:, var2]
 
     # convert variable name of otu formats and shorten if necessary
-    if var1_name[0:3] == 'k__':
+    if var1_name[0:3] == 'k__' or var1_name[0:3] == 'd__': # updated for green genes 2
         var1_name = utils.read_taxa(var1_name)
     elif len(var1_name) > 25:
         var1_name = var1_name[0:25]
 
-    if var2_name[0:3] == 'k__':
+    if var2_name[0:3] == 'k__' or var2_name[0:3] == 'd__':
         var2_name = utils.read_taxa(var2_name)
     elif len(var2_name) > 25:
         var2_name = var2_name[0:25]
@@ -617,10 +627,12 @@ def plot_corr(row, df_folder_fp, var1_names, var2_names, samp_var1, samp_var2,
     # label will be 2 if 'true corr' relationship is preserved but sign changes
     # label will be 1 if point is causing corr to be TP/FN, 0 otherwise
     label = cutie*(cutie+reverse)
-    pair_df = pd.DataFrame({var1_name:x, var2_name:y, 'label': label})
-    # ind is 0 if point is non cutieogenic,
-    pair_df = pair_df.dropna(how='any')
+    pair_df = pd.DataFrame({var1_name:x, var2_name:y, 'label': label}, index=samp_ids)
+    pair_df = pd.concat([pair_df, df_meta],axis=1)
 
+    # ind is 0 if point is non cutieogenic,
+    pair_df = pair_df.dropna(how='any', subset=[var1_name, var2_name, 'label'])
+        
     # create labels from numeric representations
     if forward:
         pair_df['label'] = pair_df['label'].apply(
@@ -632,42 +644,52 @@ def plot_corr(row, df_folder_fp, var1_names, var2_names, samp_var1, samp_var2,
     # export pair_df to tsv should users wish to plot manually
     pair_df.to_csv(df_folder_fp + '/' + str(var1) + '_' + str(var2) + '.tsv', sep='\t')
 
-    # create plot and title
-    title = 'p, ext_p = ' + '%.2E' % Decimal(row['pvalues']) + \
-            ', ' + '%.2E' % Decimal(row['extreme_p']) + ' ' + \
-            'r, ext_r = ' + str(row['correlations']) + \
-            ', ' + str(row['extreme_r'])
-            #'r, ext_r = ' + '%.2E' % Decimal(row['correlations']) + \
-            #', ' + '%.2E' % Decimal(row['extreme_r'])
+    # plot categories
+    plot_categories = [None]
 
-    fig = plt.figure(figsize=(5,5))
-    sns.set_style('white')
-    sns.axes_style("white")
+    # create one plot per metadata
+    if df_meta is not None:
+        plot_categories = plot_categories + list(df_meta.columns.values)
+    
+    for m in plot_categories:
+        # create plot and title
+        title = 'p, ext_p = ' + '%.2E' % Decimal(row['pvalues']) + \
+                ', ' + '%.2E' % Decimal(row['extreme_p']) + ' ' + \
+                'r, ext_r = ' + str(row['correlations']) + \
+                ', ' + str(row['extreme_r'])
 
-    sns_plot = sns.scatterplot(x=var1_name, y=var2_name, data=pair_df, hue='label')
-    if fix_axis:
-        sns_plot.set(xlim=(var1_min, var1_max), ylim=(var2_min, var2_max))
+        fig = plt.figure(figsize=(5,5))
+        sns.set_style('white')
+        sns.axes_style("white")
 
-    # set title
-    plt.title(title, fontsize=8)
+        sns_plot = sns.scatterplot(x=var1_name, y=var2_name, data=pair_df, hue='label', style=m)
+        if fix_axis:
+            sns_plot.set(xlim=(var1_min, var1_max), ylim=(var2_min, var2_max))
 
-    # rotate axis labels
-    plt.xticks(rotation=45)
+        # set title
+        plt.title(title, fontsize=8)
 
-    fig.set_tight_layout(True)
-    sns.despine()
-    plt.savefig(df_folder_fp + '/' + str(var1) + '_' + str(var2) + '.pdf')
-    plt.close('all')
+        # rotate axis labels
+        plt.xticks(rotation=45)
+
+        fig.set_tight_layout(True)
+        sns.despine()
+        if m is None:
+            plt.savefig(df_folder_fp + '/' + str(var1) + '_' + str(var2) + '.pdf')
+        else:
+            plt.savefig(df_folder_fp + '/' + str(var1) + '_' + str(var2) + '_' + m + '.pdf')
+        plt.close('all')
 
 
-def plot_corr_sets(graph_bound, df, working_dir, f1type, f2type, var1_names,
+def plot_corr_sets(samp_ids, graph_bound, df, working_dir, f1type, f2type, var1_names,
                    var2_names, samp_var1, samp_var2, exceeds_points, rev_points,
-                   fix_axis, var1_max, var1_min, var2_max, var2_min, forward):
+                   fix_axis, var1_max, var1_min, var2_max, var2_min, forward, df_meta):
     """
     Helper function for graph_subsets(). Plots pairwise correlations within each
     set of correlations as defined by df.
     ----------------------------------------------------------------------------
     INPUTS
+    sample_ids        - List of strings. Sample IDs.
     graph_bound       - Integer. Upper limit of how many graphs to plot in each
                         set.
     df                - Dataframe-sets object as constructed in graph_subsets().
@@ -698,6 +720,8 @@ def plot_corr_sets(graph_bound, df, working_dir, f1type, f2type, var1_names,
     var2_min          - Float. Smallest value in var2 to use as upper bound.
     forward           - Boolean. True if CUTIE is run in the forward direction, False if
                         reverse.
+    df_meta           - Pandas dataframe. Contains samples as rows and metadata
+                        variables and values as columns.
     """
     # decide var pairs to plot
     np.random.seed(0)
@@ -717,10 +741,10 @@ def plot_corr_sets(graph_bound, df, working_dir, f1type, f2type, var1_names,
 
     # plot representative plots
     for index, row in df_forplot.iterrows():
-        plot_corr(row, df_folder_fp, var1_names,
+        plot_corr(samp_ids, row, df_folder_fp, var1_names,
                   var2_names, samp_var1, samp_var2, df.k, exceeds_points,
                   rev_points, fix_axis, var1_max, var1_min, var2_max, var2_min,
-                  forward)
+                  forward, df_meta)
 
 ###
 # Diagnostic plot handling

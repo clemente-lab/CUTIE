@@ -63,7 +63,7 @@ def parse_input(ftype, fp, startcol, endcol, delimiter, skip):
 
     return samp_ids, var_names, df, n_var, n_samp
 
-def process_df(samp_var_df, samp_ids):
+def process_df(samp_var_df, samp_ids, metadata):
     """
     Reads in dataframe. Returns matrix of values. Nans are ignored in all cases.
     ----------------------------------------------------------------------------
@@ -72,6 +72,8 @@ def process_df(samp_var_df, samp_ids):
                       of metadata.
     samp_ids        - List of strings. Contains sample names in order that they
                       were read.
+    metadata        - List of strings. Contains list of columns to extract prior to 
+                      computing correlations.
 
     OUTPUTS
     samp_var        - 2D array where each value in row i col j is the level of
@@ -81,13 +83,17 @@ def process_df(samp_var_df, samp_ids):
     # subset dataframes
     samp_var_df = samp_var_df.loc[samp_ids]
 
+    # extract metadata
+    if metadata is not None:
+        df_meta = samp_var_df[metadata]
+
     # coerce NA's
     samp_var_df = samp_var_df.apply(pd.to_numeric, errors='coerce')
 
     # obtain values
     samp_var = samp_var_df.values
 
-    return samp_var
+    return samp_var, metadata
 
 ###
 # Config parsing
@@ -124,7 +130,8 @@ def parse_config(input_config_fp):
         'fold_value': 1,
         'corr_compare': False,
         'graph_bound': 30,
-        'fix_axis': False
+        'fix_axis': False,
+        'metadata': None
     }
     Config = configparser.ConfigParser(defaults=defaults)
     try:
@@ -164,11 +171,12 @@ def parse_config(input_config_fp):
     # [graph]
     graph_bound = Config.getint('graph', 'graph_bound')
     fix_axis = Config.getboolean('graph', 'fix_axis')
+    metadata = Config.get('graph', 'metadata').split(',')
 
     return (samp_var1_fp, delimiter1, samp_var2_fp, delimiter2, f1type,
             f2type, working_dir, skip1, skip2, startcol1, endcol1, startcol2,
             endcol2, param, statistic, corr_compare, resample_k, paired,
-            overwrite, alpha, multi_corr, fold, fold_value, graph_bound, fix_axis)
+            overwrite, alpha, multi_corr, fold, fold_value, graph_bound, fix_axis, metadata)
 
 def md5_checksum(fp):
     """

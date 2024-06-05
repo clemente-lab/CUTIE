@@ -44,10 +44,11 @@ def calculate_cutie(input_config_fp):
     significant when each individual observation is dropped
     """
     # unpack config variables
-    (samp_var1_fp, delimiter1, samp_var2_fp, delimiter2, f1type, f2type,
-     working_dir, skip1, skip2, startcol1, endcol1, startcol2, endcol2, param,
-     statistic, corr_compare, resample_k, paired, overwrite, alpha, multi_corr,
-     fold, fold_value, graph_bound, fix_axis) = parse.parse_config(input_config_fp)
+    (samp_var1_fp, delimiter1, samp_var2_fp, delimiter2, f1type, f2type, 
+     working_dir, skip1, skip2, startcol1, endcol1, startcol2, endcol2, 
+     param, statistic, corr_compare, resample_k, paired, overwrite, alpha, 
+     multi_corr, fold, fold_value, graph_bound, fix_axis, 
+     metadata) = parse.parse_config(input_config_fp)
 
     # create working directory
     if Path(working_dir).is_dir() is not True:
@@ -107,9 +108,9 @@ def calculate_cutie(input_config_fp):
     samp_ids = [value for value in samp_ids1 if value in samp_ids2]
     n_samp = len(samp_ids)
 
-    # subset dataframe, obtain avg and variance
-    samp_var1 = parse.process_df(samp_var1_df, samp_ids)
-    samp_var2 = parse.process_df(samp_var2_df, samp_ids)
+    # subset dataframe
+    samp_var1, df_meta = parse.process_df(samp_var1_df, samp_ids, metadata)
+    samp_var2, df_meta2 = parse.process_df(samp_var2_df, samp_ids, metadata)
 
     # printing of samp and var names for reference
     output.write_log('There are ' + str(len(samp_ids)) + ' samples', log_fp)
@@ -282,11 +283,11 @@ def calculate_cutie(input_config_fp):
     if Path(working_dir + 'graphs').is_dir() is not True:
         Path(working_dir + 'graphs').mkdir()
 
-    output.graph_subsets(working_dir, var1_names, var2_names, f1type, f2type,
+    output.graph_subsets(samp_ids, working_dir, var1_names, var2_names, f1type, f2type,
         summary_df, statistic, forward_stats, resample_k, initial_corr,
         true_corr, true_corr_to_rev, false_corr_to_rev, graph_bound, samp_var1,
         samp_var2, all_pairs, region_sets, corr_compare, exceeds_points,
-        rev_points, fix_axis)
+        rev_points, fix_axis, df_meta)
 
     output.diag_plots(samp_ids, var1_names, var2_names, samp_counter, var1_counter,
         var2_counter, resample_k, working_dir, paired, statistic, forward_stats)
