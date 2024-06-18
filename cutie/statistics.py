@@ -5,7 +5,7 @@ import matplotlib
 import numpy as np
 import statsmodels.api as sm
 import scipy.stats
-import minepy
+import minepy # https://github.com/minepy/minepy/pull/41
 from cutie import utils
 
 matplotlib.use('Agg')
