@@ -58,7 +58,7 @@ def parse_input(ftype, fp, startcol, endcol, delimiter, skip, metadata):
     print(metadata != 'None')
     print(metadata != None)
     print(type(metadata))
-    if metadata != ['None']:
+    if metadata != 'None':
         df_meta = df[metadata]
         df = df.drop(metadata, axis=1)
     else:
