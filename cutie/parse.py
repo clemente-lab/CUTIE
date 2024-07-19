@@ -53,8 +53,6 @@ def parse_input(ftype, fp, startcol, endcol, delimiter, skip, metadata):
         raise ValueError('Both startcol and endcol must be specified')
     
     # extract metadata
-    print(metadata)
-    print(type(metadata))
     if metadata != 'None' and metadata != ['None'] and metadata != "['None']":
         df_meta = df[metadata]
         df = df.drop(metadata, axis=1)
