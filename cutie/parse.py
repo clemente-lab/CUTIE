@@ -54,11 +54,8 @@ def parse_input(ftype, fp, startcol, endcol, delimiter, skip, metadata):
     
     # extract metadata
     print(metadata)
-    print(metadata != ['None'])
-    print(metadata != 'None')
-    print(metadata != None)
     print(type(metadata))
-    if metadata != 'None' and metadata != ['None']:
+    if metadata != ['None'] and metadata != "['None']":
         df_meta = df[metadata]
         df = df.drop(metadata, axis=1)
     else:
@@ -138,7 +135,7 @@ def parse_config(input_config_fp):
         'corr_compare': False,
         'graph_bound': 30,
         'fix_axis': False,
-        'metadata': ['None']
+        'metadata': 'None'
     }
     Config = configparser.ConfigParser(defaults=defaults)
     try:
